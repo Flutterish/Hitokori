@@ -1,0 +1,196 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Main\\Solutions\\Git\\Osu\\osu.Game.Rulesets.Hitokori\\osu.Game.Rulesets.Hitokori.csproj": {}
+  },
+  "projects": {
+    "D:\\Main\\Solutions\\Git\\Osu\\osu.Game.Rulesets.Hitokori\\osu.Game.Rulesets.Hitokori.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game.Rulesets.Hitokori\\osu.Game.Rulesets.Hitokori.csproj",
+        "projectName": "osu.Game.Rulesets.Hitokori",
+        "projectPath": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game.Rulesets.Hitokori\\osu.Game.Rulesets.Hitokori.csproj",
+        "packagesPath": "C:\\Users\\Charm\\.nuget\\packages\\",
+        "outputPath": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game.Rulesets.Hitokori\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Charm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\osu.Game.csproj": {
+      "version": "0.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\osu.Game.csproj",
+        "projectName": "ppy.osu.Game",
+        "projectPath": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\osu.Game.csproj",
+        "packagesPath": "C:\\Users\\Charm\\.nuget\\packages\\",
+        "outputPath": "D:\\Main\\Solutions\\Git\\Osu\\osu.Game\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Charm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.35, )"
+            },
+            "DiffPlex": {
+              "target": "Package",
+              "version": "[1.6.3, )"
+            },
+            "Humanizer": {
+              "target": "Package",
+              "version": "[2.8.26, )"
+            },
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[2.2.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite.Core": {
+              "target": "Package",
+              "version": "[2.2.6, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "Sentry": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
+            "SharpCompress": {
+              "target": "Package",
+              "version": "[0.25.1, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "ppy.osu.Framework": {
+              "target": "Package",
+              "version": "[2020.723.0, )"
+            },
+            "ppy.osu.Game.Resources": {
+              "target": "Package",
+              "version": "[2020.715.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

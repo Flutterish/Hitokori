@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>osu.Game.Rulesets.Hitokori</name>
+    </assembly>
+    <members>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.Base.HitokoriTileObject.IsFirst">
+            <summary>
+            Currently no tile other than <see cref="T:osu.Game.Rulesets.Hitokori.Objects.StartTile"/> can be first, therefore <see cref="F:osu.Game.Rulesets.Hitokori.Objects.Base.HitokoriTileObject.Previous"/> is never null otherwise
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.Base.IHasTilePosition.TilePosition">
+            <summary>
+            Where the tile is. Judgement text appears there by default.
+            </summary>
+        </member>
+        <member name="T:osu.Game.Rulesets.Hitokori.Objects.Drawables.ArchedConnector">
+            <summary>
+            A connector is a path between 2 tiles. Its center position is offset by whatever the offset is from the "around" position, that is
+            if you set its position to `<c>around - parent.Position</c>` its start will be centered at "around";
+            </summary>
+        </member>
+        <member name="T:osu.Game.Rulesets.Hitokori.Objects.Drawables.Connector">
+            <summary>
+            A connector is a path between 2 tiles. Its start position is offset by whatever the offset is from the "from" tile, that is
+            if you set its position to `<c>from.HoldPosition - parent.Position</c>` its start will be centered at "from";
+            </summary>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.DrawableHitokori.AnimateDistance(osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.Orbital,System.Double,System.Double,osu.Framework.Graphics.Easing)">
+            <summary>
+            When contracted, expands radius using the given <see cref="T:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.Orbital"/> ( the last active one by default )
+            </summary>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.DrawableHitokori.RotateTo(System.Double,System.Double,System.Double)">
+            <summary>
+            Rotates the Hitokori from interpolated start angle to <paramref name="target"/>
+            </summary>
+            <param name="target">The target in radians</param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.DrawableHitokori.RotateTo(System.Double)">
+            <summary>
+            Rotates to the given angle instantly. Use this only for snapping
+            </summary>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.DrawableHitokori.Snap">
+            <summary>
+            Instantly rotates to the target rotation
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori.Orbital.Velocity">
+            <summary>
+            Velocity in radians per millisecond
+            </summary>
+        </member>
+        <member name="F:osu.Game.Rulesets.Hitokori.Objects.TilePoint.Parent">
+            <summary>
+            <see cref="T:osu.Game.Rulesets.Hitokori.Objects.TilePoint"/> around which this tile rotates
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.TilePoint.Speed">
+            <summary>
+            ( Unsigned ) Speed in radians per millisecond
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.TilePoint.Velocity">
+            <summary>
+            ( Signed ) Speed in radians per millisecond
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.TilePoint.IsSlower">
+            <summary>
+            Is this tile slower than the previous one?
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Objects.TilePoint.IsFaster">
+            <summary>
+            Is this tile faster than the previous one?
+            </summary>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Objects.TilePoint.Then(osu.Game.Rulesets.Hitokori.Objects.TilePoint)">
+            <summary>
+            Joins the two <see cref="T:osu.Game.Rulesets.Hitokori.Objects.TilePoint"/>s and returns the latter
+            </summary>
+        </member>
+        <member name="P:osu.Game.Rulesets.Hitokori.Patterns.Pattern`2.IsUnique">
+            <summary>
+            Whether no other pattern should generate on top of this one
+            </summary>
+        </member>
+        <member name="F:osu.Game.Rulesets.Hitokori.UI.HitokoriPlayfield.CameraPosition">
+            <summary>
+            Camera position. Used because offsetting containers clips children.
+            </summary>
+        </member>
+        <member name="M:osu.Game.Rulesets.Hitokori.Utils.Extensions.Center``1(``0)">
+            <summary>
+            Sets the anchor and origin to centre.
+            </summary>
+        </member>
+    </members>
+</doc>
