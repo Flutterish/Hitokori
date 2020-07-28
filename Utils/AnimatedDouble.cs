@@ -5,16 +5,10 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Utils {
-	public class AnimatedDouble : Bindable<double>, IDisposable {
+	public class AnimatedDouble : Bindable<double> {
 		public readonly Drawable Parent;
 		public AnimatedDouble ( Drawable parent ) {
 			Parent = parent;
-
-			if ( Parent is IHasDisposeEvent disposable ) {
-				disposable.OnDispose += () => Dispose();
-			} else {
-				// TODO HACK osu does not dispose of bindable objects? Edit: The actual memory leak was Path not being disposed so this might be a false positive
-			}
 		}
 
 		new public double Value {
@@ -28,18 +22,13 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			return this;
 		}
 
-		public void Dispose () {
-			UnbindAll();
-			Parent.ClearTransforms();
-		}
-
 		public double ToDouble ()
 			=> base.Value;
 		public static implicit operator double ( AnimatedDouble value )
 			=> value.ToDouble();
 	}
 
-	public class AnimatedVector : Bindable<Vector2>, IDisposable {
+	public class AnimatedVector : Bindable<Vector2> {
 		public readonly Drawable Parent;
 		private readonly AnimatedDouble x;
 		private readonly AnimatedDouble y;
@@ -52,10 +41,6 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 
 			x.ValueChanged += x => base.Value = new Vector2( (float)x.NewValue, (float)Y );
 			y.ValueChanged += y => base.Value = new Vector2( (float)X, (float)y.NewValue );
-
-			if ( Parent is IHasDisposeEvent disposable ) {
-				disposable.OnDispose += () => Dispose();
-			}
 		}
 
 		new public Vector2 Value {
@@ -113,9 +98,5 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 		}
 		public static implicit operator Vector2 ( AnimatedVector animated )
 			=> animated.ToVector2();
-
-		public void Dispose () {
-			UnbindAll();
-		}
 	}
 }

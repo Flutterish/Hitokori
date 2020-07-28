@@ -52,6 +52,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			};
 		}
 
+		protected override void Update () {
+			if ( Line != null && Progress.B >= 0.99 && Progress.A >= 0.99 ) { // TODO do it better. probably a container in main field will do
+				Remove( Line );
+				Line.Dispose();
+				Line = null;
+			}
+		}
+
 		protected virtual void UpdateConnector () {
 			Line.ClearVertices();
 
@@ -73,13 +81,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public virtual double Disappear () {
-			this.FadeOut( 300 ).OnComplete( x => {
-				if ( Line != null ) {
-					Remove( Line );
-					Line.Dispose();
-					Line = null;
-				}
-			} );
+			this.FadeOut( 300 );
 			Disconnect( 300, Easing.Out );
 
 			return 500;
@@ -90,9 +92,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void Dispose ( bool isDisposing ) {
-			if ( isDisposing ) return;
-
 			Line?.Dispose();
+
 			base.Dispose( isDisposing );
 		}
 	}

@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public double Appear ( double duration ) {
-			Line?.FadeInFromZero( 700, Easing.Out );
+			this.FadeInFromZero( 700, Easing.Out );
 			Connect( duration );
 
 			return Math.Max( 700, duration );
@@ -66,14 +66,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		
 		public double Disappear ( double duration ) {
 			Disconnect( duration );
-
-			this.Delay( duration ).Schedule( () => { // TODO can this be done better? please do it better
-				if ( Line != null ) {
-					Remove( Line );
-					Line.Dispose();
-					Line = null;
-				}
-			} );
 
 			return duration + 200;
 		}
