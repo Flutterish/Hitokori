@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
-	public class DrawableTilePoint : DrawableHitokoriHitObject { // TODO move samples to TilePoint
+	public class DrawableTilePoint : DrawableHitokoriHitObject {
 		public TilePoint TilePoint;
 		public DrawableHitokori Hitokori => (Parent as HitokoriTile).Hitokori;
 

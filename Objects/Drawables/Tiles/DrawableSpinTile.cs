@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
-	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO connectors in spin tiles should be curved
+	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> {
 		new public readonly SpinTile Tile;
 		List<DrawableTilePoint> Points = new List<DrawableTilePoint>();
 

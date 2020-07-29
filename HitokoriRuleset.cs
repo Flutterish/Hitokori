@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Hitokori {
 						new MultiMod( new HitokoriModSuddenDeath(), new HitokoriModPerfect() ),
 						new MultiMod( new HitokoriModDoubleTime(), new HitokoriModNightcore() ),
 						new HitokoriModHidden(),
-						new HitokoriModFlashlight() // TODO implement flashlight
+						new HitokoriModFlashlight()
 					};
 
 				case ModType.Conversion:
