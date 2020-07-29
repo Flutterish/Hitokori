@@ -4,6 +4,9 @@ Hitokori ( fire and ice ) is a custom [osu!](https://github.com/ppy/osu) ruleset
 # Features
 Hitokori offers a variety of mods to spice up gameplay. Most of them are the same ones you'd exect from any other game mode, the unique ones are `Stretched`, `Squashed`, `Double Tiles`, `Experimental`, (not implemented) `Reverse Spin` and (not implemented) `Triplets`.
 
+# Demonstration video
+[Watch it on youtube!](https://www.youtube.com/watch?v=CD8K3mGTlO4&feature=youtu.be)
+
 # Installing the gamemode
 Open up osu!lazer and go into settings. On the very top, there is a big blue button with "Open osu! folder". In that folder, there is another one called "rulesets". Go into Hitokori releases, download the prebuilt `.dll` file and paste it there. Restart osu!lazer and you're done!
 
