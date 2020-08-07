@@ -5,30 +5,30 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 	public class LoopingList<T> : IEnumerable<T> {
 		private List<T> list;
 		private int index;
-		private int length;
+		public readonly int Length;
 
 		public LoopingList ( int length ) {
-			list = new List<T>( this.length = length );
+			list = new List<T>( this.Length = length );
 		}
 
 		public void Add ( T item ) {
-			if ( length > list.Count ) {
+			if ( Length > list.Count ) {
 				list.Add( item );
 				return;
 			}
 
 			list[ index ] = item;
-			index = ( index + 1 ) % length;
+			index = ( index + 1 ) % Length;
 		}
 
 		public IEnumerator<T> GetEnumerator () {
-			if ( length > list.Count ) {
+			if ( Length > list.Count ) {
 				foreach ( var i in list ) yield return i;
 				yield break;
 			}
 
-			for ( int i = 0; i < length; i++ ) {
-				yield return list[ ( index + i ) % length ];
+			for ( int i = 0; i < Length; i++ ) {
+				yield return list[ ( index + i ) % Length ];
 			}
 		}
 

@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		Bindable<CameraFollowMode> FollowMode = new Bindable<CameraFollowMode>();
 		Bindable<double> CameraSpeed = new Bindable<double>( 300 );
 
-		JudgementContainer<DrawableHitokoriJudgement> Judgements; // TODO mod where you have 3 orbitals
+		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
 		public readonly DrawableHitokori Hitokori;
 

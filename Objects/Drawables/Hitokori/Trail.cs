@@ -10,6 +10,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public Path Line;
 		public Vector2 Offset;
 		LoopingList<Vector2> vertices = new LoopingList<Vector2>( 100 ); // TODO make trails shorten towards the end
+		public int VerticeCount => vertices.Length;
 
 		new public Colour4 Colour {
 			get => Line.Colour;
