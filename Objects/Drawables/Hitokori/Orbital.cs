@@ -54,14 +54,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public Vector2 RotationVector
 			=> new Vector2( (float)Math.Cos( Angle ), (float)Math.Sin( Angle ) );
 
-		private double trailTimer = double.NaN;
+		private double trailTimer;
 		/// <summary>
 		/// Trail duration in seconds
 		/// </summary>
-		private double traiDuration = 0.7;
+		private double traiDuration = ( 1.0 / 240 ) * 100; // old behaviour is 100 update frames total, i was running on abt 240 of these
 		protected override void Update () {
-			if ( double.IsNaN( trailTimer ) ) trailTimer = Clock.CurrentTime; // initial time
-
 			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
 			Position = RotationVector * (float)Distance;
 
@@ -72,6 +70,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					Trail.AddVertice( Trail.Offset );
 					trailTimer += trailMSPV;
 				}
+			} else {
+				// if time goes backward we dont want the trail to stop
+				trailTimer = Clock.CurrentTime;
 			}
 		}
 	}
