@@ -5,7 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
+    <None Remove="Resources\hitokori-BotHold.png" />
+    <None Remove="Resources\hitokori-BotLeft.png" />
+    <None Remove="Resources\hitokori-BotNeutral.png" />
+    <None Remove="Resources\hitokori-BotRight.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\hitokori-BotHold.png" />
+    <EmbeddedResource Include="Resources\hitokori-BotLeft.png" />
+    <EmbeddedResource Include="Resources\hitokori-BotNeutral.png" />
+    <EmbeddedResource Include="Resources\hitokori-BotRight.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Osu\osu.Game\osu.Game.csproj" />
   </ItemGroup>
 
   <ItemGroup>

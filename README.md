@@ -19,3 +19,13 @@ The current build was made in 2 weeks, including me learning how to tame the osu
 All contributions are welcome! Good ones, that is. If you have any ideas how to improve the gamemode or a bug report, don't hesitate and fill out an issue. 
 
 If you want to contribute code, do it over a pull request. Make sure to discuss your new ideas over on the issues section to make sure they are actually wanted first. And make sure they work. Thats a pretty important one.
+
+# Setup
+If you want to contribute code, you first have to set up your project:
+* git clone this repo
+* git clone osu!lazer master branch
+* open osu master in your preffered IDE
+* add this repo as a linked project
+* add a project reference to this in osu.Desktop
+* replace the osu.Game project reference of this project to your local osu.Game
+* set osu.Deskktop as the startup project
