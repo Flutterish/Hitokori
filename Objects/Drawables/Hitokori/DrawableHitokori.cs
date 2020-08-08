@@ -235,10 +235,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public double StableAngle {
 			get {
 				if ( Triplets ) {
-					double offset;
-					if ( LastOrbital == Hi ) offset = 0;
-					else if ( LastOrbital == Kori ) offset = Math.PI * 4 / 3;
-					else offset = Math.PI; // dont ask why these values i Dont kn o w
+					double offset = OrbitalIndex switch {
+						/* Hi   */ 0 => 0,
+						/* Kori */ 1 => Math.PI * 4 / 3,
+						           _ => Math.PI
+					}; // dont ask why these values i Dont kn o w
 
 					return ( Hi.Angle - offset ).ToDegrees();
 				} else {
