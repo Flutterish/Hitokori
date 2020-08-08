@@ -13,7 +13,7 @@ Open up osu!lazer and go into settings. On the very top, there is a big blue but
 Note that the ruleset does not automatically update with osu!, you need to overwrite the `.dll` file each time you want to update Hitokori.
 
 # Hitokori is still WIP!
-The current build was made in 2 weeks, including me learning how to tame the osu! engine. While I do consider it pretty robust, expect a few bugs. For known bugs refer to the issues section.
+The first build was made in 2 weeks, including me learning how to tame the osu! engine. While I do consider it pretty robust, expect a few bugs. For known bugs refer to the issues section.
 
 # Contributing
 All contributions are welcome! Good ones, that is. If you have any ideas how to improve the gamemode or a bug report, don't hesitate and fill out an issue. 
