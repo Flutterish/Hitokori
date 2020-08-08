@@ -2,7 +2,7 @@
 Hitokori ( fire and ice ) is a custom [osu!](https://github.com/ppy/osu) ruleset based on `A Dance of Fire and Ice`. Click and hold to the rythm to watch the dance unfold!
 
 # Features
-Hitokori offers a variety of mods to spice up gameplay. Most of them are the same ones you'd exect from any other game mode, the unique ones are `Stretched`, `Squashed`, `Double Tiles`, `Experimental`, (not implemented) `Reverse Spin` and (not implemented) `Triplets`.
+Hitokori offers a variety of mods to spice up gameplay. Most of them are the same ones you'd exect from any other game mode, the unique ones are `Stretched`, `Squashed`, `Double Tiles`, `Experimental`, `Reverse Spin` and `Triplets`.
 
 # Demonstration video
 [Watch it on youtube!](https://www.youtube.com/watch?v=CD8K3mGTlO4&feature=youtu.be)
