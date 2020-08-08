@@ -10,10 +10,12 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Difficulty;
 using osu.Game.Rulesets.Hitokori.Mods;
+using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Hitokori.Scoring;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
@@ -50,6 +52,9 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod> mods = null )
 			=> new HitokoriDrawableRuleset( this, beatmap, mods );
+
+		public override IConvertibleReplayFrame CreateConvertibleReplayFrame ()
+			=> new HitokoriReplayFrame();
 
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
 			switch ( type ) {
