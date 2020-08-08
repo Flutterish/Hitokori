@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
@@ -12,27 +10,26 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class DrawableHitokori : Container, IHasTilePosition {
 		public List<Orbital> Orbitals = new List<Orbital>();
 		private int OrbitalIndex;
-		private Orbital lastOrbital;
+		public Orbital LastOrbital { get; private set; }
 
 		private Orbital NextOrbital {
 			get {
-				lastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
+				LastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
 
 				FirstFreeOrbital.MakeImportant();
-				lastOrbital.RevokeImportant();
+				LastOrbital.RevokeImportant();
 
-				return lastOrbital;
+				return LastOrbital;
 			}
 		}
 		private Orbital FirstFreeOrbital => Orbitals[ ( OrbitalIndex + 1 ) % Orbitals.Count ];
-		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != lastOrbital );
+		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != LastOrbital );
 		bool Triplets;
 
 		public void AddTriplet () {
@@ -75,18 +72,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		public void Swap () {
-			if ( lastOrbital is null ) {
+			if ( LastOrbital is null ) {
 				NextOrbital.Hold();
 				FreeOrbitals.ForEach( x => x.Release() );
 			} else {
-				lastOrbital.Release();
+				LastOrbital.Release();
 				NextOrbital.Hold();
 			}
 
 			if ( Triplets ) {
 				RotateTo( previousTargetRotation - ( Math.PI - TripletAngle ) );
-			}
-			else {
+			} else {
 				RotateTo( previousTargetRotation - Math.PI );
 			}
 		}
@@ -147,7 +143,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				return;
 			}
 
-			double angleOffset = lastOrbital.Angle - previousTargetRotation;
+			double angleOffset = LastOrbital.Angle - previousTargetRotation;
 			double startAngle = previousTargetRotation - angleOffset;
 
 			RotateToWithInterpolation( startAngle );
@@ -190,26 +186,26 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public void RotateTo ( double target ) {
 			previousTargetRotation = target;
 
-			Orbitals.ForEach( x => x.Angle = target );
-			if ( Triplets ) { // if yall want to find a generic formula, for for it
+			if ( Triplets ) { // if yall want to find a generic formula, go for it
+				Orbitals.ForEach( x => x.Angle = target );
 				FirstFreeOrbital.Angle += TripletAngle;
+			} else {
+				Orbitals.ForEach( x => x.Angle = target );
 			}
 		}
 
 		public void RotateToWithInterpolation ( double target ) {
 			previousTargetRotation = target;
 
-			if ( Triplets ) { // if yall want to find a generic formula, for for it
+			if ( Triplets ) { // if yall want to find a generic formula, go for it
 				foreach ( var x in Orbitals ) {
 					if ( x == FirstFreeOrbital ) {
 						x.RotateTo( target + TripletAngle );
-					}
-					else {
+					} else {
 						x.RotateTo( target );
 					}
 				}
-			}
-			else {
+			} else {
 				Orbitals.ForEach( x => x.RotateTo( target ) );
 			}
 		}
@@ -234,6 +230,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		[BackgroundDependencyLoader]
 		private void load ( HitokoriSettingsManager config ) {
 			CorrectionMode = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode );
+		}
+
+		public double StableAngle {
+			get {
+				if ( Triplets ) {
+					double offset;
+					if ( LastOrbital == Hi ) offset = 0;
+					else if ( LastOrbital == Kori ) offset = Math.PI * 4 / 3;
+					else offset = Math.PI; // dont ask why these values i Dont kn o w
+
+					return ( Hi.Angle - offset ).ToDegrees();
+				} else {
+					return ( Hi.Angle + ( ( LastOrbital == Hi ) ? Math.PI : 0 ) ).ToDegrees();
+				}
+			}
 		}
 	}
 }

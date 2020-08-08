@@ -24,8 +24,8 @@ If you want to contribute code, do it over a pull request. Make sure to discuss 
 If you want to contribute code, you first have to set up your project:
 * git clone this repo
 * git clone osu!lazer master branch
-* open osu master in your preffered IDE
+* open osu master in your preferred IDE
 * add this repo as a linked project
 * add a project reference to this in osu.Desktop
 * replace the osu.Game project reference of this project to your local osu.Game
-* set osu.Deskktop as the startup project
+* set osu.Desktop as the startup project

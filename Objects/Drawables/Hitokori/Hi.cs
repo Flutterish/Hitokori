@@ -1,6 +1,4 @@
-﻿using osu.Framework.Graphics.Shapes;
-using osu.Game.Rulesets.Hitokori.Objects.Base;
-using osu.Game.Rulesets.Hitokori.Utils;
+﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {

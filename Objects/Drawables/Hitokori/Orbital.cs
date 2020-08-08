@@ -1,8 +1,5 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
+﻿using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
-using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 

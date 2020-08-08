@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {

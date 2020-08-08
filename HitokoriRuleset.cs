@@ -89,7 +89,7 @@ namespace osu.Game.Rulesets.Hitokori {
 
 				case ModType.Fun:
 					return new Mod[] {
-						new HitokoriModReverseSpin(), // TODO implement reverse spin ( the world spins instead of hitokori )
+						new HitokoriModReverseSpin(),
 						new HitokoriModTriplets()
 					};
 

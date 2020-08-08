@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
@@ -22,19 +23,28 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		Bindable<CameraFollowMode> FollowMode = new Bindable<CameraFollowMode>();
 		Bindable<double> CameraSpeed = new Bindable<double>( 300 );
 
+		Container Everything;
+
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
 		public readonly DrawableHitokori Hitokori;
 
+		private bool reverseSpin;
+
 		Bot AutoBot;
-		public HitokoriPlayfield ( bool auto, bool triplets ) {
+		public HitokoriPlayfield ( bool auto, bool triplets, bool reverseSpin ) {
+			this.reverseSpin = reverseSpin;
 			CameraPosition = new AnimatedVector( parent: this );
 
 			InternalChildren = new Drawable[] {
+				Everything = new Container().Center()
+			};
+
+			Everything.AddRange( new Drawable[] {
 				Hitokori = new DrawableHitokori { Depth = -1 }.Center(),
 				Tiles = HitObjectContainer.Center(),
 				Judgements = new JudgementContainer<DrawableHitokoriJudgement>().Center()
-			};
+			} );
 
 			if ( Auto = auto ) {
 				AddInternal( AutoBot = new Bot {
@@ -61,11 +71,17 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Hitokori.Swap( HeadTile.Tile.Previous.LastPoint );
 			}
 
+			if ( reverseSpin ) {
+				Everything.Rotation = (float)-Hitokori.StableAngle;
+			} else {
+				Everything.Rotation = 0;
+			}
+
 			UpdateOffsets();
 		}
 
 		private void UpdateOffsets () {
-			// TODO ISSUE when rewinding time, camera is often far from the gameplay
+			// TODO ISSUE #5 when rewinding time, camera is often far from the gameplay
 			var followTiles = Tiles.AliveObjects.OfType<HitokoriTile>()
 				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 

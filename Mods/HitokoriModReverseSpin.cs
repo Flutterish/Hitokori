@@ -13,6 +13,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override ModType Type => ModType.Fun;
 
-		public override bool HasImplementation => false;
+		public override bool HasImplementation => true;
 	}
 }
