@@ -109,7 +109,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			double leadupTime = actualDuration - duration;
 			double angleOffset = leadupTime * velocity;
-			RotateTo( startAngle - angleOffset );
+			RotateToWithInterpolation( startAngle - angleOffset );
 
 			Hi.Velocity = velocity;
 			Kori.Velocity = velocity;
@@ -133,7 +133,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double angleOffset = Hi.Angle - previousTargetRotation;
 			double startAngle = previousTargetRotation - angleOffset;
 
-			RotateTo( startAngle );
+			RotateToWithInterpolation( startAngle );
 			double velocity = ( target - startAngle ) / actualDuration;
 
 			Hi.Velocity = velocity;
@@ -173,11 +173,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			Kori.Angle = target;
 		}
 
+		public void RotateToWithInterpolation ( double target ) {
+			previousTargetRotation = target;
+
+			Hi.RotateTo( target );
+			Kori.RotateTo( target );
+		}
+
 		/// <summary>
 		/// Instantly rotates to the target rotation
 		/// </summary>
 		public void Snap () {
-			RotateTo( previousTargetRotation );
+			RotateToWithInterpolation( previousTargetRotation );
 		}
 
 		public Vector2 TilePosition { get; private set; }

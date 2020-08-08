@@ -86,16 +86,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		private void OnHit () {
 			TilePoint.WasHit = true;
 
-			Hit( TilePoint, Hitokori );
+			Attach( TilePoint, Hitokori );
 		}
 
 		private void OnRevert () {
 			TilePoint.WasHit = false;
 
-			Hit( TilePoint.Previous, Hitokori );
+			Attach( TilePoint.Previous, Hitokori );
 		}
 
-		private static void Hit ( TilePoint TilePoint, DrawableHitokori Hitokori ) {
+		private static void Attach ( TilePoint TilePoint, DrawableHitokori Hitokori ) {
 			if ( TilePoint.Parent == TilePoint.Next?.Parent ) {
 				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
 				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None );

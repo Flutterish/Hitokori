@@ -68,6 +68,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 
 		private void UpdateOffsets () {
+			// TODO ISSUE when rewinding time, camera is often far from the gameplay
 			var followTiles = Tiles.AliveObjects.OfType<HitokoriTile>()
 				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 

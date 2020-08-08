@@ -29,6 +29,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public double Angle;
 
+		public void RotateTo ( double angle ) {
+			double deltaTime = ( angle - Angle ) / Velocity;
+			if ( double.IsFinite( deltaTime ) ) {
+				if ( deltaTime < 0 ) {
+					Velocity = -Velocity;
+					InterpolateTrailTo( Clock.CurrentTime - deltaTime );
+					trailTimer = Clock.CurrentTime;
+					Velocity = -Velocity;
+				} else {
+					InterpolateTrailTo( Clock.CurrentTime + deltaTime );
+				}
+			}
+			Angle = angle;
+		}
+
 		new IHasTilePosition Parent;
 
 		public Orbital ( IHasTilePosition parent ) {
@@ -60,9 +75,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// </summary>
 		private double traiDuration = ( 1.0 / 240 ) * 100; // old behaviour is 100 update frames total, i was running on abt 240 of these
 		protected override void Update () {
-			if ( Clock.CurrentTime > trailTimer ) {
+			InterpolateTrailTo( Clock.CurrentTime );
+		}
+
+		private void InterpolateTrailTo ( double time ) {
+			if ( time > trailTimer ) {
 				double trailMSPV = traiDuration * 1000 / Trail.VerticeCount;
-				while ( trailTimer + trailMSPV < Clock.CurrentTime ) {
+				while ( trailTimer + trailMSPV < time ) {
 					trailTimer += trailMSPV; // interpolating the position
 					Angle = Velocity * ( trailTimer - startTime ) + startAngle;
 					Position = RotationVector * (float)Distance;
@@ -72,7 +91,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				}
 			} else {
 				// if time goes backward we dont want the trail to stop
-				trailTimer = Clock.CurrentTime;
+				trailTimer = time;
 			}
 
 			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
