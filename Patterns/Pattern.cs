@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Patterns {
-	public abstract class Pattern<TIn,TOut> {
+	public abstract class Pattern<TIn, TOut> {
 		public abstract RangeSelector<TIn> GetSelector ();
 		public abstract IEnumerable<TOut> Apply ( IEnumerable<TIn> selected );
 
@@ -12,5 +12,5 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 		public virtual bool IsUnique => true;
 	}
 
-	public abstract class Pattern<T> : Pattern<T,T> { }
+	public abstract class Pattern<T> : Pattern<T, T> { }
 }

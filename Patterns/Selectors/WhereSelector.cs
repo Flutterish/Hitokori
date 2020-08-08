@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Patterns.Selectors {
 	public class WhereSelector<T> : RangeSelector<T> {
-		Func<T,IEnumerable<T>,bool> Predicate;
+		Func<T, IEnumerable<T>, bool> Predicate;
 		RangeSelector<T> Source;
 
 		public WhereSelector ( Predicate<T> predicate, RangeSelector<T> source ) {

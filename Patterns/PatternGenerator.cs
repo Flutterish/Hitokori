@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 		public PatternGeneratorResult<T> Process ( IEnumerable<T> source ) {
 			List<T> elements = source.ToList();
 
-			var hash = new Dictionary<T,PatternItem<T>>();
+			var hash = new Dictionary<T, PatternItem<T>>();
 			foreach ( var i in elements ) {
 				hash.Add( i, new PatternItem<T>( i ) );
 			}

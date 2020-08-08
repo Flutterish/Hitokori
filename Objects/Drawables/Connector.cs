@@ -1,10 +1,8 @@
 ﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
-using osuTK.Audio.OpenAL;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	/// <summary>
@@ -54,7 +52,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		protected override void Update () {
 			if ( Progress.B >= 0.99 && Progress.A >= 0.99 ) { // TODO do it better. probably a container in main field will do
-				if  ( Line != null ) {
+				if ( Line != null ) {
 					Remove( Line );
 					Line.Dispose();
 					Line = null;

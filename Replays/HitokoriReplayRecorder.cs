@@ -1,13 +1,10 @@
 ﻿using osu.Game.Replays;
 using osu.Game.Rulesets.Hitokori.Settings;
-using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.UI;
 using osuTK;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayRecorder : ReplayRecorder<HitokoriAction> {

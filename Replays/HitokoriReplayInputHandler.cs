@@ -1,12 +1,9 @@
-﻿using Humanizer;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using osu.Framework.Input.StateChanges;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Replays;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayInputHandler : FramedReplayInputHandler<HitokoriReplayFrame> { // TODO: BUG replays broke backwards

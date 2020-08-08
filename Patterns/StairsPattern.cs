@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace osu.Game.Rulesets.Hitokori.Patterns {
 	public class StairsPattern : Pattern<HitokoriTileObject> {
 		public override RangeSelector<HitokoriTileObject> GetSelector ()
-			=> new WhereSelector<HitokoriTileObject>( 
+			=> new WhereSelector<HitokoriTileObject>(
 				x => x is TapTile tile
 				&& Math.Abs( tile.PressPoint.AngleOffset ) < Shape.Triangle.Angle()
 			);

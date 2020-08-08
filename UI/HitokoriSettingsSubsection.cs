@@ -4,7 +4,6 @@ using osu.Framework.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hitokori.Settings;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
@@ -20,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				new SettingsCheckboxWithTooltip {
 					LabelText = "Use \"A Dance of Fire and Ice\" style judgement text (in-game only)",
 					Bindable = config.GetBindable<bool>( HitokoriSetting.ADOFAIJudgement ),
-				
+
 					TooltipText = "Display \"Early\" and \"Late\" instead of \"Good\", \"Okay\" and \"Meh\""
 				},
 				new SettingsEnumDropdown<MissCorrectionMode> {

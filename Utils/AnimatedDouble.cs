@@ -1,8 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osuTK;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.Utils {
 	public class AnimatedDouble : Bindable<double> {

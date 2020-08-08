@@ -1,11 +1,9 @@
 ﻿using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Objects.Types;
-using osu.Game.Rulesets.Scoring;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			foreach ( var i in Points ) {
 				i.Dispose();
 			}
-			
+
 			Points.Clear();
 		}
 
@@ -75,7 +73,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		public void OnReleased ( HitokoriAction action ) {
-			
+
 		}
 	}
 }

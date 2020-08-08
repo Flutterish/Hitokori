@@ -3,7 +3,6 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Scoring;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty {
 	public class HitokoriPerformanceCalculator : PerformanceCalculator {

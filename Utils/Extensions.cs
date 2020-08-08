@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 		public static T Random<T> ( this IEnumerable<T> self )
 			=> self.Skip( random.Next( 0, self.Count() ) ).First();
 
-		public static void AddNewKeys<TA, TB> ( this Dictionary<TA, TB> self, IEnumerable<TA> keys, Func<TA,TB> items ) {
+		public static void AddNewKeys<TA, TB> ( this Dictionary<TA, TB> self, IEnumerable<TA> keys, Func<TA, TB> items ) {
 			foreach ( var key in keys ) {
 				if ( !self.ContainsKey( key ) ) self.Add( key, items( key ) );
 			}

@@ -1,17 +1,15 @@
 ﻿using osu.Framework.Graphics;
-using osu.Game.Audio;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using System;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTilePoint : DrawableHitokoriHitObject {
 		public TilePoint TilePoint;
-		public DrawableHitokori Hitokori => (Parent as HitokoriTile).Hitokori;
+		public DrawableHitokori Hitokori => ( Parent as HitokoriTile ).Hitokori;
 
 		public TileMarker Marker;
 

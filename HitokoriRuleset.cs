@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -20,6 +18,8 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osu.Game.Screens.Ranking.Statistics;
+using System;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public class HitokoriRuleset : Ruleset {

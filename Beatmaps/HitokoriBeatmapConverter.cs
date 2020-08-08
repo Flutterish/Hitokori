@@ -158,7 +158,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 				if ( last.Next != null ) {
 					processed = processed.Append( last.Next );
 				}
-				
+
 				ConnectHitObjects( processed );
 			};
 

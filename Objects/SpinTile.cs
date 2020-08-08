@@ -1,11 +1,8 @@
-﻿using osu.Framework.Extensions.IEnumerableExtensions;
-using osu.Game.Audio;
-using osu.Game.Rulesets.Hitokori.Objects.Base;
+﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Objects.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	public class SpinTile : HitokoriTileObject, IHasDuration {
@@ -23,17 +20,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 		}
 		private double releaseTime;
-		public double EndTime { 
-			get => releaseTime; 
+		public double EndTime {
+			get => releaseTime;
 			set {
 				releaseTime = value;
 				RegenTiles();
 			}
 		}
 
-		public double Duration { 
-			get => EndTime - StartTime; 
-			set => EndTime = StartTime + value; 
+		public double Duration {
+			get => EndTime - StartTime;
+			set => EndTime = StartTime + value;
 		}
 
 		private int tileAmout = 2;

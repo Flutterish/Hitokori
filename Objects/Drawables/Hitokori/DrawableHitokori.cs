@@ -14,8 +14,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public Radius Radius;
 
 		private Orbital active;
-		public Orbital Active { 
-			get => active; 
+		public Orbital Active {
+			get => active;
 			private set {
 				if ( value != null && Active != null ) {
 					LastActive = Active;

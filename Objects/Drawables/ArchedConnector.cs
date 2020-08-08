@@ -63,7 +63,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 			return Math.Max( 700, duration );
 		}
-		
+
 		public double Disappear ( double duration ) {
 			Disconnect( duration );
 

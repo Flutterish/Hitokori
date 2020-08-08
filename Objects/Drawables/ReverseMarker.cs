@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				Colour = Colour4.Yellow
 			}.Center();
 
-			if ( !(ToClockwise = toClockwise) ) InternalChild.Scale = new osuTK.Vector2( -1, 1 );
+			if ( !( ToClockwise = toClockwise ) ) InternalChild.Scale = new osuTK.Vector2( -1, 1 );
 		}
 
 		public void Spin () {

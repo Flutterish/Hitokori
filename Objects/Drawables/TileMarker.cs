@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
@@ -92,7 +91,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		// ----------------
 
 		public void Reverse ( bool isClockwise ) {
-			AddInternal( 
+			AddInternal(
 				ReverseMarker = new ReverseMarker( isClockwise ) { Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ) }.Center()
 			);
 		}

@@ -85,7 +85,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			return TimeHitWindows.CanBeHit( TimeOffsetAt( time ) ) || AngleHitWindows.CanBeHit( AngleOffsetAt( time ) );
 		}
 		public HitResult ResultAt ( double time ) {
-			return TimeHitWindows.ResultFor(TimeOffsetAt( time ) ).OrBetter( AngleHitWindows.ResultFor( AngleOffsetAt( time ) ) );
+			return TimeHitWindows.ResultFor( TimeOffsetAt( time ) ).OrBetter( AngleHitWindows.ResultFor( AngleOffsetAt( time ) ) );
 		}
 		public bool IgnoresInputAt ( double time ) {
 			return time < Previous.HitTime || TimeOffsetAt( time ) < -Math.Max( TimeHitWindows.WindowFor( HitResult.Meh ), AngleHitWindows.WindowFor( HitResult.Meh ) / Previous.Speed );
@@ -102,7 +102,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI ), (float)Math.Sin( InAngle + Math.PI ) ) * (float)Distance; // because we are not going straight on
 					else
 						throw new InvalidOperationException( "No suitable rotation origin" ); // TODO do it anyway ( with dynamic distance )
-					
+
 					isPositionCached = true;
 				}
 

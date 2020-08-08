@@ -3,7 +3,6 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTapTile : HitokoriTile, IKeyBindingHandler<HitokoriAction> {
@@ -45,7 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		public void OnReleased ( HitokoriAction action ) {
-			
+
 		}
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
@@ -61,7 +60,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void ClearNestedHitObjects () {
 			PressPoint.Dispose();
-			
+
 			PressPoint = null;
 		}
 	}

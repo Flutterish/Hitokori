@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 				HitResult.Perfect => 300,
 				HitResult.Good => 100,
 				HitResult.Meh => 50,
-			
+
 				_ => 0
 			};
 		}

@@ -15,17 +15,17 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriDrawableRuleset : DrawableRuleset<HitokoriHitObject> {
 		public HitokoriDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null ) : base( ruleset, beatmap, mods ) { }
 
-        public override DrawableHitObject<HitokoriHitObject> CreateDrawableRepresentation ( HitokoriHitObject h )
-            => h.AsDrawable();
+		public override DrawableHitObject<HitokoriHitObject> CreateDrawableRepresentation ( HitokoriHitObject h )
+			=> h.AsDrawable();
 
-        protected override PassThroughInputManager CreateInputManager ()
-            => new HitokoriInputManager( Ruleset.RulesetInfo, 0, Framework.Input.Bindings.SimultaneousBindingMode.Unique );
+		protected override PassThroughInputManager CreateInputManager ()
+			=> new HitokoriInputManager( Ruleset.RulesetInfo, 0, Framework.Input.Bindings.SimultaneousBindingMode.Unique );
 
 		protected override ReplayInputHandler CreateReplayInputHandler ( Replay replay )
 			=> new HitokoriReplayInputHandler( replay );
 
 		protected override Playfield CreatePlayfield ()
-            => new HitokoriPlayfield( Mods.Any( x => x is HitokoriModAuto ) );
+			=> new HitokoriPlayfield( Mods.Any( x => x is HitokoriModAuto ) );
 
 		protected override ReplayRecorder CreateReplayRecorder ( Replay replay )
 			=> new HitokoriReplayRecorder( replay );

@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 
 			foreach ( TapTile tile in selected ) {
 				tiles.Add( tile );
-				tiles.Add( new TapTile { 
+				tiles.Add( new TapTile {
 					Samples = tile.Samples,
 					PressTime = ( tile.PressTime + ( tile.Next as TapTile ).PressTime ) / 2
 				} );

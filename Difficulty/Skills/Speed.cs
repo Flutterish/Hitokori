@@ -1,8 +1,6 @@
 ﻿using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 	public class Speed : Skill {
