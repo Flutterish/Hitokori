@@ -53,10 +53,22 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void Update () {
-			if ( Line != null && Progress.B >= 0.99 && Progress.A >= 0.99 ) { // TODO do it better. probably a container in main field will do
-				Remove( Line );
-				Line.Dispose();
-				Line = null;
+			if ( Progress.B >= 0.99 && Progress.A >= 0.99 ) { // TODO do it better. probably a container in main field will do
+				if  ( Line != null ) {
+					Remove( Line );
+					Line.Dispose();
+					Line = null;
+				}
+			} else if ( Line is null ) {
+				InternalChildren = new Drawable[] {
+				Line = new Path {
+						PathRadius = HitokoriTile.SIZE / 8f,
+						Alpha = (float)Alpha,
+						Depth = 100
+					}
+				};
+				Line.Anchor = Anchor.TopLeft;
+				Line.Origin = Anchor.TopLeft;
 			}
 		}
 

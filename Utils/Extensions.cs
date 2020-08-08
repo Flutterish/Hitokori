@@ -65,8 +65,13 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			=> self.Aggregate( Vector2.Zero, ( a, b ) => a + b );
 
 		public static Vector2 Average<T> ( this IEnumerable<T> self, Func<T, Vector2> selector )
-			=> self.Sum( selector ) / self.Count();
+			=> self.Sum( selector ) / Math.Max( self.Count(), 1 );
 		public static Vector2 Average ( this IEnumerable<Vector2> self )
-			=> self.Sum() / self.Count();
+			=> self.Sum() / Math.Max( self.Count(), 1 );
+
+		public static Vector2 AverageOr<T> ( this IEnumerable<T> self, Func<T, Vector2> selector, Vector2 or )
+			=> self.Any() ? Average( self, selector ) : or;
+		public static Vector2 AverageOr ( this IEnumerable<Vector2> self, Vector2 or )
+			=> self.Any() ? Average( self ) : or;
 	}
 }

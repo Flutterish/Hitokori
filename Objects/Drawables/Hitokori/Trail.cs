@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class Trail : Container { // TODO trails should interpolate angles so they dont jump an a late/early input
+	public class Trail : Container {
 		public Path Line;
 		public Vector2 Offset;
 		LoopingList<Vector2> vertices = new LoopingList<Vector2>( 100 ); // TODO make trails shorten towards the end

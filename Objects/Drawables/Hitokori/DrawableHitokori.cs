@@ -96,8 +96,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double duration = endTime - startTime;
 			double actualDuration = endTime - Clock.CurrentTime;
 
-			// "messed with" maps with overlapping notes have negative duration. This is to make them not teleport
-			if ( ( duration >= -50 && duration <= 0 ) || ( actualDuration >= -50 && actualDuration <= 0 ) ) {
+			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
 				Hi.Velocity = 0;
 				Kori.Velocity = 0;
@@ -124,8 +123,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double duration = endTime - startTime;
 			double actualDuration = endTime - Clock.CurrentTime;
 
-			// TODO: HACK "messed with" maps with overlapping notes have negative duration. This is a hack to make them not teleport
-			if ( ( duration >= -50 && duration <= 0 ) || ( actualDuration >= -50 && actualDuration <= 0 ) ) {
+			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
 				Hi.Velocity = 0;
 				Kori.Velocity = 0;

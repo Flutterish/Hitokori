@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
 
 		HitokoriAction? HoldButton;
-		public bool OnPressed ( HitokoriAction action ) { // TODO beatmaps that have a hold tile last end prematurely
+		public bool OnPressed ( HitokoriAction action ) { // TODO BUG beatmaps that have a hold tile last end prematurely
 			if ( Tile.StartPoint.IsNext ) {
 				BeginHold( action );
 				return true;
@@ -106,16 +106,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				StartPoint.Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition;
 				StartPoint.Marker.ConnectFrom( Tile.StartPoint.Previous );
 
-				StartPoint.OnNewResult += ( a, b ) => {
+				StartPoint.OnNewResult += ( a, b ) => { // TODO BUG when rewound the first tile gets missed when the previous tap tile is hit, in general
 					SendAutoClickEvent( AutoClickType.Down );
 
-					if ( b.Type == HitResult.Miss ) {
-						ReleaseMissed = true;
-					}
+					ReleaseMissed = b.Type == HitResult.Miss;
+				};
+				StartPoint.OnRevertResult += ( a, b ) => {
+					HoldButton = null;
+					ReleaseMissed = false;
 				};
 			} else if ( tile.TilePoint == Tile.EndPoint ) {
 				AddInternal( EndPoint = tile );
-				EndPoint.OnNewResult += ( a, b ) => SendAutoClickEvent( AutoClickType.Up );
+				EndPoint.OnNewResult += ( a, b ) => {
+					SendAutoClickEvent( AutoClickType.Up );
+				};
 			}
 		}
 

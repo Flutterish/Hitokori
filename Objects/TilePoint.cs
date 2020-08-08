@@ -11,9 +11,9 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate everything recursively with children ( for animated/rotating tiles )
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
-		public bool IsAuto;
+		//public bool IsAuto;
 		public bool WasHit;
-		public bool IsNext // TODO: move to DrawableTilePoint based on if result is set
+		public bool IsNext
 			=> !WasHit && Previous.WasHit;
 
 		/// <summary>

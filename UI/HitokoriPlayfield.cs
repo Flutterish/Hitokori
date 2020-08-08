@@ -14,8 +14,10 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
+using osuTK;
 using SixLabors.ImageSharp.Formats;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
@@ -66,14 +68,15 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 
 		private void UpdateOffsets () {
-			var all = Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori );
+			var followTiles = Tiles.AliveObjects.OfType<HitokoriTile>()
+				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 
 			if ( FollowMode.Value == CameraFollowMode.Smooth ) {
-				var averagePosition = ( all.Average( x => x.TilePosition ) + Hitokori.TilePosition ) / 2;
+				var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
 				CameraPosition.AnimateTo( averagePosition, CameraSpeed.Value );
 			}
 
-			foreach ( var tile in all ) {
+			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori ) ) {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;
 			}
 		}
@@ -131,8 +134,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		private void OnTileResult ( DrawableHitObject obj, JudgementResult result ) {
 			if ( obj is HitokoriTile tile ) {
-				tile.OnNewResult -= OnTileResult;
-
 				if ( FollowMode.Value == CameraFollowMode.Dynamic ) {
 					CameraPosition.AnimateTo( Hitokori.TilePosition, CameraSpeed.Value );
 				}

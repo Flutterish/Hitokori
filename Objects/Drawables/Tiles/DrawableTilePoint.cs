@@ -29,9 +29,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			}
 
 			OnNewResult += ( x, y ) => OnHit();
-			OnRevertResult += ( x, y ) => {
-				TilePoint.WasHit = false;
-			};
+			OnRevertResult += ( x, y ) => OnRevert();
 		}
 
 		protected override void UpdateInitialTransforms () {
@@ -86,6 +84,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		private void OnHit () {
+			TilePoint.WasHit = true;
+
+			Hit( TilePoint, Hitokori );
+		}
+
+		private void OnRevert () {
+			TilePoint.WasHit = false;
+
+			Hit( TilePoint.Previous, Hitokori );
+		}
+
+		private static void Hit ( TilePoint TilePoint, DrawableHitokori Hitokori ) {
 			if ( TilePoint.Parent == TilePoint.Next?.Parent ) {
 				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
 				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None );

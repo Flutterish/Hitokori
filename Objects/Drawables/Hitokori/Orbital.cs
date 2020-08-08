@@ -60,20 +60,25 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// </summary>
 		private double traiDuration = ( 1.0 / 240 ) * 100; // old behaviour is 100 update frames total, i was running on abt 240 of these
 		protected override void Update () {
-			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
-			Position = RotationVector * (float)Distance;
-
-			Trail.Offset = Parent.TilePosition + Position;
 			if ( Clock.CurrentTime > trailTimer ) {
 				double trailMSPV = traiDuration * 1000 / Trail.VerticeCount;
 				while ( trailTimer + trailMSPV < Clock.CurrentTime ) {
+					trailTimer += trailMSPV; // interpolating the position
+					Angle = Velocity * ( trailTimer - startTime ) + startAngle;
+					Position = RotationVector * (float)Distance;
+
+					Trail.Offset = Parent.TilePosition + Position;
 					Trail.AddVertice( Trail.Offset );
-					trailTimer += trailMSPV;
 				}
 			} else {
 				// if time goes backward we dont want the trail to stop
 				trailTimer = Clock.CurrentTime;
 			}
+
+			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
+			Position = RotationVector * (float)Distance;
+
+			Trail.Offset = Parent.TilePosition + Position;
 		}
 	}
 }
