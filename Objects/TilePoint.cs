@@ -11,8 +11,9 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate everything recursively with children ( for animated/rotating tiles )
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
-		//public bool IsAuto;
 		public bool WasHit;
+		public bool useTripletAngles;
+		public double TripletOffset => ( useTripletAngles ? ( Math.PI / 3 ) : 0 );
 		public bool IsNext
 			=> !WasHit && Previous.WasHit;
 
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		public double Distance = 1;
 
 		public const double MAX_ANGLE = Math.PI * 1.75;
-		public const double BEAT_STRETCH = Math.PI;
+		public double BEAT_STRETCH => useTripletAngles ? ( Math.PI * 2 / 3 ) : Math.PI;
 
 		public double BPMS;
 		public double HitTime {
@@ -57,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			get {
 				if ( !isOutAngleCached ) {
 					if ( Parent == Previous )
-						cachedOutAngle = InAngle + AngleFromStraight;
+						cachedOutAngle = InAngle + AngleFromStraight + TripletOffset;
 					else if ( Parent == Previous.Parent )
 						cachedOutAngle = InAngle + AngleOffset;
 					else
@@ -99,7 +100,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 					if ( Parent == Previous )
 						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle ), (float)Math.Sin( InAngle ) ) * (float)Distance;
 					else if ( Parent == Previous.Parent )
-						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI ), (float)Math.Sin( InAngle + Math.PI ) ) * (float)Distance; // because we are not going straight on
+						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI - TripletOffset ), (float)Math.Sin( InAngle + Math.PI - TripletOffset ) ) * (float)Distance; // because we are not going straight on
 					else
 						throw new InvalidOperationException( "No suitable rotation origin" ); // TODO do it anyway ( with dynamic distance )
 
@@ -112,6 +113,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		public Vector2 TilePosition
 			=> NormalizedTilePosition * HitokoriTile.SPACING;
 
+		public void Refresh () {
+			isOutAngleCached = false;
+			isPositionCached = false;
+		}
 
 		/// <summary>
 		/// ( Unsigned ) Speed in radians per millisecond

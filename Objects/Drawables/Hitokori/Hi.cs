@@ -4,17 +4,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class Hi : Orbital {
-		public Hi ( IHasTilePosition parent, Radius radius ) : base( parent, radius ) {
-			AddInternal(
-				new Circle {
-					Width = HitokoriTile.SIZE * 2,
-					Height = HitokoriTile.SIZE * 2,
-					Colour = Color4.Red
-				}.Center()
-			);
-
-			Trail.Colour = Color4.Red;
-		}
+	public class Hi : StandardOrbital {
+		public Hi ( IHasTilePosition parent, Radius radius ) : base( parent, radius, Color4.Red ) { }
 	}
 }

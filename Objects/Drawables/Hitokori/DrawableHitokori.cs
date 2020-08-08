@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
@@ -11,6 +12,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
@@ -18,17 +20,29 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public List<Orbital> Orbitals = new List<Orbital>();
 		private int OrbitalIndex;
 		private Orbital lastOrbital;
+
 		private Orbital NextOrbital {
 			get {
-				return lastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
+				lastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
+
+				FirstFreeOrbital.MakeImportant();
+				lastOrbital.RevokeImportant();
+
+				return lastOrbital;
 			}
 		}
+		private Orbital FirstFreeOrbital => Orbitals[ ( OrbitalIndex + 1 ) % Orbitals.Count ];
 		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != lastOrbital );
+		bool Triplets;
 
 		public void AddTriplet () {
+			if ( Triplets ) return;
+
 			var triplet = new TheUnwantedChild( this, Radius ).Center();
 			Orbitals.Add( triplet );
 			AddInternal( triplet );
+
+			Triplets = true;
 		}
 
 
@@ -69,7 +83,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				NextOrbital.Hold();
 			}
 
-			RotateTo( previousTargetRotation - Math.PI );
+			if ( Triplets ) {
+				RotateTo( previousTargetRotation - ( Math.PI - TripletAngle ) );
+			}
+			else {
+				RotateTo( previousTargetRotation - Math.PI );
+			}
 		}
 
 		/// <summary>
@@ -92,6 +111,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			double duration = endTime - startTime;
 			double actualDuration = endTime - Clock.CurrentTime;
+
+			if ( Triplets ) target = ConvertToTripletAngle( target );
 
 			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
@@ -118,6 +139,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double duration = endTime - startTime;
 			double actualDuration = endTime - Clock.CurrentTime;
 
+			if ( Triplets ) target = ConvertToTripletAngle( target );
+
 			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
 				Orbitals.ForEach( x => x.Velocity = 0 );
@@ -135,9 +158,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			previousTargetRotation = target;
 		}
 
+		private double ConvertToTripletAngle ( double angle ) {
+			return angle - TripletAngle;
+		}
+
 		/// <summary>
 		/// Rotates the Hitokori from interpolated start angle to <paramref name="target"/>
 		/// </summary>
+		/// <param name="tileIndex">TileIndex is used to correct rotation for triplets</param>
 		/// <param name="target">The target in radians</param>
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
@@ -163,13 +191,30 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			previousTargetRotation = target;
 
 			Orbitals.ForEach( x => x.Angle = target );
+			if ( Triplets ) { // if yall want to find a generic formula, for for it
+				FirstFreeOrbital.Angle += TripletAngle;
+			}
 		}
 
 		public void RotateToWithInterpolation ( double target ) {
 			previousTargetRotation = target;
 
-			Orbitals.ForEach( x => x.RotateTo( target ) );
+			if ( Triplets ) { // if yall want to find a generic formula, for for it
+				foreach ( var x in Orbitals ) {
+					if ( x == FirstFreeOrbital ) {
+						x.RotateTo( target + TripletAngle );
+					}
+					else {
+						x.RotateTo( target );
+					}
+				}
+			}
+			else {
+				Orbitals.ForEach( x => x.RotateTo( target ) );
+			}
 		}
+
+		const double TripletAngle = Math.PI / 3;
 
 		/// <summary>
 		/// Instantly rotates to the target rotation

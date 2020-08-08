@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 
-namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
+namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori { // TODO add sparkels when held
 	public abstract class Orbital : Container {
 		public Trail Trail;
 
@@ -96,5 +96,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			Trail.Offset = Parent.TilePosition + Position;
 		}
+
+		public abstract void MakeImportant ();
+		public abstract void RevokeImportant ();
 	}
 }
