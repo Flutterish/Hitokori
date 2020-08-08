@@ -5,7 +5,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class Hi : Orbital {
-		public Hi ( IHasTilePosition parent ) : base( parent ) {
+		public Hi ( IHasTilePosition parent, Radius radius ) : base( parent, radius ) {
 			AddInternal(
 				new Circle {
 					Width = HitokoriTile.SIZE * 2,

@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayInputHandler( replay );
 
 		protected override Playfield CreatePlayfield ()
-			=> new HitokoriPlayfield( Mods.Any( x => x is HitokoriModAuto ) );
+			=> new HitokoriPlayfield( Mods.Any( x => x is HitokoriModAuto ), Mods.Any( X => X is HitokoriModTriplets ) );
 
 		protected override ReplayRecorder CreateReplayRecorder ( Replay replay )
 			=> new HitokoriReplayRecorder( replay );

@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public readonly DrawableHitokori Hitokori;
 
 		Bot AutoBot;
-		public HitokoriPlayfield ( bool auto ) {
+		public HitokoriPlayfield ( bool auto, bool triplets ) {
 			CameraPosition = new AnimatedVector( parent: this );
 
 			InternalChildren = new Drawable[] {
@@ -42,6 +42,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					Anchor = Anchor.BottomLeft,
 					Origin = Anchor.Centre
 				} );
+			}
+
+			if ( triplets ) {
+				Hitokori.AddTriplet();
 			}
 		}
 

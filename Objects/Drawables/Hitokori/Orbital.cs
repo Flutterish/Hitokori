@@ -10,7 +10,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public abstract class Orbital : Container {
 		public Trail Trail;
 
-		public AnimatedDouble Distance;
+		Radius Radius;
+		bool isCentered = false;
+		public double Distance => isCentered ? 0 : Radius.Length;
 
 		/// <summary>
 		/// Velocity in radians per millisecond
@@ -46,24 +48,19 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		new IHasTilePosition Parent;
 
-		public Orbital ( IHasTilePosition parent ) {
+		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );
-
-			Distance = new AnimatedDouble( parent: this );
+			Radius = radius;
 
 			Parent = parent;
 		}
 
 		public void Hold () {
-			Distance.Value = 0;
+			isCentered = true;
 		}
 
-		public void Release ( double? distance = null ) {
-			Distance.Value = distance ?? DrawableTapTile.SPACING;
-		}
-
-		public void AnimateDistance ( double distance, double duration, Easing easing ) {
-			Distance.AnimateTo( distance, duration, easing );
+		public void Release () {
+			isCentered = false;
 		}
 
 		public Vector2 RotationVector

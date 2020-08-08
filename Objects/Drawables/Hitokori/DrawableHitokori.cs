@@ -1,5 +1,7 @@
-﻿using osu.Framework.Allocation;
+﻿using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
@@ -8,34 +10,44 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class DrawableHitokori : Container, IHasTilePosition { // TODO prep for n orbitals
-		public Radius Radius;
-
-		private Orbital active;
-		public Orbital Active {
-			get => active;
-			private set {
-				if ( value != null && Active != null ) {
-					LastActive = Active;
-				}
-				active = value;
+	public class DrawableHitokori : Container, IHasTilePosition {
+		public List<Orbital> Orbitals = new List<Orbital>();
+		private int OrbitalIndex;
+		private Orbital lastOrbital;
+		private Orbital NextOrbital {
+			get {
+				return lastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
 			}
 		}
-		public Orbital Inactive => ( Active == Hi ) ? Kori : Hi;
-		public Orbital LastActive { get; private set; }
-		public Orbital Hi;
-		public Orbital Kori;
+		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != lastOrbital );
+
+		public void AddTriplet () {
+			var triplet = new TheUnwantedChild( this, Radius ).Center();
+			Orbitals.Add( triplet );
+			AddInternal( triplet );
+		}
+
+
+		public Radius Radius;
+
+		public Orbital Hi { get; set; }
+		public Orbital Kori { get; set; }
 
 		public DrawableHitokori () {
 			TilePosition = InitialPosition;
 
 			InternalChildren = new Drawable[] {
 				Radius = new Radius { Depth = 1 }.Center(),
-				Hi = new Hi( this ).Center(),
-				Kori = new Kori( this ).Center()
+				Hi = new Hi( this, Radius ).Center(),
+				Kori = new Kori( this, Radius ).Center()
 			};
+
+			Orbitals.Add( Hi );
+			Orbitals.Add( Kori );
 		}
 
 		public double EndTime { get; private set; }
@@ -45,17 +57,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			TilePosition = hit.TilePosition;
 			RotateTo( hit.OutAngle, hit.HitTime, hit.HitTime + hit.Duration );
-			AnimateDistance( Active, duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 ), easing: Easing.None );
+			AnimateDistance( duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 ), easing: Easing.None );
 		}
 
 		public void Swap () {
-			if ( Active is null ) {
-				AnimateDistance( Hi );
+			if ( lastOrbital is null ) {
+				NextOrbital.Hold();
+				FreeOrbitals.ForEach( x => x.Release() );
 			} else {
-				Inactive.Release( Active.Distance );
-				Active.Hold();
-
-				Active = Inactive;
+				lastOrbital.Release();
+				NextOrbital.Hold();
 			}
 
 			RotateTo( previousTargetRotation - Math.PI );
@@ -64,29 +75,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// <summary>
 		/// When contracted, expands radius using the given <see cref="Orbital"/> ( the last active one by default )
 		/// </summary>
-		public void AnimateDistance ( Orbital orbital = null, double duration = 500, double distance = DrawableTapTile.SPACING, Easing easing = Easing.InOutCubic ) {
-			if ( orbital is null ) orbital = LastActive;
-
-			Active = orbital;
-			Active.AnimateDistance( distance, Math.Max( duration, 0 ), easing );
-
+		public void AnimateDistance ( double duration = 500, double distance = DrawableTapTile.SPACING, Easing easing = Easing.InOutCubic ) {
 			Radius.AnimateDistance( distance, Math.Max( duration, 0 ), easing );
 		}
 
-		public void Expand ( Orbital orbital = null, double duration = 500, Easing easing = Easing.InOutCubic )
-			=> AnimateDistance( orbital, duration, easing: easing );
+		public void Expand ( double duration = 500, Easing easing = Easing.InOutCubic )
+			=> AnimateDistance( duration, easing: easing );
 
 		public void Contract ( double duration = 500, Easing easing = Easing.InOutCubic ) {
-			if ( Active is null ) return;
-
-			ChangeChildDepth( Active, 1 );
-			ChangeChildDepth( Inactive, -1 );
-
-			Active.MoveTo( Vector2.Zero, duration, easing );
-			Active.AnimateDistance( 0, duration, easing );
 			Radius.AnimateDistance( 0, duration, easing );
-
-			Active = null;
 		}
 
 		private double previousTargetRotation;
@@ -98,8 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
-				Hi.Velocity = 0;
-				Kori.Velocity = 0;
+				Orbitals.ForEach( x => x.Velocity = 0 );
 				return;
 			}
 
@@ -111,8 +107,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double angleOffset = leadupTime * velocity;
 			RotateToWithInterpolation( startAngle - angleOffset );
 
-			Hi.Velocity = velocity;
-			Kori.Velocity = velocity;
+			Orbitals.ForEach( x => x.Velocity = velocity );
 
 			previousTargetRotation = target;
 		}
@@ -125,19 +120,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			if ( duration == 0 || actualDuration == 0 ) {
 				RotateTo( target );
-				Hi.Velocity = 0;
-				Kori.Velocity = 0;
+				Orbitals.ForEach( x => x.Velocity = 0 );
 				return;
 			}
 
-			double angleOffset = Hi.Angle - previousTargetRotation;
+			double angleOffset = lastOrbital.Angle - previousTargetRotation;
 			double startAngle = previousTargetRotation - angleOffset;
 
 			RotateToWithInterpolation( startAngle );
 			double velocity = ( target - startAngle ) / actualDuration;
 
-			Hi.Velocity = velocity;
-			Kori.Velocity = velocity;
+			Orbitals.ForEach( x => x.Velocity = velocity );
 
 			previousTargetRotation = target;
 		}
@@ -169,15 +162,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public void RotateTo ( double target ) {
 			previousTargetRotation = target;
 
-			Hi.Angle = target;
-			Kori.Angle = target;
+			Orbitals.ForEach( x => x.Angle = target );
 		}
 
 		public void RotateToWithInterpolation ( double target ) {
 			previousTargetRotation = target;
 
-			Hi.RotateTo( target );
-			Kori.RotateTo( target );
+			Orbitals.ForEach( x => x.RotateTo( target ) );
 		}
 
 		/// <summary>
@@ -190,10 +181,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public Vector2 TilePosition { get; private set; }
 		public static readonly Vector2 InitialPosition = Vector2.Zero;
 
-		public Vector2 ActiveOffset
-			=> ( Active is null ) ? Vector2.Zero : Active.Position;
-		public Vector2 ActivePosition
-			=> TilePosition + ActiveOffset;
 		public Vector2 HiOffset => Hi.Position;
 		public Vector2 KoriOffset => Kori.Position;
 
