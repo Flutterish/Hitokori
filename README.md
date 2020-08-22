@@ -11,7 +11,7 @@ Hitokori offers a variety of mods to spice up gameplay. Most of them are the sam
     - Add spin tiles
     - Remove overlapping tiles
 * `Reverse Spin` - Makes the whole playfiels spin
-* `Triplets` - Play with 3 orbitals
+* `Triplets` - Play with 3 orbitals ( removing hold tiles is recommended )
 
 # Demonstration video ( 0.9 )
 [Watch it on youtube!](https://www.youtube.com/watch?v=CD8K3mGTlO4&feature=youtu.be)
