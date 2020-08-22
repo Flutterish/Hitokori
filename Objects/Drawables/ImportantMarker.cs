@@ -6,7 +6,7 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class ImportantMarker : Container { // TODO important marker can overlap reverse marker
+	public class ImportantMarker : Container { // BUG important marker can overlap reverse marker
 		TickSize TickSize;
 		public ImportantMarker ( TickSize size ) {
 			TickSize = size;

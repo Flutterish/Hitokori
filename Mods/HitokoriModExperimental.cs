@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			( beatmapConverter as HitokoriBeatmapConverter ).NoUnhitable = RemoveUnhitable.Value;
 		}
 
-		public override string SettingDescription { // TODO: BUG "no mods" is always displayed on the leaderboard. on lazer's side.
+		public override string SettingDescription { // BUG "no mods" is always displayed on the leaderboard. on lazer's side.
 			get {
 				string removeHolds = RemoveHoldTiles.Value ? "Holds -> 2 Taps" : string.Empty;
 				string makeSpins = GenerateSpinTiles.Value ? "Streams -> Spins" : string.Empty;

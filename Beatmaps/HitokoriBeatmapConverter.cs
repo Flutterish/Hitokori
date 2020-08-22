@@ -182,7 +182,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			}
 		}
 
-		void GenerateBreaks ( HitokoriBeatmap Beatmap ) { // TODO: BUG doubleTile mod breaks break generation? Idk it it works at all tbh
+		void GenerateBreaks ( HitokoriBeatmap Beatmap ) { // BUG doubleTile mod breaks break generation? Idk it it works at all tbh
 			List<BreakPeriod> breaks = new List<BreakPeriod>();
 
 			foreach ( var i in Beatmap.HitObjects.OfType<HitokoriTileObject>() ) {

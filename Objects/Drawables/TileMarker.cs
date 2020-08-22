@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 		// or
 		public double Miss () {
-			Circle.ScaleTo( new Vector2( 2 ), 700 ) // TODO shake?
+			Circle.ScaleTo( new Vector2( 2 ), 700 )
 				.FadeColour( Colour4.Red, 700 )
 				.FadeOut( 700 );
 
