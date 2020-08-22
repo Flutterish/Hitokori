@@ -125,6 +125,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			RotateToWithInterpolation( startAngle - angleOffset );
 
 			Orbitals.ForEach( x => x.Velocity = velocity );
+			Velocity = velocity;
 
 			previousTargetRotation = target;
 		}
@@ -150,6 +151,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double velocity = ( target - startAngle ) / actualDuration;
 
 			Orbitals.ForEach( x => x.Velocity = velocity );
+			Velocity = velocity;
 
 			previousTargetRotation = target;
 		}
@@ -232,19 +234,23 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			CorrectionMode = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode );
 		}
 
-		public double StableAngle {
-			get {
-				if ( Triplets ) {
-					double offset = OrbitalIndex switch {
-						/* Hi   */ 0 => 0,
-						/* Kori */ 1 => Math.PI * 4 / 3,
-						           _ => Math.PI
-					}; // dont ask why these values i Dont kn o w
+		private double velocity;
+		private double startTime;
+		private double startAngle;
+		private double Velocity {
+			get => velocity;
+			set {
+				startAngle = StableAngle;
+				startTime = Clock.CurrentTime;
+				velocity = value;
+			}
+		}
 
-					return ( Hi.Angle - offset ).ToDegrees();
-				} else {
-					return ( Hi.Angle + ( ( LastOrbital == Hi ) ? Math.PI : 0 ) ).ToDegrees();
-				}
+		public double StableAngle {
+			get => startAngle + ( Clock.CurrentTime - startTime ) * Velocity;
+			private set {
+				startTime = Clock.CurrentTime;
+				startAngle = value;
 			}
 		}
 	}

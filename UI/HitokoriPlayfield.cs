@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		Bindable<CameraFollowMode> FollowMode = new Bindable<CameraFollowMode>();
 		Bindable<double> CameraSpeed = new Bindable<double>( 300 );
 
-		Container Everything;
+		public readonly Container Everything;
 
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
@@ -72,7 +72,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			}
 
 			if ( reverseSpin ) {
-				Everything.Rotation = (float)-Hitokori.StableAngle;
+				Everything.Rotation = -Hitokori.StableAngle.ToDegreesF() * 0.7f;
 			} else {
 				Everything.Rotation = 0;
 			}
