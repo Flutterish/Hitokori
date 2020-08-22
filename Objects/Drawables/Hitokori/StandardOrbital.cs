@@ -71,12 +71,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				sparkle.angularVelocity = starRandomizer.Next( -200, 200 );
 
 				Playfield.SFX.Add( sparkle );
-				if ( isHolding ) { // BUG: cant use 1 formula for both as the tap tile one for some reason thinks its where the previous tile was
-					sparkle.Position = Playfield.Everything.ToParentSpace( Hitokori.Position + Position ) - Playfield.LayoutSize / 2;
-				}
-				else {
-					sparkle.Position = Playfield.Everything.ToParentSpace( Hitokori.Position - RotationVector * (float)Radius.Length ) - Playfield.LayoutSize / 2;
-				}
+				sparkle.Position = Playfield.Everything.ToParentSpace( Hitokori.Position + Position ) - Playfield.LayoutSize / 2;
 			}
 		}
 

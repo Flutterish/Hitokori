@@ -132,17 +132,14 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			switch ( type ) {
 				case AutoClickType.Down:
 					AutoBot?.Hold();
-					Hitokori.OnHold();
 					break;
 
 				case AutoClickType.Up:
 					AutoBot?.Release();
-					Hitokori.OnRelease();
 					break;
 
 				case AutoClickType.Press:
 					AutoBot?.Press();
-					Hitokori.OnPress();
 					break;
 			}
 		}

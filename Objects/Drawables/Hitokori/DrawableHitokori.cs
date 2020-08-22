@@ -256,7 +256,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public void OnPress () {
 			held?.OnRelease();
-			LastOrbital.OnPress();
+
+			FirstFreeOrbital.OnPress();
 		}
 
 		private Orbital held;

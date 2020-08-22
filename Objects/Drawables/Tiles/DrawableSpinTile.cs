@@ -66,6 +66,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			var next = Points.FirstOrDefault( x => x.TilePoint.IsNext );
 
 			if ( next != null ) {
+				Hitokori.OnPress();
 				next.TryToHit();
 				return true;
 			}

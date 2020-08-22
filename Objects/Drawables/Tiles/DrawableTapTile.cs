@@ -37,6 +37,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		public bool OnPressed ( HitokoriAction action ) {
 			if ( Tile.PressPoint.IsNext ) {
+				Hitokori.OnPress();
 				PressPoint.TryToHit();
 				return true;
 			}
