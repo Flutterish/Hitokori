@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				AddInternal( PressPoint = tile );
 				PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
 
-				PressPoint.OnNewResult += ( a, b ) => SendAutoClickEvent();
+				PressPoint.OnNewResult += ( a, b ) => SendClickEvent();
 			}
 		}
 

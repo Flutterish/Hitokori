@@ -24,6 +24,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		Bindable<double> CameraSpeed = new Bindable<double>( 300 );
 
 		public readonly Container Everything;
+		public readonly Container SFX;
 
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
@@ -37,7 +38,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			CameraPosition = new AnimatedVector( parent: this );
 
 			InternalChildren = new Drawable[] {
-				Everything = new Container().Center()
+				Everything = new Container().Center(),
+				SFX = new Container().Center()
 			};
 
 			Everything.AddRange( new Drawable[] {
@@ -103,9 +105,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					HeadTile = tile;
 				}
 
-				if ( Auto ) {
-					tile.OnAutoClick += OnAutoClick;
-				}
+				tile.OnTileClick += OnClickEvent;
 
 				tile.OnNewResult += OnTileResult;
 				Tiles.Add( tile );
@@ -116,9 +116,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		public override bool Remove ( DrawableHitObject h ) {
 			if ( h is HitokoriTile tile ) {
-				if ( Auto ) {
-					tile.OnAutoClick -= OnAutoClick;
-				}
+				tile.OnTileClick -= OnClickEvent;
 
 				tile.OnNewResult -= OnTileResult;
 				Tiles.Remove( tile );
@@ -130,18 +128,21 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			return true;
 		}
 
-		private void OnAutoClick ( HitokoriTile tile, AutoClickType type ) {
+		private void OnClickEvent ( HitokoriTile tile, AutoClickType type ) {
 			switch ( type ) {
 				case AutoClickType.Down:
-					AutoBot.Hold();
+					AutoBot?.Hold();
+					Hitokori.OnHold();
 					break;
 
 				case AutoClickType.Up:
-					AutoBot.Release();
+					AutoBot?.Release();
+					Hitokori.OnRelease();
 					break;
 
 				case AutoClickType.Press:
-					AutoBot.Press();
+					AutoBot?.Press();
+					Hitokori.OnPress();
 					break;
 			}
 		}

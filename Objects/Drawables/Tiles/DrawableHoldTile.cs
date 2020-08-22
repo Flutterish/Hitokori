@@ -107,7 +107,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				StartPoint.Marker.ConnectFrom( Tile.StartPoint.Previous );
 
 				StartPoint.OnNewResult += ( a, b ) => { // TODO BUG when rewound the first tile gets missed when the previous tap tile is hit, in general
-					SendAutoClickEvent( AutoClickType.Down );
+					SendClickEvent( AutoClickType.Down );
 
 					ReleaseMissed = b.Type == HitResult.Miss;
 				};
@@ -118,7 +118,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			} else if ( tile.TilePoint == Tile.EndPoint ) {
 				AddInternal( EndPoint = tile );
 				EndPoint.OnNewResult += ( a, b ) => {
-					SendAutoClickEvent( AutoClickType.Up );
+					SendClickEvent( AutoClickType.Up );
 				};
 			}
 		}

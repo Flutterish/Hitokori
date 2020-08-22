@@ -253,5 +253,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				startAngle = value;
 			}
 		}
+
+		public void OnPress () {
+			held?.OnRelease();
+			LastOrbital.OnPress();
+		}
+
+		private Orbital held;
+		public void OnHold () {
+			held?.OnRelease();
+			( held = FirstFreeOrbital ).OnHold();
+		}
+
+		public void OnRelease () {
+			held?.OnRelease();
+		}
 	}
 }

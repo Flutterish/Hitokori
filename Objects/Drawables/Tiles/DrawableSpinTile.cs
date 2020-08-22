@@ -51,7 +51,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				tile.Marker.MarkImportant();
 			}
 
-			tile.OnNewResult += ( a, b ) => SendAutoClickEvent();
+			tile.OnNewResult += ( a, b ) => SendClickEvent();
 		}
 
 		protected override void ClearNestedHitObjects () {

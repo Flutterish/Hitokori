@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori { // TODO add sp
 	public abstract class Orbital : Container {
 		public Trail Trail;
 
-		Radius Radius;
+		protected Radius Radius;
 		bool isCentered = false;
 		public double Distance => isCentered ? 0 : Radius.Length;
 
@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori { // TODO add sp
 
 		public double Angle;
 
-		public void RotateTo ( double angle ) {
+		public void RotateTo ( double angle ) { // TODO move trail to StandardOrbital, Relace all InterpolateTrailTo with virtual InterpolateTo
 			double deltaTime = ( angle - Angle ) / Velocity;
 			if ( double.IsFinite( deltaTime ) ) {
 				if ( deltaTime < 0 ) {
@@ -96,5 +96,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori { // TODO add sp
 
 		public abstract void MakeImportant ();
 		public abstract void RevokeImportant ();
+
+		public abstract void OnHold ();
+		public abstract void OnRelease ();
+		public abstract void OnPress ();
 	}
 }

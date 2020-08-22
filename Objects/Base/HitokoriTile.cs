@@ -41,9 +41,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		#endregion
 
 		public delegate void OnClickEvent ( HitokoriTile tile, AutoClickType type );
-		public event OnClickEvent OnAutoClick;
-		protected void SendAutoClickEvent ( AutoClickType type = AutoClickType.Press ) {
-			OnAutoClick?.Invoke( this, type );
+		public event OnClickEvent OnTileClick;
+		protected void SendClickEvent ( AutoClickType type = AutoClickType.Press ) {
+			OnTileClick?.Invoke( this, type );
 		}
 
 		public void TryToSetResult ( DrawableTilePoint tile, HitResult result ) {

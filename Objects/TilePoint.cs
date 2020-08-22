@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
 		public bool WasHit;
 		public bool useTripletAngles;
-		public double TripletOffset => ( useTripletAngles ? ( Math.PI / 3 ) : 0 );
+		public double Offset => ( useTripletAngles ? ( Math.PI / 3 ) : 0 );
 		public bool IsNext
 			=> !WasHit && Previous.WasHit;
 
@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			get {
 				if ( !isOutAngleCached ) {
 					if ( Parent == Previous )
-						cachedOutAngle = InAngle + AngleFromStraight + TripletOffset;
+						cachedOutAngle = InAngle + AngleFromStraight + Offset;
 					else if ( Parent == Previous.Parent )
 						cachedOutAngle = InAngle + AngleOffset;
 					else
@@ -100,7 +100,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 					if ( Parent == Previous )
 						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle ), (float)Math.Sin( InAngle ) ) * (float)Distance;
 					else if ( Parent == Previous.Parent )
-						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI - TripletOffset ), (float)Math.Sin( InAngle + Math.PI - TripletOffset ) ) * (float)Distance; // because we are not going straight on
+						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI - Offset ), (float)Math.Sin( InAngle + Math.PI - Offset ) ) * (float)Distance; // because we are not going straight on
 					else
 						throw new InvalidOperationException( "No suitable rotation origin" ); // TODO do it anyway ( with dynamic distance )
 

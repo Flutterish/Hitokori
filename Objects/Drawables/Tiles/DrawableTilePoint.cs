@@ -95,7 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		private static void Attach ( TilePoint TilePoint, DrawableHitokori Hitokori ) {
 			if ( TilePoint.Parent == TilePoint.Next?.Parent ) {
-				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI - TilePoint.TripletOffset, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
+				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI - TilePoint.Offset, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
 				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None );
 			} else {
 				Hitokori.Swap( TilePoint );
