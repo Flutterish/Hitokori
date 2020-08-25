@@ -71,8 +71,6 @@ namespace osu.Game.Rulesets.Hitokori {
 			foreach ( ModType type in Enum.GetValues( typeof( ModType ) ) ) {
 				RegisterMods( GetModsFor( type ) );
 			}
-
-			var x = ModCompatibility.mods;
 		}
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
 			switch ( type ) {
