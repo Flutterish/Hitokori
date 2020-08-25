@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override bool HasImplementation => true;
 
-		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModSquashed ) };
+		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModSquashed ), typeof( HitokoriModHardRock ) };
 
 		public void ApplyToBeatmapConverter ( IBeatmapConverter beatmapConverter ) {
 			( beatmapConverter as HitokoriBeatmapConverter ).Speed = 2;

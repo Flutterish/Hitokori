@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void Update () {
-			if ( Progress.B >= 0.99 && Progress.A >= 0.99 ) {
+			if ( Math.Abs( Progress.A - Progress.B ) < 0.01 ) {
 				if ( Line != null ) {
 					Line.Release();
 					Line = null;
@@ -99,6 +99,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		public bool IsBorrowed { get; private set; }
 		public void Release () {
 			IsBorrowed = false;
+			( Parent as Container )?.Remove( this );
 		}
 
 		public void Borrow () {
@@ -108,12 +109,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 	public class PathPool : IDisposable {
 		private List<PooledPath> paths = new List<PooledPath>();
-		public IFrameBasedClock Clock;
 
 		public PooledPath Borrow () {
 			foreach ( var path in paths ) {
 				if ( !path.IsBorrowed ) {
-					( path.Parent as Container )?.Remove( path );
 					path.Borrow();
 
 					return path;

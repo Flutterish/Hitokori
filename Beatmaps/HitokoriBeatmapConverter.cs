@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		public bool NoUnhitable;
 		public bool Triplets;
 		public double Speed = 1;
+		public bool Flip = false;
 		#endregion
 		public HitokoriBeatmapConverter ( IBeatmap beatmap, Ruleset ruleset ) : base( beatmap, ruleset ) { } // TODO untangle beatmap
 
@@ -174,12 +175,19 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			var tiles = StartTile.GetWholeChain().Skip( 1 );
 			Beatmap.HitObjects = tiles.Cast<HitokoriHitObject>().ToList();
 
+			if ( Flip ) {
+				foreach ( var tile in tiles.SelectMany( x => x.AllTiles ) ) {
+					tile.IsClockwise = !tile.IsClockwise;
+				}
+			}
+
 			if ( Triplets ) {
 				foreach ( var tile in tiles.SelectMany( x => x.AllTiles ) ) {
 					tile.useTripletAngles = true;
-					tile.Refresh();
 				}
 			}
+
+			tiles.First().FirstPoint.RefreshChain();
 		}
 
 		void GenerateBreaks ( HitokoriBeatmap Beatmap ) { // BUG doubleTile mod breaks break generation? Idk it it works at all tbh

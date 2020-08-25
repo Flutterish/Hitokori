@@ -8,6 +8,8 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate everything recursively with children ( for animated/rotating tiles )
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
@@ -112,6 +114,26 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		}
 		public Vector2 TilePosition
 			=> NormalizedTilePosition * HitokoriTile.SPACING;
+
+		public IEnumerable<TilePoint> GetWholeChain () {
+			List<TilePoint> chain = new List<TilePoint>();
+			var el = this;
+
+			while ( el.Previous != null ) el = el.Previous;
+			chain.Add( el );
+			while ( el.Next != null ) {
+				el = el.Next;
+				chain.Add( el );
+			}
+
+			return chain.Skip( 1 ); // first tile point
+		}
+
+		public void RefreshChain () {
+			foreach ( var i in GetWholeChain() ) {
+				i.Refresh();
+			}
+		}
 
 		public void Refresh () {
 			isOutAngleCached = false;
