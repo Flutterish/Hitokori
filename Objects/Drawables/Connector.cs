@@ -1,44 +1,36 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
+using osu.Framework.Timing;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
+using System;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	/// <summary>
 	/// A connector is a path between 2 tiles. Its start position is offset by whatever the offset is from the "from" tile, that is
 	/// if you set its position to `<c>from.HoldPosition - parent.Position</c>` its start will be centered at "from";
 	/// </summary>
-	public class Connector : DisposableContainer {
+	public class Connector : Container {
 		public TilePoint From;
 		public TilePoint To;
-		public Path Line;
+
+		[Resolved]
+		private PathPool pathPool { get; set; }
+
+		public PooledPath Line;
 
 		new public double Alpha;
 
 		protected AnimatedVector Progress;
 
-		new public Colour4 Colour {
-			get => Line.Colour;
-			set => Line.Colour = value;
-		}
-
 		public Connector ( TilePoint from, TilePoint to, float alpha = 0.2f ) {
 			Progress = new AnimatedVector( parent: this );
-
-			InternalChildren = new Drawable[] {
-				Line = new Path {
-					PathRadius = HitokoriTile.SIZE / 8f,
-					Alpha = alpha,
-					Depth = 100
-				}
-			};
-
 			Alpha = alpha;
-
 			this.Center();
-			Line.Anchor = Anchor.TopLeft;
-			Line.Origin = Anchor.TopLeft;
 
 			From = from;
 			To = to;
@@ -51,20 +43,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void Update () {
-			if ( Progress.B >= 0.99 && Progress.A >= 0.99 ) { // TODO do it better. probably a container in main field will do
+			if ( Progress.B >= 0.99 && Progress.A >= 0.99 ) {
 				if ( Line != null ) {
-					Remove( Line );
-					Line.Dispose();
+					Line.Release();
 					Line = null;
 				}
 			} else if ( Line is null ) {
-				InternalChildren = new Drawable[] {
-				Line = new Path {
-						PathRadius = HitokoriTile.SIZE / 8f,
-						Alpha = (float)Alpha,
-						Depth = 100
-					}
-				};
+				InternalChild = Line = pathPool.Borrow();
+				Line.PathRadius = HitokoriTile.SIZE / 8f;
+				Line.Alpha = (float)Alpha;
 				Line.Anchor = Anchor.TopLeft;
 				Line.Origin = Anchor.TopLeft;
 			}
@@ -105,6 +92,46 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Line?.Dispose();
 
 			base.Dispose( isDisposing );
+		}
+	}
+
+	public class PooledPath : Path {
+		public bool IsBorrowed { get; private set; }
+		public void Release () {
+			IsBorrowed = false;
+		}
+
+		public void Borrow () {
+			IsBorrowed = true;
+		}
+	}
+
+	public class PathPool : IDisposable {
+		private List<PooledPath> paths = new List<PooledPath>();
+		public IFrameBasedClock Clock;
+
+		public PooledPath Borrow () {
+			foreach ( var path in paths ) {
+				if ( !path.IsBorrowed ) {
+					( path.Parent as Container )?.Remove( path );
+					path.Borrow();
+
+					return path;
+				}
+			}
+
+			var @new = new PooledPath();
+			@new.Borrow();
+
+			paths.Add( @new );
+
+			return @new;
+		}
+
+		public void Dispose () {
+			foreach ( var path in paths ) {
+				path?.Dispose();
+			}
 		}
 	}
 }

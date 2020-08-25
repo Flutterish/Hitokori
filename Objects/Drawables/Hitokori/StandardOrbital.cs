@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
@@ -24,7 +25,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			this.colour = colour;
 
 			Trail.Colour = colour;
-			sparklePool = new SparklePool();
 
 			RevokeImportant();
 		}
@@ -43,7 +43,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		private double starTimer;
 		private double starInterval = 40;
 		private Random starRandomizer = new Random();
-		private SparklePool sparklePool;
+		[Resolved]
+		private SparklePool sparklePool { get; set; }
 		public override void OnHold () {
 			isHolding = true;
 			ReleaseStars( 5 );
@@ -73,11 +74,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				Playfield.SFX.Add( sparkle );
 				sparkle.Position = Playfield.Everything.ToParentSpace( Hitokori.Position + Position ) - Playfield.LayoutSize / 2;
 			}
-		}
-
-		protected override void Dispose ( bool isDisposing ) {
-			base.Dispose( isDisposing );
-			sparklePool?.Dispose();
 		}
 
 		private DrawableHitokori Hitokori => Parent as DrawableHitokori; // TODO supply these properly, its ok for now as the hierarchy wont change soon
