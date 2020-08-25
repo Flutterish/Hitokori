@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Timing;
+using osu.Game.Rulesets.Hitokori.Mods;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Patterns;
@@ -14,13 +15,20 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmapConverter : BeatmapConverter<HitokoriHitObject> {
 		#region Mods
-		public bool DoubleTrouble;
-		public bool NoHolds;
-		public bool GenerateSpins;
-		public bool NoUnhitable;
-		public bool Triplets;
-		public double Speed = 1;
-		public bool Flip = false;
+		[Moddable]
+		public bool DoubleTrouble { get; set; }
+		[Moddable]
+		public bool NoHolds { get; set; }
+		[Moddable]
+		public bool GenerateSpins { get; set; }
+		[Moddable]
+		public bool NoUnhitable { get; set; }
+		[Moddable]
+		public bool Triplets { get; set; }
+		[Moddable]
+		public double Speed { get; set; } = 1;
+		[Moddable]
+		public bool Flip { get; set; }
 		#endregion
 		public HitokoriBeatmapConverter ( IBeatmap beatmap, Ruleset ruleset ) : base( beatmap, ruleset ) { } // TODO untangle beatmap
 

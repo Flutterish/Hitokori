@@ -56,6 +56,24 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override IConvertibleReplayFrame CreateConvertibleReplayFrame ()
 			=> new HitokoriReplayFrame();
 
+		public HitokoriRuleset () {
+			void RegisterMods ( IEnumerable<Mod> mods ) {
+				foreach ( var mod in mods ) {
+					if ( mod is MultiMod multi ) {
+						RegisterMods( multi.Mods );
+					}
+					else {
+						ModCompatibility.RegisterMod( GetType(), mod.GetType() );
+					}
+				}
+			}
+
+			foreach ( ModType type in Enum.GetValues( typeof( ModType ) ) ) {
+				RegisterMods( GetModsFor( type ) );
+			}
+
+			var x = ModCompatibility.mods;
+		}
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
 			switch ( type ) {
 				case ModType.DifficultyReduction:
@@ -69,7 +87,7 @@ namespace osu.Game.Rulesets.Hitokori {
 				case ModType.DifficultyIncrease:
 					return new Mod[] {
 						new HitokoriModStretched(),
-						new HitokoriModHardRock(), // TODO implement hard rock ( harder patterns )
+						new HitokoriModHardRock(),
 						new MultiMod( new HitokoriModSuddenDeath(), new HitokoriModPerfect() ),
 						new MultiMod( new HitokoriModDoubleTime(), new HitokoriModNightcore() ),
 						new HitokoriModHidden(),
