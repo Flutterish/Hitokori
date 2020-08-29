@@ -1,5 +1,4 @@
-﻿using osu.Framework.Input.Events;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty {
 	public class HitokoriDifficultyCalculator : DifficultyCalculator {
-		private const double star_scaling_factor = 0.04125; //Taken from Taiko's difficulty calculations
+		private const double STAR_SCALING_FACTOR = 0.04125; //Taken from Taiko's difficulty calculations
 
 		public HitokoriDifficultyCalculator ( Ruleset ruleset, WorkingBeatmap beatmap ) : base( ruleset, beatmap ) { }
 
@@ -18,7 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 			double readingDifficulty = skills[0].DifficultyValue();
 
 			return new DifficultyAttributes {
-				StarRating = readingDifficulty * star_scaling_factor,
+				StarRating = readingDifficulty * STAR_SCALING_FACTOR,
 				Mods = mods,
 				Skills = skills
 			};

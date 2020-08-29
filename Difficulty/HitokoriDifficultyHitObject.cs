@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 			HitAngle = lastHitokoriObject.LastPoint.AngleOffset;
 			if (hitokoriObject is HoldTile) {
 				HoldAngle = ((HoldTile)hitokoriObject).FirstPoint.AngleOffset;
-            }
+			}
 		}
 	}
 }
