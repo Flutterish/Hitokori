@@ -14,14 +14,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		DrawableTilePoint StartPoint;
 		DrawableTilePoint EndPoint;
 
-		ArchedConnector Curve;
+		ArchedTileConnector Curve;
 
 		public DrawableHoldTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
 			Tile = hitObject as HoldTile;
 			this.Center();
 
 			AddInternal(
-				Curve = new ArchedConnector( Tile.StartPoint, Tile.EndPoint, Tile.EndPoint.Parent, Tile.StartPoint.AngleOffset, 1 ) {
+				Curve = new ArchedTileConnector( Tile.StartPoint, Tile.EndPoint, Tile.EndPoint.Parent, Tile.StartPoint.AngleOffset, 1 ) {
 					Colour = Tile.StartPoint.Color,
 					Position = Tile.StartPoint.Previous.TilePosition - Tile.EndPoint.TilePosition,
 					Depth = 1

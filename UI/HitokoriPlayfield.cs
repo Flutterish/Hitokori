@@ -16,6 +16,11 @@ using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriPlayfield : Playfield {
+		[Cached]
+		public readonly SparklePool SparklePool = new SparklePool();
+		[Cached]
+		public readonly PathPool PathPool = new PathPool();
+
 		/// <summary>
 		/// Camera position. Used because offsetting containers clips children.
 		/// </summary>
@@ -172,6 +177,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private void load ( HitokoriSettingsManager config ) {
 			FollowMode = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode );
 			CameraSpeed = config.GetBindable<double>( HitokoriSetting.CameraSpeed );
+		}
+
+		protected override void Dispose ( bool isDisposing ) {
+			base.Dispose( isDisposing );
+
+			SparklePool?.Dispose();
+			PathPool?.Dispose();
 		}
 	}
 }

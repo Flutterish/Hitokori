@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		public bool IsBorrowed
-			=> Clock.CurrentTime <= StartTime + Duration;
+			=> Clock.CurrentTime <= StartTime + Duration && Clock.CurrentTime >= StartTime;
 
 		public Vector2 velocity;
 		public Vector2 gravity;

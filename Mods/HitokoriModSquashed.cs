@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Mods;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
-	public class HitokoriModSquashed : Mod, IApplicableToBeatmapConverter {
+	public class HitokoriModSquashed : AutoImplementedMod {
 		public override string Name => "Squashed";
 		public override string Acronym => "Squ";
 		public override string Description => "Something feels slower";
@@ -18,10 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override bool HasImplementation => true;
 
-		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModStretched ) };
-
-		public void ApplyToBeatmapConverter ( IBeatmapConverter beatmapConverter ) {
-			( beatmapConverter as HitokoriBeatmapConverter ).Speed = 0.5;
-		}
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Speed ) )]
+		private double Speed => 0.5;
 	}
 }
