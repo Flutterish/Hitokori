@@ -5,7 +5,9 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 		ADOFAIJudgement,
 		MissCorrectionMode,
 		CameraFollowMode,
-		CameraSpeed
+		CameraSpeed,
+		RingOpacity,
+		RingDashStyle
 	}
 
 	public enum MissCorrectionMode {
@@ -22,5 +24,13 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 
 		[Description( "Smooth" )]
 		Smooth
+	}
+
+	public enum DashStyle {
+		Dashed,
+
+		Dotted,
+
+		Solid
 	}
 }

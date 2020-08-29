@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Mods;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
-	public class HitokoriModExperimental : Mod, IApplicableToBeatmapConverter {
+	public class HitokoriModExperimental : AutoImplementedMod {
 		public override string Name => "Experimental";
 		public override string Acronym => "Ex";
 		public override string Description => "Only for the bold";
@@ -36,12 +36,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			Value = false
 		};
 
-		public void ApplyToBeatmapConverter ( IBeatmapConverter beatmapConverter ) {
-			( beatmapConverter as HitokoriBeatmapConverter ).NoHolds = RemoveHoldTiles.Value;
-			( beatmapConverter as HitokoriBeatmapConverter ).GenerateSpins = GenerateSpinTiles.Value;
-			( beatmapConverter as HitokoriBeatmapConverter ).NoUnhitable = RemoveUnhitable.Value;
-		}
-
 		public override string SettingDescription { // BUG "no mods" is always displayed on the leaderboard. on lazer's side.
 			get {
 				string removeHolds = RemoveHoldTiles.Value ? "Holds -> 2 Taps" : string.Empty;
@@ -57,5 +51,14 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				return string.IsNullOrEmpty( description ) ? string.Empty : description;
 			}
 		}
+
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.NoHolds ) )]
+		private bool NoHolds => RemoveHoldTiles.Value;
+
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.GenerateSpins ) )]
+		private bool GenerateSpins => GenerateSpinTiles.Value;
+
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.NoUnhitable ) )]
+		private bool NoUnhitable => RemoveUnhitable.Value;
 	}
 }

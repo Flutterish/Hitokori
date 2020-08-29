@@ -102,9 +102,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			);
 		}
 		public void ConnectFrom ( TilePoint from ) {
-			Connector line;
+			TileConnector line;
 			AddInternal(
-				line = new Connector( from, Tile ) {
+				line = new TileConnector( from, Tile ) {
 					Position = from.TilePosition - Tile.TilePosition
 				}
 			);
@@ -112,7 +112,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
-			ArchedConnector line;
+			ArchedTileConnector line;
 
 			var a = from.TilePosition - around.TilePosition;
 			var b = Tile.TilePosition - around.TilePosition;
@@ -120,7 +120,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
 
 			AddInternal(
-				line = new ArchedConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
+				line = new ArchedTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
 					Position = around.TilePosition - Tile.TilePosition
 				}
 			);

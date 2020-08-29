@@ -12,34 +12,42 @@ using System.Collections.Generic;
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	/// <summary>
 	/// A connector is a path between 2 tiles. Its start position is offset by whatever the offset is from the "from" tile, that is
-	/// if you set its position to `<c>from.HoldPosition - parent.Position</c>` its start will be centered at "from";
+	/// if you set its position to `<c>from.TilePosition - to.TilePosition</c>` it will be centered at "from";
 	/// </summary>
-	public class Connector : Container {
-		public TilePoint From;
-		public TilePoint To;
+	public class TileConnector : Connector {
+		new public TilePoint From;
+		new public TilePoint To;
 
+		public TileConnector ( TilePoint from, TilePoint to, float alpha = 0.2f ) : base( alpha ) {
+			From = from;
+			To = to;
+		}
+
+		protected override void UpdateConnector () {
+			base.From = From.TilePosition;
+			base.To = To.TilePosition;
+			base.UpdateConnector();
+		}
+	}
+
+	public class Connector : Container {
 		[Resolved]
 		private PathPool pathPool { get; set; }
 
 		public PooledPath Line;
 
-		new public double Alpha;
+		public float LineRadius = HitokoriTile.SIZE / 8f;
+		new public double Alpha = 0.2f;
+
+		public Vector2 From;
+		public Vector2 To;
 
 		protected AnimatedVector Progress;
 
-		public Connector ( TilePoint from, TilePoint to, float alpha = 0.2f ) {
+		public Connector ( float alpha = 0.2f ) {
 			Progress = new AnimatedVector( parent: this );
 			Alpha = alpha;
 			this.Center();
-
-			From = from;
-			To = to;
-
-			Progress.ValueChanged += x => {
-				if ( Line != null ) {
-					UpdateConnector();
-				}
-			};
 		}
 
 		protected override void Update () {
@@ -48,20 +56,25 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					Line.Release();
 					Line = null;
 				}
-			} else if ( Line is null ) {
+			}
+			else if ( Line is null ) {
 				InternalChild = Line = pathPool.Borrow();
-				Line.PathRadius = HitokoriTile.SIZE / 8f;
+				Line.PathRadius = LineRadius;
 				Line.Alpha = (float)Alpha;
 				Line.Anchor = Anchor.TopLeft;
 				Line.Origin = Anchor.TopLeft;
+			}
+
+			if ( Line != null ) {
+				UpdateConnector();
 			}
 		}
 
 		protected virtual void UpdateConnector () {
 			Line.ClearVertices();
 
-			Line.AddVertex( ( To.TilePosition - From.TilePosition ) * (float)Progress.A );
-			Line.AddVertex( ( To.TilePosition - From.TilePosition ) * (float)Progress.B );
+			Line.AddVertex( ( To - From ) * (float)Progress.A );
+			Line.AddVertex( ( To - From ) * (float)Progress.B );
 
 			Line.Position = -Line.PositionInBoundingBox( Vector2.Zero );
 		}
@@ -86,12 +99,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {
 			Progress.AnimateATo( 1, duration, easing );
-		}
-
-		protected override void Dispose ( bool isDisposing ) {
-			Line?.Dispose();
-
-			base.Dispose( isDisposing );
 		}
 	}
 
