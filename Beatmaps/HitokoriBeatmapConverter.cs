@@ -67,13 +67,13 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			return beatmap;
 		}
 
-		double BPMS => Beatmap.BeatmapInfo.BPM / 60_000;
+		double BPMSAt ( double time ) => Beatmap.ControlPointInfo.TimingPointAt( time ).BPM / 60_000;
 		public readonly HitokoriHitWindows Windows = new HitokoriHitWindows();
 		public readonly HitokoriAngleHitWindows AngleWindows = new HitokoriAngleHitWindows();
 
 		void ConnectHitObjects ( IEnumerable<HitokoriTileObject> hitObjects ) {
 			TilePoint PopulatePoint ( TilePoint point ) {
-				point.BPMS = BPMS;
+				point.BPMS = BPMSAt( point.HitTime );
 				point.SpeedModifier = Speed;
 				point.TimeHitWindows = Windows;
 				point.AngleHitWindows = AngleWindows;
@@ -150,7 +150,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			if ( NoUnhitable ) RemoveUnhitable( Beatmap );
 
 			TilePoint firstPoint = new FirstTilePoint {
-				BPMS = BPMS,
+				BPMS = BPMSAt( 0 ),
 				IsClockwise = true,
 				HitTime = -1000
 			};

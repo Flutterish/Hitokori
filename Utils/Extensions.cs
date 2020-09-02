@@ -73,5 +73,8 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			=> self.Any() ? Average( self, selector ) : or;
 		public static Vector2 AverageOr ( this IEnumerable<Vector2> self, Vector2 or )
 			=> self.Any() ? Average( self ) : or;
+
+		public static T First<T> ( this IEnumerable<object> self )
+			=> (T)self.First( x => x is T );
 	}
 }
