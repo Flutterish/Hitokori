@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 					else if ( Parent == Previous.Parent )
 						cachedOutAngle = InAngle + AngleOffset;
 					else
-						throw new InvalidOperationException( "No suitable rotation origin" ); // TODO do it anyway ( with dynamic distance )
+						throw new InvalidOperationException( "No suitable rotation origin" );
 					isOutAngleCached = true;
 				}
 
@@ -104,7 +104,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 					else if ( Parent == Previous.Parent )
 						cachedPosition = Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( InAngle + Math.PI - Offset ), (float)Math.Sin( InAngle + Math.PI - Offset ) ) * (float)Distance; // because we are not going straight on
 					else
-						throw new InvalidOperationException( "No suitable rotation origin" ); // TODO do it anyway ( with dynamic distance )
+						throw new InvalidOperationException( "No suitable rotation origin" );
 
 					isPositionCached = true;
 				}

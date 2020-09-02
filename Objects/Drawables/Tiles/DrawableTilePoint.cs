@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			// to make sure a result is set
 			if ( !TilePoint.CanBeHitAfter( TilePoint.TimeAtOffset( timeOffset ) ) ) {
-				SetResult( HitResult.Miss );
+				SetResult( HitResult.Miss ); // NOTE when rewinding this sets off on first tile, at an offset from its actual hit time
 			}
 		}
 
@@ -75,7 +75,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 					return false;
 				}
 				var result = TilePoint.ResultAt( time );
-				SetResult( ( result == HitResult.None ) ? HitResult.Miss : result );
+				if ( result == HitResult.None ) {
+					return false;
+				}
+				SetResult( result );
 				return true;
 			}
 			return false;

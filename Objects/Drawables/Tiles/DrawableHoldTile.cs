@@ -54,10 +54,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			double time = Tile.EndTime + timeOffset;
 
-			if ( !Tile.EndPoint.WasHit ) {
-				if ( !Tile.EndPoint.CanBeHitAfter( time ) || ( ReleaseMissed && timeOffset >= 0 ) ) {
-					TryToSetResult( EndPoint, HitResult.Miss );
-				}
+			if ( Tile.EndPoint.IsNext && ( ReleaseMissed && timeOffset >= 0 ) ) {
+				TryToSetResult( EndPoint, HitResult.Miss );
 			}
 		}
 
