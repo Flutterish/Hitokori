@@ -94,7 +94,8 @@ namespace osu.Game.Rulesets.Hitokori {
 
 				case ModType.Conversion:
 					return new Mod[] {
-						new HitokoriModExperimental(),
+						new HitokoriModHoldTiles(),
+						new HitokoriModSpinTiles(),
 						new HitokoriModDoubleTile()
 					};
 

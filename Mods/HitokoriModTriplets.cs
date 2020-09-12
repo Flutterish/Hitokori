@@ -21,5 +21,9 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Triplets ) )]
 		private bool Triplets => true;
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.NoHolds ) )]
+		private bool NoHolds => true;
+		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.GenerateSpins ) )]
+		private bool GenerateSpins => false;
 	}
 }

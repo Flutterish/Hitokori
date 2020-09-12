@@ -18,11 +18,9 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		[Moddable]
 		public bool DoubleTrouble { get; set; }
 		[Moddable]
-		public bool NoHolds { get; set; }
+		public bool NoHolds { get; set; } = true;
 		[Moddable]
 		public bool GenerateSpins { get; set; }
-		[Moddable]
-		public bool NoUnhitable { get; set; }
 		[Moddable]
 		public bool Triplets { get; set; }
 		[Moddable]
@@ -147,7 +145,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		void PostProcess ( HitokoriBeatmap Beatmap ) { //TODO: NOTE this should be in BeatmapProcessor but I cant figure out how to pass mods to it
 			Beatmap.HitObjects = Beatmap.HitObjects.OrderBy( x => x.StartTime ).ToList(); // some objects are not always ordered. idk why
 
-			if ( NoUnhitable ) RemoveUnhitable( Beatmap );
+			RemoveUnhitable( Beatmap );
 
 			TilePoint firstPoint = new FirstTilePoint {
 				BPMS = BPMSAt( 0 ),
