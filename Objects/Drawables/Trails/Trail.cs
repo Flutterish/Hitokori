@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
-namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
+namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	public class Trail : Container {
 		public Path Line;
 		public Vector2 Offset;

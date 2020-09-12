@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK;
 using System;
 
-namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
+namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// <summary>
 	/// A connector is a path between 2 tiles. Its center position is offset by whatever the offset is from the "around" position, that is
 	/// if you set its position to `<c>around - to</c>` its start will be centered at "around";
@@ -67,7 +67,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 			deltaAngle = to - from;
 
-			if ( ( deltaAngle < 0.001 ) ) {
+			if ( deltaAngle < 0.001 ) {
 				Line.Alpha = 0;
 				return;
 			}

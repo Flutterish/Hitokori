@@ -11,7 +11,7 @@ using osuTK;
 using System;
 using System.Collections.Generic;
 
-namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
+namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// <summary>
 	/// A connector is a path between 2 tiles. Its start position is offset by whatever the offset is from the "from" tile, that is
 	/// if you set its position to `<c>from.TilePosition - to.TilePosition</c>` it will be centered at "from";

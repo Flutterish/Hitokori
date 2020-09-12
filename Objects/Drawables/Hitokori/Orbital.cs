@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
+using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osuTK;
 using System;
 
