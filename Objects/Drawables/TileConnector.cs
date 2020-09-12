@@ -1,9 +1,11 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Timing;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
@@ -24,9 +26,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void UpdateConnector () {
+			LineRadius = HitokoriTile.SIZE / 8f * (float)( width?.Value ?? 1 );
+
 			base.From = From.TilePosition;
 			base.To = To.TilePosition;
 			base.UpdateConnector();
+		}
+
+		Bindable<double> width;
+		[BackgroundDependencyLoader]
+		private void load ( HitokoriSettingsManager config ) {
+			width = config.GetBindable<double>( HitokoriSetting.ConnectorWidth );
 		}
 	}
 
@@ -36,7 +46,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		public PooledPath Line;
 
-		public float LineRadius = HitokoriTile.SIZE / 8f;
+		private float lineRadius = HitokoriTile.SIZE / 8f;
+		public float LineRadius {
+			get => lineRadius;
+			set {
+				if ( lineRadius == value ) return;
+				lineRadius = value;
+				if ( Line is not null ) Line.PathRadius = lineRadius;
+			}
+		}
 		new public double Alpha = 0.2f;
 
 		public Vector2 From;
@@ -59,7 +77,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			}
 			else if ( Line is null ) {
 				InternalChild = Line = pathPool.Borrow();
-				Line.PathRadius = LineRadius;
+				Line.PathRadius = lineRadius;
 				Line.Alpha = (float)Alpha;
 				Line.Anchor = Anchor.TopLeft;
 				Line.Origin = Anchor.TopLeft;

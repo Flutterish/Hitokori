@@ -41,7 +41,15 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				new SettingsEnumDropdown<DashStyle> {
 					LabelText = "Orbit ring border style",
 					Bindable = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle )
-				}
+				},
+				new SettingsSlider<double,PercentageSlider> {
+					LabelText = "Connector width",
+					Bindable = config.GetBindable<double>( HitokoriSetting.ConnectorWidth )
+				},
+				new SettingsSlider<double,PercentageSlider> {
+					LabelText = "Hold/Spin connector width",
+					Bindable = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
+				},
 			};
 		}
 	}

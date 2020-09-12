@@ -12,6 +12,8 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 			Set( HitokoriSetting.CameraSpeed, 300, 100, 500, 20.0 );
 			Set( HitokoriSetting.RingOpacity, 0.15, 0, 1, 0.01 );
 			Set( HitokoriSetting.RingDashStyle, DashStyle.Dashed );
+			Set( HitokoriSetting.ConnectorWidth, 1, 0.4, 4 );
+			Set( HitokoriSetting.HoldConnectorWidth, 1, 0.2, 2 );
 
 			base.InitialiseDefaults();
 		}

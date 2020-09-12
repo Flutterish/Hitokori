@@ -1,5 +1,8 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK;
 using System;
 
@@ -20,10 +23,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void UpdateConnector () {
+			LineRadius = HitokoriTile.SIZE / 4f * (float)( width?.Value ?? 1 );
+
 			base.From = From.TilePosition;
 			base.To = To.TilePosition;
 			base.Around = Around.TilePosition;
 			base.UpdateConnector();
+		}
+
+		Bindable<double> width;
+		[BackgroundDependencyLoader]
+		private void load ( HitokoriSettingsManager config ) {
+			width = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth );
 		}
 	}
 

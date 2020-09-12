@@ -7,7 +7,10 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 		CameraFollowMode,
 		CameraSpeed,
 		RingOpacity,
-		RingDashStyle
+		RingDashStyle,
+
+		HoldConnectorWidth,
+		ConnectorWidth
 	}
 
 	public enum MissCorrectionMode {
