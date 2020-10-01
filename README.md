@@ -8,8 +8,8 @@ Hitokori offers a variety of mods to spice up gameplay. Most of them are the sam
 * `Double Tiles` - A tile is generated in between all tiles
 * `Hold Tiles` - Adds tiles you need to hold
 * `Spin tiles` - Adds tiles that you have to press multiple times at the same speed
-* `Reverse Spin` - Makes the whole playfiels spin
-* `Triplets` - Play with 3 orbitals ( removing hold tiles is recommended )
+* `Reverse Spin` - Makes the whole playfield spin
+* `Triplets` - Play with 3 orbitals
 
 # Demonstration video ( 0.9 )
 [Watch it on youtube!](https://www.youtube.com/watch?v=CD8K3mGTlO4&feature=youtu.be)
