@@ -6,10 +6,8 @@ Hitokori offers a variety of mods to spice up gameplay. Most of them are the sam
 * `Stretched` - Tiles have bigger angles in between, makes the game look faster
 * `Squashed` - Tiles have smaller angles in between, makes the game look slower
 * `Double Tiles` - A tile is generated in between all tiles
-* `Experimental` - Game modifiers that allow you to:
-    - Remove hold tiles
-    - Add spin tiles
-    - Remove overlapping tiles
+* `Hold Tiles` - Adds tiles you need to hold
+* `Spin tiles` - Adds tiles that you have to press multiple times at the same speed
 * `Reverse Spin` - Makes the whole playfiels spin
 * `Triplets` - Play with 3 orbitals ( removing hold tiles is recommended )
 
