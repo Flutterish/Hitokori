@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Utils;
@@ -20,6 +21,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
 		List<Connector> LinesToMe = new List<Connector>();
+		SpriteText Label;
 
 		public TileMarker ( TilePoint tile, Color4 color, TickSize size = TickSize.Auto ) {
 			Tile = tile;
@@ -60,6 +62,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			ReverseMarker?.Spin();
 			ImportantMarker?.Appear();
 			ImportantMarker?.Spin();
+			Label?.FadeInFromZero( 700 );
 
 			double lineDuration = LinesToMe.Select( line => line.Appear() ).Append( 0 ).Max();
 
@@ -73,6 +76,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
 			ImportantMarker?.Disappear();
+			Label?.FadeOutFromOne( 300 );
 
 			return new[] { 300, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
 		}
@@ -126,6 +130,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				}
 			);
 			LinesToMe.Add( line );
+		}
+
+		public void AddLabel ( string text ) {
+			AddInternal( Label = new SpriteText {
+				Text = text,
+				Colour = Circle.Colour,
+				Anchor = Anchor.BottomCentre,
+				Origin = Anchor.TopCentre,
+				Position = new Vector2( 0, 18 ),
+				Scale = new Vector2( 0.8f )
+			} );
 		}
 	}
 

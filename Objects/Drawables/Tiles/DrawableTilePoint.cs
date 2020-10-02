@@ -1,6 +1,9 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -28,6 +31,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 			OnNewResult += ( x, y ) => OnHit();
 			OnRevertResult += ( x, y ) => OnRevert();
+		}
+
+		[BackgroundDependencyLoader]
+		private void load ( HitokoriSettingsManager config ) {
+			if ( TilePoint.IsDifferentSpeed && config.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ) {
+				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
+			}
 		}
 
 		protected override void UpdateInitialTransforms () {

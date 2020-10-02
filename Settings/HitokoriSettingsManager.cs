@@ -14,6 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 			Set( HitokoriSetting.RingDashStyle, DashStyle.Dashed );
 			Set( HitokoriSetting.ConnectorWidth, 1, 0.4, 4 );
 			Set( HitokoriSetting.HoldConnectorWidth, 1, 0.2, 2 );
+			Set( HitokoriSetting.ShowSpeeedChange, true );
 
 			base.InitialiseDefaults();
 		}

@@ -151,13 +151,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		/// <summary>
 		/// Is this tile slower than the previous one?
 		/// </summary>
-		public bool IsSlower => SpeedDifferece < -0.0001;
+		public bool IsSlower => SpeedDifferencePercent <= -0.01;
 		/// <summary>
 		/// Is this tile faster than the previous one?
 		/// </summary>
-		public bool IsFaster => SpeedDifferece > 0.0001;
+		public bool IsFaster => SpeedDifferencePercent >= 0.01;
 		public double SpeedDifferece
 			=> Speed - Previous.Speed;
+		public double SpeedDifferencePercent
+			=> ( Speed / Previous.Speed ) - 1;
 		public double VelocityDifferece
 			=> Velocity - Previous.Velocity;
 		public bool IsDifferentSpeed => IsFaster || IsSlower;

@@ -10,7 +10,9 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 		RingDashStyle,
 
 		HoldConnectorWidth,
-		ConnectorWidth
+		ConnectorWidth,
+
+		ShowSpeeedChange
 	}
 
 	public enum MissCorrectionMode {

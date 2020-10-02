@@ -50,6 +50,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					LabelText = "Hold/Spin connector width",
 					Bindable = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
 				},
+				new SettingsCheckbox {
+					LabelText = "Show speed changes below cyan/orange tiles",
+					Bindable = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
+				}
 			};
 		}
 	}
