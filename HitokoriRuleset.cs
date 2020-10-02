@@ -96,7 +96,8 @@ namespace osu.Game.Rulesets.Hitokori {
 					return new Mod[] {
 						new HitokoriModHoldTiles(),
 						new HitokoriModSpinTiles(),
-						new HitokoriModDoubleTile()
+						new HitokoriModDoubleTile(),
+						new HitokoriModUntangle()
 					};
 
 				case ModType.Automation:

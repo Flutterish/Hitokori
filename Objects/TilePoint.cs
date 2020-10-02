@@ -32,8 +32,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		public double SpeedModifier = 1;
 		public bool IsClockwise = true;
 		public double Direction => IsClockwise ? 1 : -1;
-		public bool ChangedDirection
-			=> Previous.IsClockwise != IsClockwise;
+		public bool ChangedDirection {
+			get => Previous.IsClockwise != IsClockwise;
+			set => IsClockwise = (ChangedDirection == value) ? IsClockwise : !IsClockwise;
+		}
 
 		public double Distance = 1;
 
@@ -69,6 +71,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 				}
 
 				return cachedOutAngle;
+			}
+		}
+		public double FlippedOutAngle {
+			get {
+				if ( Previous is null ) return 0;
+
+				if ( Parent == Previous )
+					return InAngle - AngleFromStraight + Offset;
+				else if ( Parent == Previous.Parent )
+					return InAngle - AngleOffset;
+				else
+					throw new InvalidOperationException( "No suitable rotation origin" );
 			}
 		}
 		public double InAngle => Previous.OutAngle;
@@ -112,6 +126,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 				return cachedPosition;
 			}
 		}
+		public Vector2 FlippedNormalizedTilePosition {
+			get {
+				if ( Parent == Previous )
+					return Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( Previous.FlippedOutAngle ), (float)Math.Sin( Previous.FlippedOutAngle ) ) * (float)Distance;
+				else if ( Parent == Previous.Parent )
+					return Parent.NormalizedTilePosition + new Vector2( (float)Math.Cos( Previous.FlippedOutAngle + Math.PI - Offset ), (float)Math.Sin( Previous.FlippedOutAngle + Math.PI - Offset ) ) * (float)Distance; // because we are not going straight on
+				else
+					throw new InvalidOperationException( "No suitable rotation origin" );
+			}
+		}
 		public Vector2 TilePosition
 			=> NormalizedTilePosition * HitokoriTile.SPACING;
 
@@ -127,6 +151,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			}
 
 			return chain.Skip( 1 ); // first tile point
+		}
+		public IEnumerable<TilePoint> GetPrevious ( int count ) {
+			List<TilePoint> chain = new List<TilePoint>();
+			var el = this;
+			while ( el.Previous != null ) {
+				el = el.Previous;
+				chain.Add( el );
+			}
+			return chain;
 		}
 
 		public void RefreshChain () {

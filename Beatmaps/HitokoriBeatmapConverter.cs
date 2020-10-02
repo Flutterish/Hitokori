@@ -27,13 +27,15 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		public double Speed { get; set; } = 1;
 		[Moddable]
 		public bool Flip { get; set; }
+		[Moddable]
+		public bool Untangle { get; set; }
 		#endregion
 		public HitokoriBeatmapConverter ( IBeatmap beatmap, Ruleset ruleset ) : base( beatmap, ruleset ) { } // TODO untangle beatmap
 
 		public override bool CanConvert ()
 			=> true; // can always convert because it only uses timing. For some reason some modes still dont convert though ( taiko? )
 
-		protected override IEnumerable<HitokoriHitObject> ConvertHitObject ( HitObject original, IBeatmap beatmap ) {
+		protected override IEnumerable<HitokoriHitObject> ConvertHitObject ( HitObject original, IBeatmap beatmap ) { // TODO do the async version
 			switch ( original ) {
 				case IHasDuration duration:
 					return new HoldTile {
@@ -180,6 +182,15 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 			var tiles = StartTile.GetWholeChain().Skip( 1 );
 			Beatmap.HitObjects = tiles.Cast<HitokoriHitObject>().ToList();
+
+			if ( Untangle ) {
+				generator.ClearPatterns();
+				generator.AddPattern( new UntanglePattern() );
+				generator.Process( Beatmap.HitObjects.OfType<HitokoriTileObject>() );
+
+				tiles = StartTile.GetWholeChain().Skip( 1 );
+				Beatmap.HitObjects = tiles.Cast<HitokoriHitObject>().ToList();
+			}
 
 			if ( Flip ) {
 				foreach ( var tile in tiles.SelectMany( x => x.AllTiles ) ) {
