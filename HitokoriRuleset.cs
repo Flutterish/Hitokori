@@ -45,6 +45,9 @@ namespace osu.Game.Rulesets.Hitokori {
 			=> new HitokoriDifficultyCalculator( this, beatmap );
 		public override HealthProcessor CreateHealthProcessor ( double drainStartTime )
 			=> new HitokoriHealthProcessor();
+		public override ScoreProcessor CreateScoreProcessor () {
+			return base.CreateScoreProcessor();
+		}
 		public override StatisticRow[] CreateStatisticsForScore ( ScoreInfo score, IBeatmap playableBeatmap )
 			=> base.CreateStatisticsForScore( score, playableBeatmap );
 
@@ -124,6 +127,25 @@ namespace osu.Game.Rulesets.Hitokori {
 
 				new KeyBinding( InputKey.X, HitokoriAction.Action2 ),
 				new KeyBinding( InputKey.MouseRight, HitokoriAction.Action2 )
+			};
+		}
+
+		public override string GetDisplayNameForHitResult ( HitResult result ) {
+			return result switch
+			{
+				HitResult.Miss => "Miss",
+				HitResult.Great => "Late",
+				HitResult.Ok => "Early",
+				_ => "Perfect"
+			};
+		}
+
+		protected override IEnumerable<HitResult> GetValidHitResults () {
+			return new HitResult[] {
+				HitResult.Miss,
+				HitResult.Ok,
+				HitResult.Great,
+				HitResult.Perfect
 			};
 		}
 	}

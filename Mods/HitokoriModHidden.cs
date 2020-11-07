@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override string Description => "Where's the track?";
 
-		protected override void ApplyHiddenState ( DrawableHitObject hitObject, ArmedState state ) {
+		protected override void ApplyNormalVisibilityState ( DrawableHitObject hitObject, ArmedState state ) {
 			if ( hitObject is DrawableTilePoint tile ) {
 				using ( tile.BeginAbsoluteSequence( tile.TilePoint.HitTime - 700 ) ) {
 					tile.FadeOut( 300 );

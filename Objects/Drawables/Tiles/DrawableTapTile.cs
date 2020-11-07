@@ -19,16 +19,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void UpdateInitialTransforms () { }
 
-		protected override void UpdateStateTransforms ( ArmedState state ) {
-			switch ( state ) {
-				case ArmedState.Idle:
-					break;
-
-				case ArmedState.Miss:
-				case ArmedState.Hit:
-					LifetimeEnd = Tile.PressTime + 1000;
-					break;
-			}
+		protected override void UpdateHitStateTransforms ( ArmedState state ) {
+			LifetimeEnd = Tile.PressTime + 1000;
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {

@@ -46,11 +46,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				}
 			};
 
-			if ( config.Get<bool>( HitokoriSetting.ADOFAIJudgement ) ) {
-				var result = GetADOFAIResult();
-
-				Text.Text = result.GetDescription().ToUpperInvariant();
-			}
+			var result = GetADOFAIResult();
+			Text.Text = result.GetDescription().ToUpperInvariant();
 		}
 
 		public ADOFAIResult GetADOFAIResult () {

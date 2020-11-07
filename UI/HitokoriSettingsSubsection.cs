@@ -16,12 +16,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var config = Config as HitokoriSettingsManager;
 
 			Children = new Drawable[] {
-				new SettingsCheckboxWithTooltip {
-					LabelText = "Use \"A Dance of Fire and Ice\" style judgement text (in-game only)",
-					Current = config.GetBindable<bool>( HitokoriSetting.ADOFAIJudgement ),
-
-					TooltipText = "Display \"Early\" and \"Late\" instead of \"Good\", \"Okay\" and \"Meh\""
-				},
 				new SettingsEnumDropdown<MissCorrectionMode> {
 					LabelText = "Miss correction mode",
 					Current = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode )

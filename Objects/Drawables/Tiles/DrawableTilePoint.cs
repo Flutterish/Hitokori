@@ -44,18 +44,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			Marker.Appear();
 		}
 
-		protected override void UpdateStateTransforms ( ArmedState state ) {
-			switch ( state ) {
-				case ArmedState.Idle:
-					break;
-
-				case ArmedState.Miss:
-					LifetimeEnd = TilePoint.HitTime + Marker.Miss();
-					break;
-
-				case ArmedState.Hit:
-					LifetimeEnd = TilePoint.HitTime + Marker.Hit();
-					break;
+		protected override void UpdateHitStateTransforms ( ArmedState state ) {
+			if ( state == ArmedState.Miss ) {
+				LifetimeEnd = TilePoint.HitTime + Marker.Miss();
+			}
+			else {
+				LifetimeEnd = TilePoint.HitTime + Marker.Hit();
 			}
 		}
 
