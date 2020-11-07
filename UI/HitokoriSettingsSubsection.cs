@@ -18,41 +18,41 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			Children = new Drawable[] {
 				new SettingsCheckboxWithTooltip {
 					LabelText = "Use \"A Dance of Fire and Ice\" style judgement text (in-game only)",
-					Bindable = config.GetBindable<bool>( HitokoriSetting.ADOFAIJudgement ),
+					Current = config.GetBindable<bool>( HitokoriSetting.ADOFAIJudgement ),
 
 					TooltipText = "Display \"Early\" and \"Late\" instead of \"Good\", \"Okay\" and \"Meh\""
 				},
 				new SettingsEnumDropdown<MissCorrectionMode> {
 					LabelText = "Miss correction mode",
-					Bindable = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode )
+					Current = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode )
 				},
 				new SettingsSlider<double,SpeedSlider> {
 					LabelText = "Camera speed",
-					Bindable = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
+					Current = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
 				},
 				new SettingsEnumDropdown<CameraFollowMode> {
 					LabelText = "Camera follow mode",
-					Bindable = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode )
+					Current = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode )
 				},
 				new SettingsSlider<double,PercentageSlider> {
 					LabelText = "Orbit ring opacity",
-					Bindable = config.GetBindable<double>( HitokoriSetting.RingOpacity )
+					Current = config.GetBindable<double>( HitokoriSetting.RingOpacity )
 				},
 				new SettingsEnumDropdown<DashStyle> {
 					LabelText = "Orbit ring border style",
-					Bindable = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle )
+					Current = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle )
 				},
 				new SettingsSlider<double,PercentageSlider> {
 					LabelText = "Connector width",
-					Bindable = config.GetBindable<double>( HitokoriSetting.ConnectorWidth )
+					Current = config.GetBindable<double>( HitokoriSetting.ConnectorWidth )
 				},
 				new SettingsSlider<double,PercentageSlider> {
 					LabelText = "Hold/Spin connector width",
-					Bindable = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
+					Current = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
 				},
 				new SettingsCheckbox {
 					LabelText = "Show speed changes below cyan/orange tiles",
-					Bindable = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
+					Current = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
 				}
 			};
 		}

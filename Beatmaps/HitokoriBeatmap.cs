@@ -8,23 +8,20 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmap : Beatmap<HitokoriHitObject> {
 		public override IEnumerable<BeatmapStatistic> GetStatistics () {
-			var holds = HitObjects.OfType<HoldTile>();
-			var tiles = HitObjects.OfType<TapTile>();
-
-			return new[]
-			{
-				new BeatmapStatistic
-				{
-					Name = @"Press Tiles",
-					Content = tiles.Count().ToString(),
-					Icon = FontAwesome.Solid.Square
-				},
-				new BeatmapStatistic
-				{
-					Name = @"Hold Tiles",
-					Content = holds.Count().ToString(),
-					Icon = FontAwesome.Solid.Circle
-				}
+			yield return new BeatmapStatistic {
+				Name = "Press Tiles",
+				Content = HitObjects.OfType<TapTile>().Count().ToString(),
+				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.Square }
+			};
+			yield return new BeatmapStatistic {
+				Name = "Hold Tiles",
+				Content = HitObjects.OfType<HoldTile>().Count().ToString(),
+				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.HandHolding }
+			};
+			yield return new BeatmapStatistic {
+				Name = "Spin Tiles",
+				Content = HitObjects.OfType<SpinTile>().Count().ToString(),
+				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.RedoAlt }
 			};
 		}
 	}

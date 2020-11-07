@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmapConverter : BeatmapConverter<HitokoriHitObject> {
@@ -35,24 +36,23 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		public override bool CanConvert ()
 			=> true; // can always convert because it only uses timing. For some reason some modes still dont convert though ( taiko? )
 
-		protected override IEnumerable<HitokoriHitObject> ConvertHitObject ( HitObject original, IBeatmap beatmap ) { // TODO do the async version
-			switch ( original ) {
-				case IHasDuration duration:
-					return new HoldTile {
-						Samples = new List<IList<Audio.HitSampleInfo>> { original.Samples, original.Samples },
-						StartTime = original.StartTime,
-						EndTime = duration.EndTime
-					}.Yield();
-
-				default:
-					return new TapTile {
-						Samples = original.Samples.Yield().ToList(),
-						PressTime = original.StartTime
-					}.Yield();
+		protected override IEnumerable<HitokoriHitObject> ConvertHitObject ( HitObject original, IBeatmap beatmap, CancellationToken cancellationToken ) {
+			if ( original is IHasDuration duration ) {
+				yield return new HoldTile {
+					Samples = new List<IList<Audio.HitSampleInfo>> { original.Samples, original.Samples },
+					StartTime = original.StartTime,
+					EndTime = duration.EndTime
+				};
+			}
+			else {
+				yield return new TapTile {
+					Samples = original.Samples.Yield().ToList(),
+					PressTime = original.StartTime
+				};
 			}
 		}
 
-		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original ) {
+		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original, CancellationToken cancellationToken ) {
 			var beatmap = CreateBeatmap() as HitokoriBeatmap;
 
 			Windows.SetDifficulty( Beatmap.BeatmapInfo.StarDifficulty );
@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 			beatmap.BeatmapInfo = original.BeatmapInfo;
 			beatmap.ControlPointInfo = original.ControlPointInfo;
-			beatmap.HitObjects = ConvertHitObjects( original.HitObjects, original );
+			beatmap.HitObjects = ConvertHitObjects( original.HitObjects, original, cancellationToken );
 			PostProcess( beatmap );
 			GenerateBreaks( beatmap );
 
@@ -219,11 +219,12 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			Beatmap.Breaks = breaks;
 		}
 
-		private List<HitokoriHitObject> ConvertHitObjects ( IReadOnlyList<HitObject> originalHitObjects, IBeatmap original ) {
+		private List<HitokoriHitObject> ConvertHitObjects ( IReadOnlyList<HitObject> originalHitObjects, IBeatmap original, CancellationToken cancellationToken ) {
 			List<HitokoriHitObject> hitObjects = new List<HitokoriHitObject>();
 
 			foreach ( var hitObject in originalHitObjects ) {
-				hitObjects.AddRange( ConvertHitObject( hitObject, original ) );
+				cancellationToken.ThrowIfCancellationRequested();
+				hitObjects.AddRange( ConvertHitObject( hitObject, original, cancellationToken ) );
 			}
 
 			return hitObjects;

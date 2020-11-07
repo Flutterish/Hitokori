@@ -45,8 +45,6 @@ namespace osu.Game.Rulesets.Hitokori {
 			=> new HitokoriDifficultyCalculator( this, beatmap );
 		public override HealthProcessor CreateHealthProcessor ( double drainStartTime )
 			=> new HitokoriHealthProcessor();
-		public override ScoreProcessor CreateScoreProcessor ()
-			=> new HitokoriScoreProcessor();
 		public override StatisticRow[] CreateStatisticsForScore ( ScoreInfo score, IBeatmap playableBeatmap )
 			=> base.CreateStatisticsForScore( score, playableBeatmap );
 

@@ -3,6 +3,7 @@ using osu.Game.Rulesets.Hitokori.Scoring;
 using osu.Game.Rulesets.Judgements;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 	public abstract class HitokoriTileObject : HitokoriHitObject {
@@ -15,11 +16,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		public TilePoint LastPoint => AllTiles.Last();
 		new public List<IList<HitSampleInfo>> Samples = new List<IList<HitSampleInfo>>();
 
-		protected override void CreateNestedHitObjects () {
+		protected override void CreateNestedHitObjects ( CancellationToken cancellationToken ) {
 			int index = 0;
 			foreach ( var i in AllTiles ) {
 				i.Samples = Samples[ index++ ];
 				AddNested( i );
+
+				cancellationToken.ThrowIfCancellationRequested();
 			}
 		}
 
