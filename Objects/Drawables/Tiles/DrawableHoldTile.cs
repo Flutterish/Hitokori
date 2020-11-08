@@ -107,7 +107,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 					HoldButton = null;
 					ReleaseMissed = false;
 				};
-			} else if ( tile.TilePoint == Tile.EndPoint ) {
+			}
+			else if ( tile.TilePoint == Tile.EndPoint ) {
 				AddInternal( EndPoint = tile );
 				EndPoint.OnNewResult += ( a, b ) => {
 					Hitokori.OnRelease();

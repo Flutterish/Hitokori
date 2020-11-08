@@ -1,8 +1,6 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public abstract class AutoImplementedMod : Mod, IApplicableToBeatmapConverter {

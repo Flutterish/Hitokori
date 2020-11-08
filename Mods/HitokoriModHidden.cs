@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				using ( tile.BeginAbsoluteSequence( tile.TilePoint.HitTime - 700 ) ) {
 					tile.FadeOut( 300 );
 				}
-			} else if ( hitObject is DrawableHoldTile hold ) {
+			}
+			else if ( hitObject is DrawableHoldTile hold ) {
 				using ( hold.BeginAbsoluteSequence( hold.Tile.StartPoint.HitTime - 500 ) ) {
 					hold.FadeOut( 300 );
 				}

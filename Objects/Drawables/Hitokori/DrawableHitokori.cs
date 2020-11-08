@@ -75,14 +75,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			if ( LastOrbital is null ) {
 				NextOrbital.Hold();
 				FreeOrbitals.ForEach( x => x.Release() );
-			} else {
+			}
+			else {
 				LastOrbital.Release();
 				NextOrbital.Hold();
 			}
 
 			if ( Triplets ) {
 				RotateTo( previousTargetRotation - ( Math.PI - TripletAngle ) );
-			} else {
+			}
+			else {
 				RotateTo( previousTargetRotation - Math.PI );
 			}
 		}
@@ -102,7 +104,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		private double previousTargetRotation;
-		public void VelocityConsistentRotateTo ( double target, double startTime, double endTime ) {
+		public void VelocityConsistentRotateTo ( double target, double startTime, double endTime ) { // TODO make a better one
 			EndTime = endTime;
 
 			double duration = endTime - startTime;
@@ -191,7 +193,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			if ( Triplets ) { // if yall want to find a generic formula, go for it
 				Orbitals.ForEach( x => x.Angle = target );
 				FirstFreeOrbital.Angle += TripletAngle;
-			} else {
+			}
+			else {
 				Orbitals.ForEach( x => x.Angle = target );
 			}
 		}
@@ -203,11 +206,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				foreach ( var x in Orbitals ) {
 					if ( x == FirstFreeOrbital ) {
 						x.RotateTo( target + TripletAngle );
-					} else {
+					}
+					else {
 						x.RotateTo( target );
 					}
 				}
-			} else {
+			}
+			else {
 				Orbitals.ForEach( x => x.RotateTo( target ) );
 			}
 		}

@@ -1,14 +1,10 @@
-﻿using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Settings;
-using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
-using osuTK.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class Radius : Container {
 		Bindable<double> Opacity;
 		Bindable<DashStyle> BorderStyle;
-		DashStyle LastBorderStyle = (DashStyle)(-1);
+		DashStyle LastBorderStyle = (DashStyle)( -1 );
 
 		public Radius () {
 

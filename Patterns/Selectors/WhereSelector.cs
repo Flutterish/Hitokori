@@ -31,7 +31,8 @@ namespace osu.Game.Rulesets.Hitokori.Patterns.Selectors {
 				foreach ( var x in i ) {
 					if ( Predicate( x, group ) ) {
 						group.Add( x );
-					} else if ( group.Count > 0 ) {
+					}
+					else if ( group.Count > 0 ) {
 						all.Add( group );
 						group = new List<T>();
 					}

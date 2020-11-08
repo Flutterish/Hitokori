@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		public double Direction => IsClockwise ? 1 : -1;
 		public bool ChangedDirection {
 			get => Previous.IsClockwise != IsClockwise;
-			set => IsClockwise = (ChangedDirection == value) ? IsClockwise : !IsClockwise;
+			set => IsClockwise = ( ChangedDirection == value ) ? IsClockwise : !IsClockwise;
 		}
 
 		public double Distance = 1;

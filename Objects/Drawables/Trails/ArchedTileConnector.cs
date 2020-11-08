@@ -5,7 +5,6 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
@@ -68,7 +67,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			deltaAngle = to - from;
 
 			if ( deltaAngle < 0.001 ) {
-				Line.Alpha = 0;
 				yield break;
 			}
 

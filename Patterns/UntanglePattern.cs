@@ -1,9 +1,7 @@
 ﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Patterns.Selectors;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Patterns {
 	public class UntanglePattern : Pattern<HitokoriTileObject> {
@@ -22,7 +20,7 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 					return ( flippedDistance - normalDistance ) / normalDistance > REQUIED_IMPROVEMENT;
 				}
 			);
-		
+
 		public override IEnumerable<HitokoriTileObject> Apply ( IEnumerable<HitokoriTileObject> selected ) {
 			foreach ( var i in selected ) {
 				var tile = i.FirstPoint.Previous;

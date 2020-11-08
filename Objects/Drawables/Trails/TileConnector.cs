@@ -1,10 +1,8 @@
-﻿using FFmpeg.AutoGen;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
-using osu.Framework.Timing;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
@@ -48,7 +46,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		[Resolved]
 		private PathPool pathPool { get; set; }
 
-		public PooledPath Line;
+		private PooledPath Line;
 
 		private float lineRadius = HitokoriTile.SIZE / 8f;
 		public float LineRadius {
@@ -112,7 +110,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 				//Size = requiredSize;
 			}
 		}
-		
+
 		protected void UpdateConnector () {
 			Line.ClearVertices();
 

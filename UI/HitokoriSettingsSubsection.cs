@@ -59,6 +59,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public override string TooltipText => $"{Current.Value}ms";
 	}
 	public class PercentageSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{(int)(Current.Value*100)}%";
+		public override string TooltipText => $"{(int)( Current.Value * 100 )}%";
 	}
 }

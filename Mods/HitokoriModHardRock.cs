@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Graphics.Sprites;
-using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Mods;

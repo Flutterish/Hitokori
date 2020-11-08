@@ -17,11 +17,11 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 		/// </summary>
 		private const double BASE_BPM = 120;
 
-		protected override double StrainValueOf(DifficultyHitObject current) {
+		protected override double StrainValueOf ( DifficultyHitObject current ) {
 			HitokoriDifficultyHitObject hitokoriCurrent = (HitokoriDifficultyHitObject)current;
-			double bpm = Math.Min(hitokoriCurrent.BPM, MAX_BPM);
+			double bpm = Math.Min( hitokoriCurrent.BPM, MAX_BPM );
 
-			return Math.Pow(bpm / BASE_BPM, 0.6);
+			return Math.Pow( bpm / BASE_BPM, 0.6 );
 		}
 	}
 }

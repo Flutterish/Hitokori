@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public static class ModCompatibility {
@@ -18,7 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			=> mods[ RulesetOf( mod ) ].GetIncompatible( mod ).ToArray();
 
 		public static Type RulesetOf ( Type mod ) {
-			foreach ( var ( ruleset, mods ) in mods ) {
+			foreach ( var (ruleset, mods) in mods ) {
 				if ( mods.HasMod( mod ) ) return ruleset;
 			}
 			throw new InvalidOperationException();
@@ -45,7 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public void AddMod ( Type mod ) {
 			if ( !Mods.ContainsKey( mod ) ) {
 				var newMod = new ModDependencies( mod );
-				
+
 				foreach ( ModDependencies dependencies in Mods.Values ) {
 					newMod.GenerateIncompabilitiesWith( dependencies );
 				}
@@ -76,7 +75,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 					if ( !targetProperty.GetCustomAttributes<ModdableAttribute>().Any() ) throw new InvalidOperationException( $"Cannot modify {targetType.Name}.{targetProperty.Name} as it's not [Moddable]" );
 
 					if ( !AffectedProperties.ContainsKey( targetType ) ) AffectedProperties.Add( targetType, new List<(PropertyInfo by, PropertyInfo target)>() );
-					AffectedProperties[ targetType ].Add( ( prop, targetProperty) );
+					AffectedProperties[ targetType ].Add( (prop, targetProperty) );
 				}
 			}
 		}
@@ -97,7 +96,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			foreach ( var target in targets ) {
 				var targetType = target.GetType();
 				foreach ( var typeEffects in AffectedProperties.Where( x => x.Key.IsAssignableFrom( targetType ) ) ) {
-					foreach ( var ( by, targetProp ) in typeEffects.Value ) {
+					foreach ( var (by, targetProp) in typeEffects.Value ) {
 						targetProp.SetValue( target, by.GetValue( mod ) );
 					}
 				}

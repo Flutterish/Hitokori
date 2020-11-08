@@ -55,7 +55,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		public void SetResultOrMiss ( DrawableTilePoint tile, HitResult result ) {
 			if ( result != HitResult.None ) {
 				tile.SetResult( result );
-			} else {
+			}
+			else {
 				tile.SetResult( HitResult.Miss );
 			}
 		}

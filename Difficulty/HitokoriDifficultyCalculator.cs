@@ -7,7 +7,6 @@ using osu.Game.Rulesets.Hitokori.Difficulty.Skills;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 		protected override DifficultyAttributes CreateDifficultyAttributes ( IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate ) {
 			double readingDifficulty = skills.First<Reading>().DifficultyValue() * STAR_SCALING_FACTOR;
 			double speedDifficulty = skills.First<Speed>().DifficultyValue() * STAR_SCALING_FACTOR;
-			double starRating = (readingDifficulty + speedDifficulty) / 2;
+			double starRating = ( readingDifficulty + speedDifficulty ) / 2;
 
 			return new DifficultyAttributes {
 				StarRating = starRating,

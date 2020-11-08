@@ -81,7 +81,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			if ( reverseSpin ) {
 				Everything.Rotation = -Hitokori.StableAngle.ToDegreesF() * 0.7f;
-			} else {
+			}
+			else {
 				Everything.Rotation = 0;
 			}
 
@@ -115,7 +116,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 				tile.OnNewResult += OnTileResult;
 				Tiles.Add( tile );
-			} else {
+			}
+			else {
 				base.Add( hitObject );
 			}
 		}
@@ -127,7 +129,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				tile.OnNewResult -= OnTileResult;
 				Tiles.Remove( tile );
 				tile.RemoveNested();
-			} else {
+			}
+			else {
 				base.Remove( h );
 			}
 
@@ -167,7 +170,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 						} );
 					}
 				}
-			} else if ( obj is DrawableTilePoint point ) {
+			}
+			else if ( obj is DrawableTilePoint point ) {
 				Judgements.Add( new DrawableHitokoriJudgement( result, point ) );
 			}
 		}

@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
@@ -104,7 +103,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			if ( TilePoint.Parent == TilePoint.Next?.Parent ) {
 				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI - TilePoint.Offset, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
 				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None );
-			} else {
+			}
+			else {
 				Hitokori.Swap( TilePoint );
 			}
 		}

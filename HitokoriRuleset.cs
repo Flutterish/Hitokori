@@ -33,8 +33,6 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public override IBeatmapConverter CreateBeatmapConverter ( IBeatmap beatmap )
 			=> new HitokoriBeatmapConverter( beatmap, this );
-		public override IBeatmapProcessor CreateBeatmapProcessor ( IBeatmap beatmap )
-			=> new HitokoriBeatmapProcessor( beatmap );
 
 		public override IRulesetConfigManager CreateConfig ( SettingsStore settings )
 			=> new HitokoriSettingsManager( settings, RulesetInfo );

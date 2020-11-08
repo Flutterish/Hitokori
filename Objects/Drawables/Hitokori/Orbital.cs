@@ -37,7 +37,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					InterpolateTrailTo( Clock.CurrentTime - deltaTime );
 					trailTimer = Clock.CurrentTime;
 					Velocity = -Velocity;
-				} else {
+				}
+				else {
 					InterpolateTrailTo( Clock.CurrentTime + deltaTime );
 				}
 			}
@@ -84,7 +85,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					Trail.Offset = Parent.TilePosition + Position;
 					Trail.AddVertice( Trail.Offset );
 				}
-			} else {
+			}
+			else {
 				// if time goes backward we dont want the trail to stop
 				trailTimer = time;
 			}

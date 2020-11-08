@@ -100,11 +100,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot {
 
 			if ( IsHolding ) {
 				Texture.Texture = HoldTexture;
-			} else if ( Left.IsDown ) {
+			}
+			else if ( Left.IsDown ) {
 				Texture.Texture = LeftTexture;
-			} else if ( Right.IsDown ) {
+			}
+			else if ( Right.IsDown ) {
 				Texture.Texture = RightTexture;
-			} else {
+			}
+			else {
 				Texture.Texture = NeutralTexture;
 			}
 		}

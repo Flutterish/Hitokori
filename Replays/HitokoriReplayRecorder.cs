@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Hitokori.Replays {
 			HitokoriReplayFrame previous = previousFrame as HitokoriReplayFrame;
 			if ( previous is null ) {
 				return new HitokoriReplayFrame( Time.Current, actions.ToArray().ToList() );
-			} else if ( ( actions.Count() != previous.Actions.Count ) || actions.Except( previous.Actions ).Any() ) {
+			}
+			else if ( ( actions.Count() != previous.Actions.Count ) || actions.Except( previous.Actions ).Any() ) {
 				return new HitokoriReplayFrame( Time.Current, actions.ToArray().ToList() );
 			}
 			return null;

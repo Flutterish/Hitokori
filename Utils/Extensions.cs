@@ -81,19 +81,5 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			=> vector.X * vector.Y;
 		public static bool FitsInside ( this Vector2 a, Vector2 b )
 			=> a.X <= b.X && a.Y <= b.Y;
-
-		public static T WithMin<T> ( this IEnumerable<T> self, Func<T,float> func ) {
-			var picked = self.FirstOrDefault();
-			if ( picked is null ) return picked;
-			var min = func( picked );
-			foreach ( var i in self.Skip( 1 ) ) {
-				var val = func( i );
-				if ( min > val ) {
-					picked = i;
-					min = val;
-				}
-			}
-			return picked;
-		}
 	}
 }
