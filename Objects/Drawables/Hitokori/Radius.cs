@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Settings;
+using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 using System.Collections.Generic;
@@ -33,31 +34,29 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			BeforeUpdate = null;
 
 			if ( style == DashStyle.Solid ) {
-				ArchedConnector Solid = new ArchedConnector( Math.PI * 2, 1 );
+				CircularConnector Solid = new( Vector2.Zero, Vector2.Zero, Math.PI * 2 );
 				Solid.AlwaysPresent = true;
-				Solid.Around = Vector2.Zero;
-				Solid.LineRadius = 1;
+				Solid.TrailRadius = 1;
 				Solid.Connect( 0 );
-				AddInternal( Solid );
+				AddInternal( Solid.Center() );
 
 				BeforeUpdate = () => {
 					Solid.From = Vector2.UnitX * (float)Length;
-					Solid.To = Vector2.UnitX * (float)Length;
+					Solid.Position = Solid.From;
 				};
 			}
 			else if ( style == DashStyle.Dashed ) { // BUG when switching back to this, not all dashes exist
 				int count = 10;
-				List<ArchedConnector> dashes = new List<ArchedConnector>();
+				List<CircularConnector> dashes = new();
 
 				double angle = Math.PI * 2 / count;
 				double angleSkip = angle / 4;
 				for ( int i = 0; i < count; i++ ) {
-					ArchedConnector Dash = new ArchedConnector( angle - angleSkip, 1 );
+					CircularConnector Dash = new( Vector2.Zero, Vector2.Zero, angle - angleSkip );
 					Dash.AlwaysPresent = true;
-					Dash.Around = Vector2.Zero;
-					Dash.LineRadius = 1;
+					Dash.TrailRadius = 1;
 					Dash.Connect( 0 );
-					AddInternal( Dash );
+					AddInternal( Dash.Center() );
 					dashes.Add( Dash );
 				}
 
@@ -65,24 +64,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					for ( int i = 0; i < count; i++ ) {
 						var theta = angle * i;
 						dashes[ i ].From = new Vector2( (float)( Math.Cos( theta ) * Length ), (float)( Math.Sin( theta ) * Length ) );
-						dashes[ i ].To = new Vector2( (float)( Math.Cos( theta + angle - angleSkip ) * Length ), (float)( Math.Sin( theta + angle - angleSkip ) * Length ) );
+						dashes[ i ].Position = dashes[ i ].From - new Vector2( dashes[ i ].TrailRadius );
 					}
 				};
 			}
 			else if ( style == DashStyle.Dotted ) {
 				int count = 20;
-				List<ArchedConnector> dots = new List<ArchedConnector>();
+				List<CircularConnector> dots = new List<CircularConnector>();
 
 				double angle = Math.PI * 2 / count;
 				for ( int i = 0; i < count; i++ ) {
-					ArchedConnector Dot = new ArchedConnector( Math.PI * 2, 1 );
-					Dot.From = Vector2.One * 0.4f;
-					Dot.To = Vector2.One * 0.4f;
+					CircularConnector Dot = new( Vector2.One * 0.4f, Vector2.Zero, Math.PI * 2 );
 					Dot.AlwaysPresent = true;
-					Dot.Around = Vector2.Zero;
-					Dot.LineRadius = 1;
+					Dot.TrailRadius = 1;
 					Dot.Connect( 0 );
-					AddInternal( Dot );
+					AddInternal( Dot.Center() );
 					dots.Add( Dot );
 				}
 

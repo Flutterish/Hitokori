@@ -16,11 +16,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// A connector is a path between 2 tiles. Its start position is offset by whatever the offset is from the "from" tile, that is
 	/// if you set its position to `<c>from.TilePosition - to.TilePosition</c>` it will be centered at "from";
 	/// </summary>
-	public class TileConnector : Connector {
+	public class PathTileConnector : PathConnector {
 		new public TilePoint From;
 		new public TilePoint To;
 
-		public TileConnector ( TilePoint from, TilePoint to, float alpha = 0.2f ) : base( alpha ) {
+		public PathTileConnector ( TilePoint from, TilePoint to, float alpha = 0.2f ) : base( alpha ) {
 			From = from;
 			To = to;
 		}
@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 	}
 
-	public class Connector : Container {
+	public class PathConnector : Container {
 		[Resolved]
 		private PathPool pathPool { get; set; }
 
@@ -71,7 +71,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 
 		protected AnimatedVector Progress;
 
-		public Connector ( float alpha = 0.2f ) {
+		public PathConnector ( float alpha = 0.2f ) {
 			Progress = new AnimatedVector( parent: this );
 
 			LineAlpha = alpha;

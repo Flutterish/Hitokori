@@ -12,12 +12,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// A connector is a path between 2 tiles. Its center position is offset by whatever the offset is from the "around" position, that is
 	/// if you set its position to `<c>around - to</c>` its start will be centered at "around";
 	/// </summary>
-	public class ArchedTileConnector : ArchedConnector { // TODO on miss connectors
+	public class ArchedPathTileConnector : ArchedPathConnector {
 		new TilePoint Around;
 		new TilePoint From;
 		new TilePoint To;
 
-		public ArchedTileConnector ( TilePoint from, TilePoint to, TilePoint around, double angle, float alpha = 0.2F ) : base( angle, alpha ) {
+		public ArchedPathTileConnector ( TilePoint from, TilePoint to, TilePoint around, double angle, float alpha = 0.2F ) : base( angle, alpha ) {
 			Around = around;
 			From = from;
 			To = to;
@@ -38,11 +38,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 	}
 
-	public class ArchedConnector : Connector { // TODO on miss connectors
+	public class ArchedPathConnector : PathConnector { // TODO on miss connectors
 		public Vector2 Around;
 		double Angle;
 
-		public ArchedConnector ( double angle, float alpha = 0.2F ) : base( alpha ) {
+		public ArchedPathConnector ( double angle, float alpha = 0.2F ) : base( alpha ) {
 			Angle = angle;
 		}
 

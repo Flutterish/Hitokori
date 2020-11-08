@@ -11,19 +11,29 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public class CircularTrail : TrailRenderer {
-		protected Vector2 From;
+	public class CircularConnector : Connector {
+		private Vector2 from;
+		public Vector2 From { 
+			get => from; 
+			set {
+				if ( from == value ) return;
+
+				from = value;
+				isInvalidated = true;
+			}
+		}
 		protected Vector2 Around;
 		protected double angle;
 
-		public CircularTrail ( Vector2 from, Vector2 around, double angle ) : this() {
+		public CircularConnector ( Vector2 from, Vector2 around, double angle ) : this() {
 			From = from;
 			Around = around;
 			this.angle = angle;
 		}
 
 		CircularProgress arc;
-		public CircularTrail () {
+
+		public CircularConnector () {
 			InternalChild = arc = new CircularProgress().Center();
 			AutoSizeAxes = Axes.None;
 		}
@@ -35,22 +45,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			arc.InnerRadius = TrailRadius * 2 / radius;
 			arc.Size = new Vector2( radius * 2 );
 
-			if ( angle >= 0 ) {
-				arc.FillTo( ( progress.B - progress.A ) / Math.PI / 2 * angle );
-				arc.Rotation = ( ( Around - From ).AngleFromXAxis() + progress.A * angle ).ToDegreesF() - 90;
-			}
-			else {
-				arc.FillTo( ( progress.A - progress.B ) / Math.PI / 2 * -angle );
-				arc.Rotation = ( ( Around - From ).AngleFromXAxis() + progress.B * angle ).ToDegreesF() - 90;
-			}
+			arc.FillTo( ( progress.B - progress.A ) / Math.PI / 2 * angle );
+
+			arc.Rotation = ( ( Around - From ).AngleFromXAxis() + ( angle >= 0 ? progress.A : progress.B ) * angle ).ToDegreesF() - 90;
 		}
 	}
 
-	public class CircularTileTrail : CircularTrail {
+	public class CircularTileConnector : CircularConnector {
 		new public TilePoint From;
 		new public TilePoint Around;
 
-		public CircularTileTrail ( TilePoint from, TilePoint around, double angle ) {
+		public CircularTileConnector ( TilePoint from, TilePoint around, double angle ) {
 			From = from;
 			Around = around;
 			this.angle = angle;

@@ -20,7 +20,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		Circle Circle;
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
-		List<TrailRenderer> LinesToMe = new();
+		List<Connector> LinesToMe = new();
+		ArchedPathTileConnector c;
 		SpriteText Label;
 
 		public TileMarker ( TilePoint tile, Color4 color, TickSize size = TickSize.Auto ) {
@@ -65,6 +66,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Label?.FadeInFromZero( 700 );
 
 			double lineDuration = LinesToMe.Select( line => line.Appear() ).Append( 0 ).Max();
+			c?.Appear();
 
 			return new[] { 700, ReverseMarker?.Appear(), lineDuration }.Max().Value;
 		}
@@ -75,6 +77,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				.FadeOut( 300 );
 
 			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
+			c?.Disappear();
 			ImportantMarker?.Disappear();
 			Label?.FadeOutFromOne( 300 );
 
@@ -87,6 +90,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				.FadeOut( 700 );
 
 			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
+			c?.Disappear();
 			ImportantMarker?.Disappear();
 
 			return new[] { 700, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
@@ -107,9 +111,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			);
 		}
 		public void ConnectFrom ( TilePoint from ) {
-			StraightTileTrail line;
+			LineTileConnector line;
 			AddInternal(
-				line = new StraightTileTrail( from, Tile ) {
+				line = new LineTileConnector( from, Tile ) {
 					Position = from.TilePosition - Tile.TilePosition
 				}
 			);
@@ -117,19 +121,19 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
-			//ArchedTileConnector line;
+			ArchedPathTileConnector line;
 
-			//var a = from.TilePosition - around.TilePosition;
-			//var b = Tile.TilePosition - around.TilePosition;
+			var a = from.TilePosition - around.TilePosition;
+			var b = Tile.TilePosition - around.TilePosition;
 
-			//var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
+			var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
 
-			//AddInternal(
-			//	line = new ArchedTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
-			//		Position = around.TilePosition - Tile.TilePosition
-			//	}
-			//);
-			//LinesToMe.Add( line );
+			AddInternal(
+				line = new ArchedPathTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
+					Position = around.TilePosition - Tile.TilePosition
+				}
+			);
+			c = line;
 		}
 
 		public void AddLabel ( string text ) {

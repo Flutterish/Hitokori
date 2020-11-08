@@ -13,14 +13,14 @@ using System.Text;
 using SixLabors.ImageSharp;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public class StraightTrail : TrailRenderer {
+	public class LineConnector : Connector {
 		Box box;
 
-		public StraightTrail () {
+		public LineConnector () {
 			InternalChild = box = new Box().Center();
 		}
 
-		public StraightTrail ( Vector2 from, Vector2 to ) : this() {
+		public LineConnector ( Vector2 from, Vector2 to ) : this() {
 			From = from;
 			To = to;
 		}
@@ -38,11 +38,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 	}
 
-	public class StraightTileTrail : StraightTrail {
+	public class LineTileConnector : LineConnector {
 		new public TilePoint From;
 		new public TilePoint To;
 
-		public StraightTileTrail ( TilePoint from, TilePoint to ) {
+		public LineTileConnector ( TilePoint from, TilePoint to ) {
 			From = from;
 			To = to;
 			InternalChild.Alpha = 0.2f;

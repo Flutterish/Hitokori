@@ -1,4 +1,5 @@
-﻿using osu.Framework.Input.Bindings;
+﻿using osu.Framework.Graphics;
+using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
@@ -15,14 +16,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		DrawableTilePoint StartPoint;
 		DrawableTilePoint EndPoint;
 
-		CircularTileTrail Curve;
+		CircularTileConnector Curve;
 
 		public DrawableHoldTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
 			Tile = hitObject as HoldTile;
 			this.Center();
 
 			AddInternal(
-				Curve = new CircularTileTrail( Tile.StartPoint, Tile.EndPoint.Parent, Tile.StartPoint.AngleOffset ) {
+				Curve = new CircularTileConnector( Tile.StartPoint, Tile.EndPoint.Parent, Tile.StartPoint.AngleOffset ) {
 					Colour = Tile.StartPoint.Color,
 					Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition,
 					Depth = 1
@@ -36,7 +37,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			Curve.Appear( Tile.StartPoint.Duration * 0.75 );
 
 			using ( BeginDelayedSequence( InitialLifetimeOffset, true ) ) {
-				Curve.Disappear( Tile.StartPoint.Duration );
+				Curve.Disappear( Tile.StartPoint.Duration, Easing.None );
 			}
 		}
 

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public abstract class TrailRenderer : CompositeDrawable {
-		public TrailRenderer () {
+	public abstract class Connector : CompositeDrawable {
+		public Connector () {
 			progress = new( this );
 			progress.BindValueChanged( v => isInvalidated = true );
 		}
@@ -45,15 +45,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			progress.AnimateATo( 1, duration, easing );
 		}
 
-		public virtual double Appear ( double duration = 500 ) {
+		public virtual double Appear ( double duration = 500, Easing easing = Easing.In ) {
 			this.FadeInFromZero( duration );
-			Connect( duration, Easing.In );
+			Connect( duration, easing );
 
 			return duration;
 		}
-		public virtual double Disappear ( double duration = 300 ) {
+		public virtual double Disappear ( double duration = 300, Easing easing = Easing.Out ) {
 			this.FadeOut( duration );
-			Disconnect( duration, Easing.Out );
+			Disconnect( duration, easing );
 
 			return duration;
 		}
