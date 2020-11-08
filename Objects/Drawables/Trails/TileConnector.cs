@@ -165,14 +165,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			( Parent as Container )?.Remove( this );
 		}
 
-		int borrows;
 		public void Borrow () {
 			IsBorrowed = true;
-			borrows++;
 		}
-
-		public override string ToString ()
-			=> Size.ToString() + ' ' + borrows;
 	}
 
 	public class PathPool : IDisposable {
