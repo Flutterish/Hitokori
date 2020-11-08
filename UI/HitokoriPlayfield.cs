@@ -26,8 +26,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		/// Camera position. Used because offsetting containers clips children.
 		/// </summary>
 		AnimatedVector CameraPosition;
-		Bindable<CameraFollowMode> FollowMode = new Bindable<CameraFollowMode>();
-		Bindable<double> CameraSpeed = new Bindable<double>( 300 );
+		Bindable<CameraFollowMode> FollowMode = new();
+		BindableDouble CameraSpeed = new( 300 );
 
 		public readonly Container Everything;
 		public readonly Container SFX;
@@ -180,8 +180,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		[BackgroundDependencyLoader]
 		private void load ( HitokoriSettingsManager config ) {
-			FollowMode = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode );
-			CameraSpeed = config.GetBindable<double>( HitokoriSetting.CameraSpeed );
+			config.BindWith( HitokoriSetting.CameraFollowMode, FollowMode );
+			config.BindWith( HitokoriSetting.CameraSpeed, CameraSpeed );
 		}
 
 		protected override void Dispose ( bool isDisposing ) {

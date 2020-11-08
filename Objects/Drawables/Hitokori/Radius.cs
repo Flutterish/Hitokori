@@ -10,13 +10,8 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class Radius : Container {
-		Bindable<double> Opacity;
-		Bindable<DashStyle> BorderStyle;
-		DashStyle LastBorderStyle = (DashStyle)( -1 );
-
-		public Radius () {
-
-		}
+		BindableDouble Opacity = new();
+		Bindable<DashStyle> BorderStyle = new();
 
 		public void AnimateDistance ( double length, double duration, Easing easing = Easing.None ) {
 			this.ResizeTo( (float)length * 2, duration, easing );
@@ -27,13 +22,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		protected override void Update () {
 			BeforeUpdate?.Invoke();
 			base.Update();
-			Alpha = (float)Opacity.Value;
-
-			if ( BorderStyle.Value != LastBorderStyle ) {
-				LastBorderStyle = BorderStyle.Value;
-
-				LoadStyle( LastBorderStyle );
-			}
 
 			Rotation += (float)( 20 * Clock.ElapsedFrameTime / 1000 );
 		}
@@ -57,7 +45,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					Solid.To = Vector2.UnitX * (float)Length;
 				};
 			}
-			else if ( style == DashStyle.Dashed ) {
+			else if ( style == DashStyle.Dashed ) { // BUG when switching back to this, not all dashes exist
 				int count = 10;
 				List<ArchedConnector> dashes = new List<ArchedConnector>();
 
@@ -109,8 +97,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		[BackgroundDependencyLoader]
 		private void load ( HitokoriSettingsManager config ) {
-			Opacity = config.GetBindable<double>( HitokoriSetting.RingOpacity );
-			BorderStyle = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle );
+			config.BindWith( HitokoriSetting.RingOpacity, Opacity );
+			config.BindWith( HitokoriSetting.RingDashStyle, BorderStyle );
+
+			BorderStyle.BindValueChanged( v => LoadStyle( v.NewValue ), true );
+			Opacity.BindValueChanged( v => Alpha = (float)v.NewValue, true );
 		}
 	}
 }

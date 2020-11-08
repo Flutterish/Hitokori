@@ -26,18 +26,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 
 		protected override void Update () {
-			LineRadius = HitokoriTile.SIZE / 8f * (float)( width?.Value ?? 1 );
-
 			base.From = From.TilePosition;
 			base.To = To.TilePosition;
 
 			base.Update();
 		}
 
-		Bindable<double> width;
+		BindableDouble width = new();
 		[BackgroundDependencyLoader]
 		private void load ( HitokoriSettingsManager config ) {
-			width = config.GetBindable<double>( HitokoriSetting.ConnectorWidth );
+			config.BindWith( HitokoriSetting.ConnectorWidth, width );
+			width.BindValueChanged( v => LineRadius = HitokoriTile.SIZE / 8f * (float)width.Value, true );
 		}
 	}
 

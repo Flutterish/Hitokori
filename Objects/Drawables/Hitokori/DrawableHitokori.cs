@@ -233,10 +233,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public Vector2 KoriOffset => Kori.Position;
 
 
-		Bindable<MissCorrectionMode> CorrectionMode = new Bindable<MissCorrectionMode>();
+		Bindable<MissCorrectionMode> CorrectionMode = new();
 		[BackgroundDependencyLoader]
 		private void load ( HitokoriSettingsManager config ) {
-			CorrectionMode = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode );
+			config.BindWith( HitokoriSetting.MissCorrectionMode, CorrectionMode );
 		}
 
 		private double velocity;
