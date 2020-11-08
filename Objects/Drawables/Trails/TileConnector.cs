@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using FFmpeg.AutoGen;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,6 +11,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// <summary>
@@ -25,12 +27,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			To = to;
 		}
 
-		protected override void UpdateConnector () {
+		protected override void Update () {
 			LineRadius = HitokoriTile.SIZE / 8f * (float)( width?.Value ?? 1 );
 
 			base.From = From.TilePosition;
 			base.To = To.TilePosition;
-			base.UpdateConnector();
+
+			base.Update();
 		}
 
 		Bindable<double> width;
@@ -41,6 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	}
 
 	public class Connector : Container {
+
 		[Resolved]
 		private PathPool pathPool { get; set; }
 
@@ -51,11 +55,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			get => lineRadius;
 			set {
 				if ( lineRadius == value ) return;
+
 				lineRadius = value;
 				if ( Line is not null ) Line.PathRadius = lineRadius;
 			}
 		}
-		new public double Alpha = 0.2f;
+		private double alpha = 0.2f;
+		public double LineAlpha {
+			get => alpha;
+			set {
+				alpha = value;
+
+				if ( Line is not null ) Line.Alpha = (float)LineAlpha;
+			}
+		}
 
 		public Vector2 From;
 		public Vector2 To;
@@ -64,7 +77,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 
 		public Connector ( float alpha = 0.2f ) {
 			Progress = new AnimatedVector( parent: this );
-			Alpha = alpha;
+
+			LineAlpha = alpha;
 			this.Center();
 		}
 
@@ -76,23 +90,33 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 				}
 			}
 			else if ( Line is null ) {
-				InternalChild = Line = pathPool.Borrow();
+				InternalChild = Line = pathPool.Borrow( getMaxRequiredSize() );
 				Line.PathRadius = lineRadius;
-				Line.Alpha = (float)Alpha;
+				Line.Alpha = (float)LineAlpha;
 				Line.Anchor = Anchor.TopLeft;
 				Line.Origin = Anchor.TopLeft;
+				AutoSizeAxes = Axes.None;
+				Line.AutoSizeAxes = Axes.None;
 			}
 
 			if ( Line != null ) {
+				setLineSize();
 				UpdateConnector();
 			}
 		}
 
-		protected virtual void UpdateConnector () {
+		private void setLineSize () {
+			var requiredSize = getMaxRequiredSize();
+			if ( requiredSize.X > Line.Size.X || requiredSize.Y > Line.Size.Y ) {
+				Line.Size = new Vector2( MathF.Max( requiredSize.X, Line.Size.X ), MathF.Max( requiredSize.Y, Line.Size.Y ) );
+				//Size = requiredSize;
+			}
+		}
+		
+		protected void UpdateConnector () {
 			Line.ClearVertices();
 
-			Line.AddVertex( ( To - From ) * (float)Progress.A );
-			Line.AddVertex( ( To - From ) * (float)Progress.B );
+			foreach ( var i in getVerticesAt( (float)Progress.A, (float)Progress.B ) ) Line.AddVertex( i );
 
 			Line.Position = -Line.PositionInBoundingBox( Vector2.Zero );
 		}
@@ -118,6 +142,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {
 			Progress.AnimateATo( 1, duration, easing );
 		}
+
+		private Vector2 getMaxRequiredSize () {
+			var points = getVerticesAt( 0, 1 );
+			if ( !points.Any() ) return Vector2.One;
+			return new Vector2(
+				points.Max( v => v.X ) - points.Min( v => v.X ),
+				points.Max( v => v.Y ) - points.Min( v => v.Y )
+			) + new Vector2( lineRadius * 2 );
+		}
+
+		protected virtual IEnumerable<Vector2> getVerticesAt ( float progressA, float progressB ) {
+			yield return ( To - From ) * progressA;
+			yield return ( To - From ) * progressB;
+		}
 	}
 
 	public class PooledPath : Path {
@@ -127,24 +165,65 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			( Parent as Container )?.Remove( this );
 		}
 
+		int borrows;
 		public void Borrow () {
 			IsBorrowed = true;
+			borrows++;
 		}
+
+		public override string ToString ()
+			=> Size.ToString() + ' ' + borrows;
 	}
 
 	public class PathPool : IDisposable {
 		private List<PooledPath> paths = new List<PooledPath>();
+		public PathPool () {
+			while ( paths.Count < 15 ) {
+				var @new = new PooledPath {
+					AutoSizeAxes = Axes.None,
+					Size = new Vector2( 200 )
+				};
+				paths.Add( @new );
+			}
+			while ( paths.Count < 25 ) {
+				var @new = new PooledPath {
+					AutoSizeAxes = Axes.None,
+					Size = new Vector2( 250 )
+				};
+				paths.Add( @new );
+			}
+		}
 
-		public PooledPath Borrow () {
-			foreach ( var path in paths ) {
-				if ( !path.IsBorrowed ) {
-					path.Borrow();
+		public PooledPath Borrow ( Vector2 targetSize ) {
+			PooledPath picked = null;
+			for ( int i = 0; i < paths.Count; i++ ) {
+				var p = paths[ i ];
+				if ( !p.IsBorrowed ) {
+					if ( picked is null ) {
+						if ( targetSize.FitsInside( p.Size ) ) picked = p;
+						continue;
+					}
+					if ( picked.Size.Area() > p.Size.Area() ) picked = p;
+				}
+			}
 
-					return path;
+			if ( picked is not null ) {
+				picked.Borrow();
+				return picked;
+			}
+
+
+			for ( int i = 0; i < paths.Count; i++ ) {
+				var p = paths[ i ];
+				if ( !p.IsBorrowed ) {
+					p.Borrow();
+					return p;
 				}
 			}
 
 			var @new = new PooledPath();
+			@new.AutoSizeAxes = Axes.None;
+			@new.Size = targetSize;
 			@new.Borrow();
 
 			paths.Add( @new );

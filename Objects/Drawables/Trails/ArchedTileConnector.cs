@@ -5,6 +5,8 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// <summary>
@@ -22,13 +24,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			To = to;
 		}
 
-		protected override void UpdateConnector () {
+		protected override void Update () {
 			LineRadius = HitokoriTile.SIZE / 4f * (float)( width?.Value ?? 1 );
 
 			base.From = From.TilePosition;
 			base.To = To.TilePosition;
 			base.Around = Around.TilePosition;
-			base.UpdateConnector();
+			base.Update();
 		}
 
 		Bindable<double> width;
@@ -46,17 +48,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			Angle = angle;
 		}
 
-		protected override void UpdateConnector () {
-			Line.ClearVertices();
-
+		protected override IEnumerable<Vector2> getVerticesAt ( float progressA, float progressB ) {
 			var deltaFrom = From - Around;
 
 			double from = Math.Atan2( deltaFrom.Y, deltaFrom.X );
 			double to = from + Angle;
 			double deltaAngle = to - from;
 
-			to = from + Progress.B * deltaAngle;
-			from += Progress.A * deltaAngle;
+			to = from + progressB * deltaAngle;
+			from += progressA * deltaAngle;
 
 			double startDistance = ( From - Around ).Length;
 			double endDistance = ( To - Around ).Length;
@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 
 			if ( deltaAngle < 0.001 ) {
 				Line.Alpha = 0;
-				return;
+				yield break;
 			}
 
 			int steps = (int)Math.Max( deltaAngle / ( Math.PI / 64 ), 2 );
@@ -78,12 +78,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 				var angle = from + deltaAngle / ( steps - 1 ) * i;
 				var distance = startDistance + ( endDistance - startDistance ) * ( angle - startAngle ) / Angle;
 
-				Line.AddVertex( new Vector2( (float)Math.Cos( angle ), (float)Math.Sin( angle ) ) * (float)distance );
+				yield return new Vector2( (float)Math.Cos( angle ), (float)Math.Sin( angle ) ) * (float)distance;
 			}
-
-			Line.Position = -Line.PositionInBoundingBox( Vector2.Zero ); ;
-
-			Line.Alpha = (float)Alpha;
 		}
 
 		public double Appear ( double duration ) {
