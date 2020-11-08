@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		Circle Circle;
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
-		List<Connector> LinesToMe = new List<Connector>();
+		List<TrailRenderer> LinesToMe = new();
 		SpriteText Label;
 
 		public TileMarker ( TilePoint tile, Color4 color, TickSize size = TickSize.Auto ) {
@@ -107,9 +107,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			);
 		}
 		public void ConnectFrom ( TilePoint from ) {
-			TileConnector line;
+			StraightTileTrail line;
 			AddInternal(
-				line = new TileConnector( from, Tile ) {
+				line = new StraightTileTrail( from, Tile ) {
 					Position = from.TilePosition - Tile.TilePosition
 				}
 			);
@@ -117,19 +117,19 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
-			ArchedTileConnector line;
+			//ArchedTileConnector line;
 
-			var a = from.TilePosition - around.TilePosition;
-			var b = Tile.TilePosition - around.TilePosition;
+			//var a = from.TilePosition - around.TilePosition;
+			//var b = Tile.TilePosition - around.TilePosition;
 
-			var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
+			//var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
 
-			AddInternal(
-				line = new ArchedTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
-					Position = around.TilePosition - Tile.TilePosition
-				}
-			);
-			LinesToMe.Add( line );
+			//AddInternal(
+			//	line = new ArchedTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
+			//		Position = around.TilePosition - Tile.TilePosition
+			//	}
+			//);
+			//LinesToMe.Add( line );
 		}
 
 		public void AddLabel ( string text ) {

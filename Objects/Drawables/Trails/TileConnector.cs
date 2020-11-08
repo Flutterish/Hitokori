@@ -41,7 +41,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	}
 
 	public class Connector : Container {
-
 		[Resolved]
 		private PathPool pathPool { get; set; }
 

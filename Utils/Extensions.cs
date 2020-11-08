@@ -81,5 +81,9 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			=> vector.X * vector.Y;
 		public static bool FitsInside ( this Vector2 a, Vector2 b )
 			=> a.X <= b.X && a.Y <= b.Y;
+		public static float DistanceTo ( this Vector2 a, Vector2 b )
+			=> ( a - b ).Length;
+		public static float AngleFromXAxis ( this Vector2 a )
+			=> MathF.Atan2( a.Y, a.X );
 	}
 }
