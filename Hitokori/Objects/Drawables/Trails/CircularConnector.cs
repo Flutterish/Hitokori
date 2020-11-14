@@ -71,10 +71,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			base.Update();
 		}
 
-		BindableDouble width = new();
-		[BackgroundDependencyLoader]
+		BindableDouble width = new( 1 );
+		[BackgroundDependencyLoader(true)]
 		private void load ( HitokoriSettingsManager config ) {
-			config.BindWith( HitokoriSetting.HoldConnectorWidth, width );
+			config?.BindWith( HitokoriSetting.HoldConnectorWidth, width );
 			width.BindValueChanged( v => TrailRadius = HitokoriTile.SIZE / 4f * (float)v.NewValue, true );
 		}
 	}
