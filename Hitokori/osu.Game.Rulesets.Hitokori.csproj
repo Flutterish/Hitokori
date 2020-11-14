@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Osu\osu.Game\osu.Game.csproj" />
+    <PackageReference Include="ppy.osu.Game" Version="2020.1114.0" />
   </ItemGroup>
 
   <ItemGroup>

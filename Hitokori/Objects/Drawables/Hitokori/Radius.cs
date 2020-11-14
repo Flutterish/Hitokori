@@ -11,8 +11,8 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class Radius : Container {
-		BindableDouble Opacity = new();
-		Bindable<DashStyle> BorderStyle = new();
+		BindableDouble Opacity = new( 0.15 );
+		Bindable<DashStyle> BorderStyle = new( DashStyle.Dashed );
 
 		public void AnimateDistance ( double length, double duration, Easing easing = Easing.None ) {
 			this.ResizeTo( (float)length * 2, duration, easing );
@@ -91,10 +91,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			}
 		}
 
-		[BackgroundDependencyLoader]
+		[BackgroundDependencyLoader(true)]
 		private void load ( HitokoriSettingsManager config ) {
-			config.BindWith( HitokoriSetting.RingOpacity, Opacity );
-			config.BindWith( HitokoriSetting.RingDashStyle, BorderStyle );
+			config?.BindWith( HitokoriSetting.RingOpacity, Opacity );
+			config?.BindWith( HitokoriSetting.RingDashStyle, BorderStyle );
 
 			BorderStyle.BindValueChanged( v => LoadStyle( v.NewValue ), true );
 			Opacity.BindValueChanged( v => Alpha = (float)v.NewValue, true );

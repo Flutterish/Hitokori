@@ -32,8 +32,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			OnRevertResult += ( x, y ) => OnRevert();
 		}
 
-		[BackgroundDependencyLoader]
+		[BackgroundDependencyLoader(true)]
 		private void load ( HitokoriSettingsManager config ) {
+			if ( config is null ) return; // TODO dynamic text
+
 			if ( TilePoint.IsDifferentSpeed && config.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ) {
 				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
 			}

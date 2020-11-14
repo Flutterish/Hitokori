@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		private OsuColour colours { get; set; }
 
 		[BackgroundDependencyLoader]
-		private void load ( HitokoriSettingsManager config ) {
+		private void load () {
 			InternalChild = new Container {
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
