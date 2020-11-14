@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			yield return new BeatmapStatistic {
 				Name = "Press Tiles",
 				Content = HitObjects.OfType<TapTile>().Count().ToString(),
-				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.Square }
+				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.Circle }
 			};
 			yield return new BeatmapStatistic {
 				Name = "Hold Tiles",

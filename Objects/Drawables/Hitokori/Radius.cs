@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					Solid.Position = Solid.From;
 				};
 			}
-			else if ( style == DashStyle.Dashed ) { // BUG when switching back to this, not all dashes exist
+			else if ( style == DashStyle.Dashed ) {
 				int count = 10;
 				List<CircularConnector> dashes = new();
 

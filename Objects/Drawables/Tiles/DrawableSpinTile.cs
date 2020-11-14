@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
-	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> {
-		new public readonly SpinTile Tile;
-		List<DrawableTilePoint> Points = new List<DrawableTilePoint>();
+	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO join paths
+		new public readonly SpinTile Tile; // TODO default parameters should be zero
+		List<DrawableTilePoint> Points = new List<DrawableTilePoint>(); // TODO rework drawable tile logic
 
 		public double EndTime => ( (IHasDuration)Tile ).EndTime;
 		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
