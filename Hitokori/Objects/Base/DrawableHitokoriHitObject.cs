@@ -21,5 +21,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		public void RemoveNested () {
 			ClearNestedHitObjects();
 		}
+
+		protected override void LoadComplete () {
+			base.LoadComplete();
+			LifetimeStart = HitObject.StartTime - InitialLifetimeOffset;
+		}
 	}
 }
