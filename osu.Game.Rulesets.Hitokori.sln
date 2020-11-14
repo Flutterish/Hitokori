@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Hitokori", "Hitokori\osu.Game.Rulesets.Hitokori.csproj", "{E5ABD6B1-6FFF-4296-84AF-F962257C208C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Hitokori.Tests", "Tests\osu.Game.Rulesets.Hitokori.Tests.csproj", "{7D952749-8A13-45A3-9E94-8CD7ACD449A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5ABD6B1-6FFF-4296-84AF-F962257C208C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5ABD6B1-6FFF-4296-84AF-F962257C208C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5ABD6B1-6FFF-4296-84AF-F962257C208C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5ABD6B1-6FFF-4296-84AF-F962257C208C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D952749-8A13-45A3-9E94-8CD7ACD449A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D952749-8A13-45A3-9E94-8CD7ACD449A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D952749-8A13-45A3-9E94-8CD7ACD449A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D952749-8A13-45A3-9E94-8CD7ACD449A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {618A9BE2-F05B-4C22-B91C-CE203E542D2C}
+	EndGlobalSection
+EndGlobal
