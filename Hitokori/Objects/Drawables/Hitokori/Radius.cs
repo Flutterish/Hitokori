@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		private Action BeforeUpdate;
 
-		void LoadStyle ( DashStyle style ) { // TODO make connectors more crisp
+		void LoadStyle ( DashStyle style ) {
 			ClearInternal();
 			BeforeUpdate = null;
 

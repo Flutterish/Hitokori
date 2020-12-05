@@ -45,8 +45,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public Radius Radius;
 
-		public Orbital Hi { get; set; }
-		public Orbital Kori { get; set; }
+		public Orbital Hi { get; private set; }
+		public Orbital Kori { get; private set; }
 
 		public DrawableHitokori () {
 			TilePosition = InitialPosition;
@@ -63,10 +63,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public double EndTime { get; private set; }
 		public void Swap ( TilePoint hit ) {
+			FinishTransforms( true );
 			Snap();
 			Swap();
 
 			TilePosition = hit.TilePosition;
+			foreach ( var i in Orbitals.Except( LastOrbital.Yield() ) ) {
+				i.TileRotationOrigin.Value = TilePosition;
+			}
+			LastOrbital.TileRotationOrigin.Value = LastOrbital.TilePosition;
+			LastOrbital.TransformBindableTo( LastOrbital.TileRotationOrigin, TilePosition, 140, Easing.InBack );
+
 			RotateTo( hit.OutAngle, hit.HitTime, hit.HitTime + hit.Duration );
 			AnimateDistance( duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 ), easing: Easing.None );
 		}
@@ -104,57 +111,23 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		private double previousTargetRotation;
-		public void VelocityConsistentRotateTo ( double target, double startTime, double endTime ) { // TODO make a better one
+
+		public void NoOffsetRotateTo ( double target, double startTime, double endTime ) {
 			EndTime = endTime;
-
-			double duration = endTime - startTime;
 			double actualDuration = endTime - Clock.CurrentTime;
-
 			if ( Triplets ) target = ConvertToTripletAngle( target );
-
-			if ( duration == 0 || actualDuration == 0 ) {
+			if ( actualDuration < 0 ) {
+				actualDuration = endTime - startTime;
+			}
+			if ( actualDuration <= 0 ) {
 				RotateTo( target );
 				Orbitals.ForEach( x => x.Velocity = 0 );
 				return;
 			}
-
-			double velocity = ( target - previousTargetRotation ) / duration;
-
-			double startAngle = previousTargetRotation;
-
-			double leadupTime = actualDuration - duration;
-			double angleOffset = leadupTime * velocity;
-			RotateToWithInterpolation( startAngle - angleOffset );
-
+			double velocity = ( target - previousTargetRotation ) / actualDuration;
+			RotateToWithInterpolation( previousTargetRotation );
 			Orbitals.ForEach( x => x.Velocity = velocity );
 			Velocity = velocity;
-
-			previousTargetRotation = target;
-		}
-
-		public void AngleConsistentRotateTo ( double target, double startTime, double endTime ) {
-			EndTime = endTime;
-
-			double duration = endTime - startTime;
-			double actualDuration = endTime - Clock.CurrentTime;
-
-			if ( Triplets ) target = ConvertToTripletAngle( target );
-
-			if ( duration == 0 || actualDuration == 0 ) {
-				RotateTo( target );
-				Orbitals.ForEach( x => x.Velocity = 0 );
-				return;
-			}
-
-			double angleOffset = LastOrbital.Angle - previousTargetRotation;
-			double startAngle = previousTargetRotation - angleOffset;
-
-			RotateToWithInterpolation( startAngle );
-			double velocity = ( target - startAngle ) / actualDuration;
-
-			Orbitals.ForEach( x => x.Velocity = velocity );
-			Velocity = velocity;
-
 			previousTargetRotation = target;
 		}
 
@@ -170,7 +143,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
 		public void RotateTo ( double target, double startTime, double endTime ) {
-			AngleConsistentRotateTo( target, startTime, endTime );
+			NoOffsetRotateTo( target, startTime, endTime );
 		}
 
 		/// <summary>

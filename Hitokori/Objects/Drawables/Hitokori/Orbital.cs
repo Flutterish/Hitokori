@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics.Containers;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osuTK;
@@ -11,6 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		protected Radius Radius;
 		bool isCentered = false;
 		public double Distance => isCentered ? 0 : Radius.Length;
+		public Vector2 TilePosition;
 
 		/// <summary>
 		/// Velocity in radians per millisecond
@@ -33,10 +35,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			double deltaTime = ( angle - Angle ) / Velocity;
 			if ( double.IsFinite( deltaTime ) ) {
 				if ( deltaTime < 0 ) {
-					Velocity = -Velocity;
-					InterpolateTrailTo( Clock.CurrentTime - deltaTime );
 					trailTimer = Clock.CurrentTime;
-					Velocity = -Velocity;
 				}
 				else {
 					InterpolateTrailTo( Clock.CurrentTime + deltaTime );
@@ -46,6 +45,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		new IHasTilePosition Parent;
+		public Bindable<Vector2> TileRotationOrigin = new();
 
 		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );
@@ -80,9 +80,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				while ( trailTimer + trailMSPV < time ) {
 					trailTimer += trailMSPV; // interpolating the position
 					Angle = Velocity * ( trailTimer - startTime ) + startAngle;
-					Position = RotationVector * (float)Distance;
 
+					TilePosition = TileRotationOrigin.Value + RotationVector * (float)Distance;
+					Position = TilePosition - Parent.TilePosition;
 					Trail.Offset = Parent.TilePosition + Position;
+
 					Trail.AddVertice( Trail.Offset );
 				}
 			}
@@ -90,10 +92,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				// if time goes backward we dont want the trail to stop
 				trailTimer = time;
 			}
-
 			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
-			Position = RotationVector * (float)Distance;
 
+			TilePosition = TileRotationOrigin.Value + RotationVector * (float)Distance;
+			Position = TilePosition - Parent.TilePosition;
 			Trail.Offset = Parent.TilePosition + Position;
 		}
 
