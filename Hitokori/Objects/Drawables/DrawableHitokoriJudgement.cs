@@ -5,7 +5,6 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
-using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 using System.ComponentModel;

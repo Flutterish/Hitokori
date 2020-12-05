@@ -170,18 +170,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
 		public void RotateTo ( double target, double startTime, double endTime ) {
-			switch ( CorrectionMode.Value ) {
-				case MissCorrectionMode.Angle:
-					AngleConsistentRotateTo( target, startTime, endTime );
-					break;
-
-				case MissCorrectionMode.Velocity:
-					VelocityConsistentRotateTo( target, startTime, endTime );
-					break;
-
-				default:
-					throw new InvalidOperationException( "How the fuck" );
-			}
+			AngleConsistentRotateTo( target, startTime, endTime );
 		}
 
 		/// <summary>
@@ -231,13 +220,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public Vector2 HiOffset => Hi.Position;
 		public Vector2 KoriOffset => Kori.Position;
-
-
-		Bindable<MissCorrectionMode> CorrectionMode = new( MissCorrectionMode.Angle );
-		[BackgroundDependencyLoader(true)]
-		private void load ( HitokoriSettingsManager config ) {
-			config?.BindWith( HitokoriSetting.MissCorrectionMode, CorrectionMode );
-		}
 
 		private double velocity;
 		private double startTime;

@@ -16,17 +16,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var config = Config as HitokoriSettingsManager;
 
 			Children = new Drawable[] {
-				new SettingsEnumDropdown<MissCorrectionMode> {
-					LabelText = "Miss correction mode",
-					Current = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode )
-				},
 				new SettingsSlider<double,SpeedSlider> {
 					LabelText = "Camera speed",
 					Current = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
-				},
-				new SettingsEnumDropdown<CameraFollowMode> {
-					LabelText = "Camera follow mode",
-					Current = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode )
 				},
 				new SettingsSlider<double,PercentageSlider> {
 					LabelText = "Orbit ring opacity",

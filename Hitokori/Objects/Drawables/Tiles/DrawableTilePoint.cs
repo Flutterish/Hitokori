@@ -32,12 +32,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			OnRevertResult += ( x, y ) => OnRevert();
 		}
 
-		[BackgroundDependencyLoader(true)]
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			if ( config is null ) return; // TODO dynamic text
-
-			if ( TilePoint.IsDifferentSpeed && config.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ) {
-				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
+			if ( TilePoint.IsDifferentSpeed ) {
+				if ( config?.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ?? true ) {
+					Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
+				}// TODO dynamic text
 			}
 		}
 
@@ -70,18 +70,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			}
 		}
 
-		public bool TryToHit ( double timeOffset )
-			=> TryToHitAt( TilePoint.TimeAtOffset( timeOffset ) );
 		public bool TryToHit ()
 			=> TryToHitAt( Clock.CurrentTime );
 		public bool TryToHitAt ( double time ) {
 			if ( TilePoint.IsNext ) {
-				if ( TilePoint.IgnoresInputAt( time ) ) {
-					return false;
-				}
 				var result = TilePoint.ResultAt( time );
 				if ( result == HitResult.None ) {
-					return false;
+					result = HitResult.Miss;
 				}
 				SetResult( result );
 				return true;

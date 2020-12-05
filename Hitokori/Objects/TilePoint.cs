@@ -103,11 +103,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		}
 		public HitResult ResultAt ( double time ) {
 			var result = TimeHitWindows.ResultFor( TimeOffsetAt( time ) ).OrBetter( AngleHitWindows.ResultFor( AngleOffsetAt( time ) ) );
-			if ( result is HitResult.Perfect or HitResult.Miss ) return result;
+			if ( result is HitResult.Perfect or HitResult.Miss or HitResult.None ) return result;
 			return TimeOffsetAt( time ) > 0 ? HitResult.Great : HitResult.Ok;
-		}
-		public bool IgnoresInputAt ( double time ) {
-			return time < Previous.HitTime || TimeOffsetAt( time ) < -Math.Max( TimeHitWindows.WindowFor( HitResult.Meh ), AngleHitWindows.WindowFor( HitResult.Meh ) / Previous.Speed );
 		}
 
 		protected bool isPositionCached = false;

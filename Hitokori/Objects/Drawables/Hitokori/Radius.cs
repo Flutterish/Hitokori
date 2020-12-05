@@ -91,7 +91,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			}
 		}
 
-		[BackgroundDependencyLoader(true)]
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
 			config?.BindWith( HitokoriSetting.RingOpacity, Opacity );
 			config?.BindWith( HitokoriSetting.RingDashStyle, BorderStyle );

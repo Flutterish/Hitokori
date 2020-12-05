@@ -144,8 +144,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			Beatmap.HitObjects = valid;
 		}
 
-		void PostProcess ( HitokoriBeatmap Beatmap ) { //TODO: NOTE this should be in BeatmapProcessor but I cant figure out how to pass mods to it
-			Beatmap.HitObjects = Beatmap.HitObjects.OrderBy( x => x.StartTime ).ToList(); // some objects are not always ordered. idk why
+		void PostProcess ( HitokoriBeatmap Beatmap ) {
+			Beatmap.HitObjects = Beatmap.HitObjects.OrderBy( x => x.StartTime ).ToList(); // some hold objects are not always ordered.
 
 			RemoveUnhitable( Beatmap );
 

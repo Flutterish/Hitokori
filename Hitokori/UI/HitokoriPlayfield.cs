@@ -26,7 +26,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		/// Camera position. Used because offsetting containers clips children.
 		/// </summary>
 		AnimatedVector CameraPosition;
-		Bindable<CameraFollowMode> FollowMode = new( CameraFollowMode.Smooth );
 		BindableDouble CameraSpeed = new( 300 );
 
 		public readonly Container Everything;
@@ -94,10 +93,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var followTiles = Tiles.AliveObjects.OfType<HitokoriTile>()
 				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 
-			if ( FollowMode.Value == CameraFollowMode.Smooth ) {
-				var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
-				CameraPosition.AnimateTo( averagePosition, CameraSpeed.Value );
-			}
+			var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
+			CameraPosition.AnimateTo( averagePosition, CameraSpeed.Value );
 
 			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori ) ) {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;
@@ -155,10 +152,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		private void OnTileResult ( DrawableHitObject obj, JudgementResult result ) {
 			if ( obj is HitokoriTile tile ) {
-				if ( FollowMode.Value == CameraFollowMode.Dynamic ) {
-					CameraPosition.AnimateTo( Hitokori.TilePosition, CameraSpeed.Value );
-				}
-
 				if ( tile.Tile.LastPoint.Duration > MinimumBreakTime || tile.Tile.IsLast ) {
 					Hitokori.Contract();
 					AutoBot?.AllowGhosting();
@@ -178,9 +171,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		public static readonly double MinimumBreakTime = 1000;
 
-		[BackgroundDependencyLoader(true)]
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			config?.BindWith( HitokoriSetting.CameraFollowMode, FollowMode );
 			config?.BindWith( HitokoriSetting.CameraSpeed, CameraSpeed );
 		}
 

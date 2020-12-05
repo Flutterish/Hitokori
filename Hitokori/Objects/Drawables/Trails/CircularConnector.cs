@@ -1,20 +1,18 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	public class CircularConnector : Connector {
 		private Vector2 from;
-		public Vector2 From { 
-			get => from; 
+		public Vector2 From {
+			get => from;
 			set {
 				if ( from == value ) return;
 
@@ -72,7 +70,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 
 		BindableDouble width = new( 1 );
-		[BackgroundDependencyLoader(true)]
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
 			config?.BindWith( HitokoriSetting.HoldConnectorWidth, width );
 			width.BindValueChanged( v => TrailRadius = HitokoriTile.SIZE / 4f * (float)v.NewValue, true );

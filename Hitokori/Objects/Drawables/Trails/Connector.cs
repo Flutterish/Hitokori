@@ -1,11 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Input.Handlers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	public abstract class Connector : CompositeDrawable {

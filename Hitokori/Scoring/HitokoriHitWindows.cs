@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 				new DifficultyRange( HitResult.Miss,    300 * MOD, 250 * MOD, 200 * MOD )
 			};
 
-		const double MOD = 0.5;
+		const double MOD = 0.6;
 	}
 
 	public class HitokoriAngleHitWindows : HitWindows {
@@ -46,6 +46,6 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 				new DifficultyRange( HitResult.Miss,    14 * MOD, 13 * MOD, 12 * MOD )
 			};
 
-		const double MOD = 1;
+		const double MOD = 1.2;
 	}
 }
