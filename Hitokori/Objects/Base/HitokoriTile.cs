@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		private void OnResult ( Rulesets.Objects.Drawables.DrawableHitObject arg1, JudgementResult arg2 ) {
 			if ( arg1 is DrawableTilePoint tile && tile.TilePoint == Tile.LastPoint ) {
 				ApplyResult( j => {
-					j.Type = arg2.Type;
+					j.Type = HitResult.IgnoreHit;
 				} );
 			}
 		}
