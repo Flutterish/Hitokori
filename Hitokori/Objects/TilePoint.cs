@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		/// <summary>
 		/// Arclength per beat
 		/// </summary>
-		private double BEAT_STRETCH => useTripletAngles ? ( Math.PI * 2 / 3 ) : Math.PI * 3 / 4;
+		private double BEAT_STRETCH => useTripletAngles ? ( Math.PI * 2 / 3 ) : Math.PI * 2 / 3;
 
 		public double BPMS;
 		public double HitTime {

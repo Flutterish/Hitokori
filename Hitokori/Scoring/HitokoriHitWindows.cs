@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 
 		protected override DifficultyRange[] GetRanges ()
 			=> new DifficultyRange[] {
-				new DifficultyRange( HitResult.Perfect, 80, 60, 40 ),
+				new DifficultyRange( HitResult.Perfect, 70, 50, 40 ),
 				new DifficultyRange( HitResult.Good,    200, 150, 100 ),
 				new DifficultyRange( HitResult.Miss,    200, 150, 100 )
 			};
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 
 		protected override DifficultyRange[] GetRanges ()
 			=> new DifficultyRange[] {
-				new DifficultyRange( HitResult.Perfect, 15,  13,  10 ),
+				new DifficultyRange( HitResult.Perfect, 15, 13, 10 ),
 				new DifficultyRange( HitResult.Good,    40, 35, 25 ),
 				new DifficultyRange( HitResult.Miss,    40, 35, 25 )
 			};

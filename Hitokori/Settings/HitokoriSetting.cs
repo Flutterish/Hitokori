@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace osu.Game.Rulesets.Hitokori.Settings {
+﻿namespace osu.Game.Rulesets.Hitokori.Settings {
 	public enum HitokoriSetting {
 		CameraSpeed,
 		RingOpacity,

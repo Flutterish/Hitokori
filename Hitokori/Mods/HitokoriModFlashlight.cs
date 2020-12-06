@@ -14,7 +14,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override bool HasImplementation => true;
 
 		HitokoriFlashlight flashlight;
-		const float FLASHLIGHT_SIZE = 200;
 
 		public override Flashlight CreateFlashlight ()
 			=> flashlight = new HitokoriFlashlight();
@@ -24,6 +23,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		}
 
 		private class HitokoriFlashlight : Flashlight {
+			float FLASHLIGHT_SIZE => (float)( Playfield?.Hitokori.Radius.Length ?? 200 ) * 1.1f;
 			public HitokoriFlashlight () {
 				FlashlightSize = new Vector2( 0, FLASHLIGHT_SIZE );
 			}
@@ -32,15 +32,11 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 			private float getSizeFor ( int combo ) {
 				if ( combo > 200 )
-					return FLASHLIGHT_SIZE * 0.8f;
+					return 0.8f;
 				else if ( combo > 100 )
-					return FLASHLIGHT_SIZE * 0.9f;
+					return 0.9f;
 				else
-					return FLASHLIGHT_SIZE;
-			}
-
-			protected override void OnComboChange ( ValueChangedEvent<int> e ) {
-				this.TransformTo( nameof( FlashlightSize ), new Vector2( 0, getSizeFor( e.NewValue ) ), FLASHLIGHT_FADE_DURATION );
+					return 1;
 			}
 
 			HitokoriPlayfield Playfield;
@@ -48,6 +44,12 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				Playfield = playfield as HitokoriPlayfield;
 
 				FlashlightPosition = Playfield.Everything.ToParentSpace( Playfield.Hitokori.Position + Playfield.Hitokori.HiOffset );
+				FlashlightSize = new Vector2( FLASHLIGHT_SIZE * (float)comboModifier.Value );
+			}
+
+			Bindable<double> comboModifier = new();
+			protected override void OnComboChange ( ValueChangedEvent<int> e ) {
+				this.TransformBindableTo( comboModifier, getSizeFor( e.NewValue ), FLASHLIGHT_FADE_DURATION );
 			}
 		}
 	}

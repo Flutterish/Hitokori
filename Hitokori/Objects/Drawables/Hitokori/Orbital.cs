@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
+using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 
@@ -14,7 +15,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		bool isCentered = false;
 		public double Distance => isCentered ? 0 : Radius.Length;
 		private Vector2 targetTilePosition => Parent.TilePosition + RotationVector * (float)Distance;
-		public Vector2 TilePosition => targetTilePosition * (float)animationProgress.Value + animationStartTilePosition * (float)( 1 - animationProgress.Value );
+		public Vector2 TilePosition {
+			get {
+				animationCurve.End = targetTilePosition;
+				return animationCurve.Evaluate( (float)animationProgress.Value );
+			}
+		}
 
 		/// <summary>
 		/// Velocity in radians per millisecond
@@ -47,13 +53,22 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		new IHasTilePosition Parent;
-		private Vector2 animationStartTilePosition;
+		private QuadraticBezier animationCurve;
 		private Bindable<double> animationProgress = new( 1 );
-		public void AnimateFromHere ( double duration, Easing easing = Easing.None ) {
-			animationStartTilePosition = TilePosition;
+		public void AnimateLate ( double duration ) {
+			animationCurve.Start = TilePosition;
+			animationCurve.Control = animationCurve.Start + VectorVelocity * 4000;
 			animationProgress.Value = 0;
-			this.TransformBindableTo( animationProgress, 1, duration, easing );
+			this.TransformBindableTo( animationProgress, 1, duration, Easing.In );
 		}
+		public void AnimateEarly ( double duration ) {
+			animationCurve.Start = TilePosition;
+			animationCurve.Control = animationCurve.Start;
+			animationProgress.Value = 0;
+			this.TransformBindableTo( animationProgress, 1, duration, Easing.InBounce );
+		}
+
+		public Vector2 VectorVelocity => (float)Velocity * (float)(Distance / HitokoriTile.SPACING) * RotationVector.PerpendicularLeft;
 
 		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );

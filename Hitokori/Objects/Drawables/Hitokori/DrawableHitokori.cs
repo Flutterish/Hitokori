@@ -1,11 +1,8 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
-using osu.Framework.Extensions.IEnumerableExtensions;
+﻿using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
-using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
@@ -62,7 +59,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public double EndTime { get; private set; }
 		private double lastDistance = DrawableTapTile.SPACING;
 		public void Swap ( TilePoint hit ) {
-			NextOrbital.AnimateFromHere( 140, Easing.InBack );
+			if ( EndTime > Clock.CurrentTime )
+				NextOrbital.AnimateEarly( Math.Min( 140, hit.Duration ) );
+			else
+				NextOrbital.AnimateLate( Math.Min( 140, hit.Duration ) );
 			Snap();
 			Swap();
 
