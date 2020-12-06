@@ -17,6 +17,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override bool HasImplementation => true;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Speed ) )]
-		private double Speed => 0.5;
+		private double Speed => 2d / 3;
 	}
 }

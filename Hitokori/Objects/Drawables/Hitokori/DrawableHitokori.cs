@@ -138,7 +138,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		/// <summary>
 		/// Rotates the Hitokori from interpolated start angle to <paramref name="target"/>
 		/// </summary>
-		/// <param name="tileIndex">TileIndex is used to correct rotation for triplets</param>
 		/// <param name="target">The target in radians</param>
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
