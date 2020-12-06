@@ -13,7 +13,7 @@ using Vector2 = osuTK.Vector2;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawableHitokoriJudgement : DrawableJudgement, IHasTilePosition {
-		private HitResult Type;
+		private HitResult Type; // TODO somehow, this rid itself of animations
 		private double Offset;
 
 		public DrawableHitokoriJudgement ( JudgementResult result, DrawableTilePoint judgedObject ) : base( result, judgedObject ) {
@@ -40,13 +40,25 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					Text = Type.GetDescription().ToUpperInvariant(),
 					Font = OsuFont.Numeric.With( size: 20 ),
 					Colour = colours.ForHitResult( Type ),
-					Scale = new Vector2( 0.7f ),
-					Position = new Vector2( 0, -50 )
+					Scale = new Vector2( 0.5f ),
+					Position = new Vector2( 0, -45 )
 				}
 			};
 
 			var result = GetADOFAIResult();
 			Text.Text = result.GetDescription().ToUpperInvariant();
+		}
+
+		protected override void ApplyHitAnimations () {
+			Text.FadeInFromZero( 80 ).TransformSpacingTo( new Vector2( 10 ), 500, Easing.Out ).Then().Delay( 300 ).Then().FadeOut( 300, Easing.Out );
+			LifetimeEnd = LifetimeStart + 2000;
+			base.ApplyHitAnimations();
+		}
+
+		protected override void ApplyMissAnimations () {
+			Text.FadeInFromZero( 80 ).TransformSpacingTo( new Vector2( 10 ), 500, Easing.Out ).Then().Delay( 300 ).Then().FadeOut( 300, Easing.Out );
+			LifetimeEnd = LifetimeStart + 2000;
+			base.ApplyMissAnimations();
 		}
 
 		public ADOFAIResult GetADOFAIResult () {

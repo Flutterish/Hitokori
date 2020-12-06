@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
@@ -12,7 +13,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		protected Radius Radius;
 		bool isCentered = false;
 		public double Distance => isCentered ? 0 : Radius.Length;
-		public Vector2 TilePosition;
+		private Vector2 targetTilePosition => Parent.TilePosition + RotationVector * (float)Distance;
+		public Vector2 TilePosition => targetTilePosition * (float)animationProgress.Value + animationStartTilePosition * (float)( 1 - animationProgress.Value );
 
 		/// <summary>
 		/// Velocity in radians per millisecond
@@ -45,7 +47,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		new IHasTilePosition Parent;
-		public Bindable<Vector2> TileRotationOrigin = new();
+		private Vector2 animationStartTilePosition;
+		private Bindable<double> animationProgress = new( 1 );
+		public void AnimateFromHere ( double duration, Easing easing = Easing.None ) {
+			animationStartTilePosition = TilePosition;
+			animationProgress.Value = 0;
+			this.TransformBindableTo( animationProgress, 1, duration, easing );
+		}
 
 		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );
@@ -81,7 +89,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 					trailTimer += trailMSPV; // interpolating the position
 					Angle = Velocity * ( trailTimer - startTime ) + startAngle;
 
-					TilePosition = TileRotationOrigin.Value + RotationVector * (float)Distance;
 					Position = TilePosition - Parent.TilePosition;
 					Trail.Offset = Parent.TilePosition + Position;
 
@@ -94,7 +101,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			}
 			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
 
-			TilePosition = TileRotationOrigin.Value + RotationVector * (float)Distance;
 			Position = TilePosition - Parent.TilePosition;
 			Trail.Offset = Parent.TilePosition + Position;
 		}

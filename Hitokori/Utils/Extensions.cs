@@ -37,8 +37,9 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 		public static float ToDegreesF ( this float self )
 			=> (float)self.ToDegrees();
 
-		public static HitResult OrBetter ( this HitResult self, HitResult other )
-			=> (HitResult)Math.Max( (int)self, (int)other );
+		public static HitResult OrBetter ( this HitResult self, HitResult other ) {
+			return (HitResult)Math.Max( (int)self, (int)other );
+		}
 
 		public static bool IsAbout ( this double A, double B, double range )
 			=> ( A >= B - range ) && ( A <= B + range );

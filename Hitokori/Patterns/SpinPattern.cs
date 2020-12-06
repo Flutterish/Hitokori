@@ -25,6 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 
 			foreach ( var i in spin.TilePoints ) {
 				i.IsClockwise = selected.First().LastPoint.IsClockwise;
+				i.AllowDynamicDistance = false;
 			}
 
 			return spin.Yield();

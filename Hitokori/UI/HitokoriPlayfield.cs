@@ -158,7 +158,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 					if ( !tile.Tile.IsLast ) {
 						this.Delay( tile.Tile.LastPoint.Duration - 1000 ).Schedule( () => {
-							Hitokori.AnimateDistance();
+							Hitokori.Expand();
 							AutoBot?.ForbidGhosting();
 						} );
 					}

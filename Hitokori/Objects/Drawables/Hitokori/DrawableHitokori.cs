@@ -16,20 +16,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class DrawableHitokori : Container, IHasTilePosition {
 		public List<Orbital> Orbitals = new List<Orbital>();
 		private int OrbitalIndex;
-		public Orbital LastOrbital { get; private set; }
+		public Orbital HoldingOrbital { get; private set; }
 
-		private Orbital NextOrbital {
-			get {
-				LastOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
+		private Orbital SwitchToNextOrbital () {
+			HoldingOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
 
-				FirstFreeOrbital.MakeImportant();
-				LastOrbital.RevokeImportant();
+			NextOrbital.MakeImportant();
+			HoldingOrbital.RevokeImportant();
 
-				return LastOrbital;
-			}
+			return HoldingOrbital;
 		}
-		private Orbital FirstFreeOrbital => Orbitals[ ( OrbitalIndex + 1 ) % Orbitals.Count ];
-		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != LastOrbital );
+		private Orbital NextOrbital => Orbitals[ ( OrbitalIndex + 1 ) % Orbitals.Count ];
+		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != HoldingOrbital );
 		bool Triplets;
 
 		public void AddTriplet () {
@@ -62,30 +60,27 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		public double EndTime { get; private set; }
+		private double lastDistance = DrawableTapTile.SPACING;
 		public void Swap ( TilePoint hit ) {
-			FinishTransforms( true );
+			NextOrbital.AnimateFromHere( 140, Easing.InBack );
 			Snap();
 			Swap();
 
 			TilePosition = hit.TilePosition;
-			foreach ( var i in Orbitals.Except( LastOrbital.Yield() ) ) {
-				i.TileRotationOrigin.Value = TilePosition;
-			}
-			LastOrbital.TileRotationOrigin.Value = LastOrbital.TilePosition;
-			LastOrbital.TransformBindableTo( LastOrbital.TileRotationOrigin, TilePosition, 140, Easing.InBack );
 
 			RotateTo( hit.OutAngle, hit.HitTime, hit.HitTime + hit.Duration );
-			AnimateDistance( duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 ), easing: Easing.None );
+			lastDistance = DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 );
+			AnimateDistance( duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: lastDistance, easing: Easing.None );
 		}
 
 		public void Swap () {
-			if ( LastOrbital is null ) {
-				NextOrbital.Hold();
+			if ( HoldingOrbital is null ) {
+				SwitchToNextOrbital().Hold();
 				FreeOrbitals.ForEach( x => x.Release() );
 			}
 			else {
-				LastOrbital.Release();
-				NextOrbital.Hold();
+				HoldingOrbital.Release();
+				SwitchToNextOrbital().Hold();
 			}
 
 			if ( Triplets ) {
@@ -104,7 +99,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		public void Expand ( double duration = 500, Easing easing = Easing.InOutCubic )
-			=> AnimateDistance( duration, easing: easing );
+			=> AnimateDistance( duration, lastDistance, easing );
 
 		public void Contract ( double duration = 500, Easing easing = Easing.InOutCubic ) {
 			Radius.AnimateDistance( 0, duration, easing );
@@ -153,7 +148,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			if ( Triplets ) { // if yall want to find a generic formula, go for it
 				Orbitals.ForEach( x => x.Angle = target );
-				FirstFreeOrbital.Angle += TripletAngle;
+				NextOrbital.Angle += TripletAngle;
 			}
 			else {
 				Orbitals.ForEach( x => x.Angle = target );
@@ -165,7 +160,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			if ( Triplets ) { // if yall want to find a generic formula, go for it
 				foreach ( var x in Orbitals ) {
-					if ( x == FirstFreeOrbital ) {
+					if ( x == NextOrbital ) {
 						x.RotateTo( target + TripletAngle );
 					}
 					else {
@@ -216,13 +211,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public void OnPress () {
 			held?.OnRelease();
 
-			FirstFreeOrbital.OnPress();
+			NextOrbital.OnPress();
 		}
 
 		private Orbital held;
 		public void OnHold () {
 			held?.OnRelease();
-			( held = FirstFreeOrbital ).OnHold();
+			( held = NextOrbital ).OnHold();
 		}
 
 		public void OnRelease () {

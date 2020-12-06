@@ -204,6 +204,9 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 				}
 			}
 
+			foreach ( var tile in Beatmap.HitObjects ) {
+				tile.StylizeTiles();
+			}
 			tiles.First().FirstPoint.RefreshChain();
 		}
 

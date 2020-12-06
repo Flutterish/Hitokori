@@ -23,10 +23,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			LifetimeEnd = Tile.PressTime + 1000;
 		}
 
-		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-
-		}
-
 		public bool OnPressed ( HitokoriAction action ) {
 			if ( Tile.PressPoint.IsNext ) {
 				Hitokori.OnPress();
@@ -35,10 +31,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			}
 			return false;
 		}
-
-		public void OnReleased ( HitokoriAction action ) {
-
-		}
+		public void OnReleased ( HitokoriAction action ) { }
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
 			var tile = hitObject as DrawableTilePoint;
