@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hitokori.Settings;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
@@ -48,9 +49,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public string TooltipText { get; set; }
 	}
 	public class SpeedSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{Current.Value}ms";
+		public override string TooltipText => $"{Current.Value:N1}x";
 	}
 	public class PercentageSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{(int)( Current.Value * 100 )}%";
+		public override string TooltipText => $"{Current.Value:###%}";
 	}
 }

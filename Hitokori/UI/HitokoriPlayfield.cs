@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		/// Camera position. Used because offsetting containers clips children.
 		/// </summary>
 		AnimatedVector CameraPosition;
-		BindableDouble CameraSpeed = new( 300 );
+		BindableDouble CameraSpeed = new( 1 );
 
 		public readonly Container Everything;
 		public readonly Container SFX;
@@ -95,7 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 
 			var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
-			CameraPosition.AnimateTo( averagePosition, CameraSpeed.Value );
+			CameraPosition.AnimateTo( averagePosition, 300 / CameraSpeed.Value );
 
 			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori ) ) {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;

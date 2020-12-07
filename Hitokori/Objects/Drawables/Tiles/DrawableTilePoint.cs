@@ -76,11 +76,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			=> TryToHitAt( Clock.CurrentTime );
 		public bool TryToHitAtOffset ( double offset )
 			=> TryToHitAt( TilePoint.TimeAtOffset( offset ) );
+		int attempts = 2;
 		public bool TryToHitAt ( double time ) {
 			if ( !Judged ) {
 				var result = TilePoint.ResultAt( time );
 				if ( result == HitResult.None ) {
-					return false;
+					result = HitResult.Miss;
+				}
+				if ( result == HitResult.Miss ) {
+					attempts--;
+					if ( attempts > 0 ) return false;
 				}
 				SetResult( result );
 				return true;
@@ -95,6 +100,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		bool wasReverted;
 		double revertedTimestamp;
 		private void OnRevert () {
+			attempts = 2;
 			wasReverted = true;
 			revertedTimestamp = Clock.CurrentTime;
 			Attach( TilePoint.Previous, Hitokori );
