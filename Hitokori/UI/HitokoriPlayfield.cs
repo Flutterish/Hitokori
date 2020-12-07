@@ -2,6 +2,7 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
@@ -16,6 +17,7 @@ using osu.Game.Rulesets.UI;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
+	[Cached]
 	public class HitokoriPlayfield : Playfield {
 		[Cached]
 		public readonly SparklePool SparklePool = new SparklePool();
@@ -34,6 +36,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
 		public readonly DrawableHitokori Hitokori;
+		public TilePoint NextTilePoint { get => CurrentTilePoint?.Next; set => CurrentTilePoint = value?.Previous; }
+		public TilePoint CurrentTilePoint { get; set; }
+		public TilePoint PreviousTilePoint { get => CurrentTilePoint?.Previous; set => CurrentTilePoint = value?.Next; }
+
 
 		private bool reverseSpin;
 

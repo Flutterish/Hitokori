@@ -57,13 +57,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
 
 		HitokoriAction? HoldButton;
-		public bool OnPressed ( HitokoriAction action ) { // BUG beatmaps that have a hold tile last end prematurely
-			if ( Tile.StartPoint.IsNext ) {
-				BeginHold( action );
-				return true;
-			}
-
-			return false;
+		public bool OnPressed ( HitokoriAction action ) { // BUG beatmaps that have a hold tile last end prematurely?
+			if ( StartPoint.Judged ) return false;
+			BeginHold( action );
+			return true;
 		}
 
 		public void OnReleased ( HitokoriAction action ) {

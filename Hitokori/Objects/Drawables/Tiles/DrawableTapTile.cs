@@ -24,12 +24,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		public bool OnPressed ( HitokoriAction action ) {
-			if ( Tile.PressPoint.IsNext ) {
-				Hitokori.OnPress();
-				PressPoint.TryToHit();
-				return true;
-			}
-			return false;
+			if ( PressPoint.Judged ) return false;
+			Hitokori.OnPress();
+			PressPoint.TryToHit();
+			return true;
 		}
 		public void OnReleased ( HitokoriAction action ) { }
 

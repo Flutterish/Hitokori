@@ -1,4 +1,6 @@
-﻿using osu.Game.Rulesets.Objects;
+﻿using osu.Framework.Allocation;
+using osu.Game.Rulesets.Hitokori.UI;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using System;
 
@@ -6,6 +8,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject>, IHasDisposeEvent {
 		protected DrawableHitokoriHitObject ( HitokoriHitObject hitObject ) : base( hitObject ) { }
+
+		[Resolved]
+		public HitokoriPlayfield Playfield { get; private set; }
+
+		protected bool isCurrent ( TilePoint tilePoint )
+			=> Playfield.NextTilePoint == tilePoint?.Next;
+		protected bool isNext ( TilePoint tilePoint )
+			=> Playfield.NextTilePoint == tilePoint;
+		protected bool isPrevious ( TilePoint tilePoint )
+			=> Playfield.NextTilePoint?.Previous == tilePoint?.Next;
 
 		protected override double InitialLifetimeOffset => 1000;
 

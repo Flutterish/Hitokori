@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
 using osu.Game.Rulesets.Hitokori.Settings;
+using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -86,12 +87,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		private void OnHit () {
 			TilePoint.WasHit = true;
+			Playfield.CurrentTilePoint = TilePoint;
 
 			Attach( TilePoint, Hitokori );
 		}
 
 		private void OnRevert () {
 			TilePoint.WasHit = false;
+			Playfield.NextTilePoint = TilePoint;
 
 			Attach( TilePoint.Previous, Hitokori );
 		}

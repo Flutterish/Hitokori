@@ -51,14 +51,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		public bool OnPressed ( HitokoriAction action ) {
-			var next = Points.FirstOrDefault( x => x.TilePoint.IsNext );
-
-			if ( next != null ) {
-				Hitokori.OnPress();
-				next.TryToHit();
-				return true;
-			}
-			return false;
+			var next = Points.FirstOrDefault( X => X.Judged );
+			if ( next is null ) return false;
+			Hitokori.OnPress();
+			next.TryToHit();
+			return true;
 		}
 		public void OnReleased ( HitokoriAction action ) { }
 	}
