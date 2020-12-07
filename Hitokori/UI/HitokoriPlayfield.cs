@@ -36,10 +36,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
 		public readonly DrawableHitokori Hitokori;
-		public TilePoint NextTilePoint { get => CurrentTilePoint?.Next; set => CurrentTilePoint = value?.Previous; }
-		public TilePoint CurrentTilePoint { get; set; }
-		public TilePoint PreviousTilePoint { get => CurrentTilePoint?.Previous; set => CurrentTilePoint = value?.Next; }
-
 
 		private bool reverseSpin;
 

@@ -51,7 +51,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		public bool OnPressed ( HitokoriAction action ) {
-			var next = Points.FirstOrDefault( X => X.Judged );
+			var next = Points.FirstOrDefault( X => !X.Judged );
 			if ( next is null ) return false;
 			Hitokori.OnPress();
 			next.TryToHit();

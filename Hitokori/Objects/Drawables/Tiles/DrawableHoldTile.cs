@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			double time = Tile.EndTime + timeOffset;
 
-			if ( Tile.EndPoint.IsNext && ( ReleaseMissed && timeOffset >= 0 ) ) {
+			if ( ( StartPoint.Judged && !EndPoint.Judged ) && ( ReleaseMissed && timeOffset >= 0 ) ) {
 				TryToSetResult( EndPoint, HitResult.Miss );
 			}
 		}
@@ -81,7 +81,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				return;
 			}
 
-			if ( Tile.EndPoint.IsNext ) {
+			if ( StartPoint.Judged && !EndPoint.Judged ) {
 				if ( !EndPoint.TryToHit() ) {
 					ReleaseMissed = true;
 				}

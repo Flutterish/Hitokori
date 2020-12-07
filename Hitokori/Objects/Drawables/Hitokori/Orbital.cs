@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			this.TransformBindableTo( animationProgress, 1, duration, Easing.InBounce );
 		}
 
-		public Vector2 VectorVelocity => (float)Velocity * (float)(Distance / HitokoriTile.SPACING) * RotationVector.PerpendicularLeft;
+		public Vector2 VectorVelocity => (float)Velocity * (float)( Distance / HitokoriTile.SPACING ) * RotationVector.PerpendicularLeft;
 
 		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );

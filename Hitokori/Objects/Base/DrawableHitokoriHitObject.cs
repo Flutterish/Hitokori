@@ -12,13 +12,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		[Resolved]
 		public HitokoriPlayfield Playfield { get; private set; }
 
-		protected bool isCurrent ( TilePoint tilePoint )
-			=> Playfield.NextTilePoint == tilePoint?.Next;
-		protected bool isNext ( TilePoint tilePoint )
-			=> Playfield.NextTilePoint == tilePoint;
-		protected bool isPrevious ( TilePoint tilePoint )
-			=> Playfield.NextTilePoint?.Previous == tilePoint?.Next;
-
 		protected override double InitialLifetimeOffset => 1000;
 
 		public event Action OnDispose;

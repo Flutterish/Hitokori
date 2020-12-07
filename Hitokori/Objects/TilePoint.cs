@@ -13,11 +13,8 @@ using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate everything recursively with children ( for animated/rotating tiles )
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
-		public bool WasHit; // TODO HitObject are supposed to be immutable.
 		public bool useTripletAngles;
 		public double Offset => ( useTripletAngles ? ( Math.PI / 3 ) : 0 );
-		public bool IsNext
-			=> !WasHit && Previous.WasHit;
 
 		/// <summary>
 		/// <see cref="TilePoint"/> around which this tile rotates
@@ -58,7 +55,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		public double NextRequestedDistance {
 			get {
 				if ( arclength / distance > MAX_ANGLE ) {
-					return BEAT_STRETCH / MAX_ANGLE * Beats * SpeedModifier;
+					return BEAT_STRETCH / MAX_ANGLE * Beats * SpeedModifier; // TODO request contant speed instead of angle
 				}
 				else return Next.distance;
 			}
