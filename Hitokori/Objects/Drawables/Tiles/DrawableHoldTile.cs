@@ -46,8 +46,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-			double time = Tile.EndTime + timeOffset;
-
 			if ( ( StartPoint.Judged && !EndPoint.Judged ) && ( ReleaseMissed && timeOffset >= 0 ) ) {
 				TryToSetResult( EndPoint, HitResult.Miss );
 			}
@@ -58,6 +56,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		HitokoriAction? HoldButton;
 		public bool OnPressed ( HitokoriAction action ) { // BUG beatmaps that have a hold tile last end prematurely?
+			if ( Clock.ElapsedFrameTime < 0 ) return true;
 			if ( StartPoint.Judged ) return false;
 			BeginHold( action );
 			return true;

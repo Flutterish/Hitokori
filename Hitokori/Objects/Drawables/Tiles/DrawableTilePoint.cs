@@ -63,6 +63,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
+			if ( wasReverted && Clock.CurrentTime > revertedTimestamp )
+				TryToHitAt( revertedTimestamp ); // HACK this fixes https://github.com/ppy/osu/issues/10811
+			
 			// to make sure a result is set
 			if ( !TilePoint.CanBeHitAfter( TilePoint.TimeAtOffset( timeOffset ) ) || timeOffset > TilePoint.Duration / 2 ) {
 				SetResult( HitResult.Miss ); // NOTE when rewinding this sets off on first tile, at an offset from its actual hit time
@@ -71,6 +74,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		public bool TryToHit ()
 			=> TryToHitAt( Clock.CurrentTime );
+		public bool TryToHitAtOffset ( double offset )
+			=> TryToHitAt( TilePoint.TimeAtOffset( offset ) );
 		public bool TryToHitAt ( double time ) {
 			if ( !Judged ) {
 				var result = TilePoint.ResultAt( time );
@@ -87,7 +92,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			Attach( TilePoint, Hitokori );
 		}
 
+		bool wasReverted;
+		double revertedTimestamp;
 		private void OnRevert () {
+			wasReverted = true;
+			revertedTimestamp = Clock.CurrentTime;
 			Attach( TilePoint.Previous, Hitokori );
 		}
 

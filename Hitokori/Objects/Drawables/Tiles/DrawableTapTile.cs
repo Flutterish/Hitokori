@@ -16,17 +16,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 			NormalizedTilePosition = Tile.PressPoint.NormalizedTilePosition;
 		}
-
 		protected override void UpdateInitialTransforms () { }
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.PressTime + 1000;
 		}
-
+		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
+			if ( userTriggered ) {
+				Hitokori.OnPress();
+				PressPoint.TryToHitAtOffset( timeOffset );
+			}
+		}
 		public bool OnPressed ( HitokoriAction action ) {
 			if ( PressPoint.Judged ) return false;
-			Hitokori.OnPress();
-			PressPoint.TryToHit();
+			UpdateResult( userTriggered: true );
 			return true;
 		}
 		public void OnReleased ( HitokoriAction action ) { }

@@ -50,11 +50,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			Points.Clear();
 		}
 
+		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
+			if ( userTriggered ) {
+				var next = Points.First( X => !X.Judged );
+				Hitokori.OnPress();
+				next.TryToHit();
+			}
+		}
+
 		public bool OnPressed ( HitokoriAction action ) {
 			var next = Points.FirstOrDefault( X => !X.Judged );
 			if ( next is null ) return false;
-			Hitokori.OnPress();
-			next.TryToHit();
+			UpdateResult( true );
 			return true;
 		}
 		public void OnReleased ( HitokoriAction action ) { }
