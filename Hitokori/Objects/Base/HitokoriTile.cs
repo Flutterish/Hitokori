@@ -1,5 +1,4 @@
 ﻿using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
@@ -7,8 +6,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 	public abstract class HitokoriTile : DrawableHitokoriHitObject, IHasTilePosition {
-		public DrawableHitokori Hitokori;
-		public readonly HitokoriTileObject Tile;
+		public HitokoriTileObject Tile { get; private set; }
 
 		protected HitokoriTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
 			Tile = hitObject as HitokoriTileObject;
@@ -22,6 +20,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 					j.Type = HitResult.IgnoreHit;
 				} );
 			}
+		}
+		protected override void OnApply () {
+			base.OnApply();
+			Tile = HitObject as HitokoriTileObject;
+		}
+		protected override void OnFree () {
+			base.OnFree();
+			Tile = null;
 		}
 
 		#region Constants

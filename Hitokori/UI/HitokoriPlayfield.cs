@@ -2,6 +2,7 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
@@ -11,6 +12,7 @@ using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using System.Linq;
@@ -34,6 +36,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
+		[Cached]
 		public readonly DrawableHitokori Hitokori;
 
 		private bool reverseSpin;
@@ -65,18 +68,24 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			if ( triplets ) {
 				Hitokori.AddTriplet();
 			}
+
+			RegisterPool<TapTile, DrawableTapTile>( 50 );
 		}
+		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject ) => new HitokoriHitObjectLifetimeEntry( hitObject );
 
 		public bool Auto = false;
 
-		bool Started = false;
-		HitokoriTile HeadTile;
-
+		bool hasStarted = false;
 		protected override void UpdateAfterChildren () {
-			if ( !Started && HeadTile != null && Clock.CurrentTime >= HeadTile.Tile.Previous.LastPoint.HitTime ) {
-				Started = true;
+			if ( !hasStarted ) {
+				var head = Tiles.AliveObjects.OrderBy( x => x.LifetimeStart ).FirstOrDefault();
+				if ( head is HitokoriTile Head ) {
+					if ( Clock.CurrentTime >= Head.Tile.Previous.LastPoint.HitTime ) {
+						hasStarted = true;
 
-				Hitokori.Swap( HeadTile.Tile.Previous.LastPoint );
+						Hitokori.Swap( Head.Tile.Previous.LastPoint );
+					}
+				}
 			}
 
 			if ( reverseSpin ) {
@@ -102,53 +111,47 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			}
 		}
 
-		public override void Add ( DrawableHitObject hitObject ) {
-			if ( hitObject is HitokoriTile tile ) {
-				tile.Hitokori = Hitokori;
+		protected override void OnNewDrawableHitObject ( DrawableHitObject drawableHitObject ) {
+			base.OnNewDrawableHitObject( drawableHitObject );
 
-				if ( HeadTile is null ) {
-					HeadTile = tile;
-				}
-
-				tile.OnTileClick += OnClickEvent;
-
-				tile.OnNewResult += OnTileResult;
-				Tiles.Add( tile );
-			}
-			else {
-				base.Add( hitObject );
-			}
+			if ( drawableHitObject is not HitokoriTile tile ) return;
+			tile.OnTileClick += OnClickEvent;
+			tile.OnNewResult += OnTileResult;
 		}
 
-		public override bool Remove ( DrawableHitObject h ) {
-			if ( h is HitokoriTile tile ) {
-				tile.OnTileClick -= OnClickEvent;
+		//public override void Add ( DrawableHitObject hitObject ) {
+		//	if ( hitObject is HitokoriTile tile ) {
+		//		tile.OnTileClick += OnClickEvent;
+		//		tile.OnNewResult += OnTileResult;
+		//		Tiles.Add( tile );
+		//	}
+		//	else {
+		//		base.Add( hitObject );
+		//	}
+		//}
 
-				tile.OnNewResult -= OnTileResult;
-				Tiles.Remove( tile );
-				tile.RemoveNested();
-			}
-			else {
-				base.Remove( h );
-			}
-
-			return true;
-		}
+		//public override bool Remove ( DrawableHitObject h ) {
+		//	if ( h is HitokoriTile tile ) {
+		//		tile.OnTileClick -= OnClickEvent;
+		//		tile.OnNewResult -= OnTileResult;
+		//
+		//		Tiles.Remove( tile );
+		//		tile.RemoveNested();
+		//	}
+		//	else {
+		//		base.Remove( h );
+		//	}
+		//
+		//	return true;
+		//}
 
 		private void OnClickEvent ( HitokoriTile tile, AutoClickType type ) {
-			switch ( type ) {
-				case AutoClickType.Down:
-					AutoBot?.Hold();
-					break;
-
-				case AutoClickType.Up:
-					AutoBot?.Release();
-					break;
-
-				case AutoClickType.Press:
-					AutoBot?.Press();
-					break;
-			}
+			if ( type == AutoClickType.Down )
+				AutoBot?.Hold();
+			else if ( type == AutoClickType.Up )
+				AutoBot?.Release();
+			else if ( type == AutoClickType.Press )
+				AutoBot?.Press();
 		}
 
 		private void OnTileResult ( DrawableHitObject obj, JudgementResult result ) {

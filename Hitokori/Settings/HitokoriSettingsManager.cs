@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 		public HitokoriSettingsManager ( SettingsStore settings, RulesetInfo ruleset, int? variant = null ) : base( settings, ruleset, variant ) { }
 
 		protected override void InitialiseDefaults () {
-			Set( HitokoriSetting.CameraSpeed, 1, 1/2d, 3, 0.1 );
+			Set( HitokoriSetting.CameraSpeed, 1, 1 / 2d, 3, 0.1 );
 			Set( HitokoriSetting.RingOpacity, 0.15, 0, 1, 0.01 );
 			Set( HitokoriSetting.RingDashStyle, DashStyle.Dashed );
 			Set( HitokoriSetting.ConnectorWidth, 1, 0.4, 4 );

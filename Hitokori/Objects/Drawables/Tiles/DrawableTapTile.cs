@@ -6,15 +6,21 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTapTile : HitokoriTile, IKeyBindingHandler<HitokoriAction> {
-		new public readonly TapTile Tile;
+		new public TapTile Tile { get; private set; }
 
 		DrawableTilePoint PressPoint;
 
 		public DrawableTapTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
-			Tile = hitObject as TapTile;
 			this.Center();
-
+		}
+		public DrawableTapTile () : this( null ) { }
+		protected override void OnApply () {
+			base.OnApply();
+			Tile = HitObject as TapTile;
 			NormalizedTilePosition = Tile.PressPoint.NormalizedTilePosition;
+
+			PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
+			PressPoint.OnNewResult += ( a, b ) => SendClickEvent();
 		}
 		protected override void UpdateInitialTransforms () { }
 
@@ -35,18 +41,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public void OnReleased ( HitokoriAction action ) { }
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
-			var tile = hitObject as DrawableTilePoint;
-
-			if ( tile.TilePoint == Tile.PressPoint ) {
-				AddInternal( PressPoint = tile );
-				PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
-
-				PressPoint.OnNewResult += ( a, b ) => SendClickEvent();
-			}
+			AddInternal( PressPoint = hitObject as DrawableTilePoint );
 		}
 
 		protected override void ClearNestedHitObjects () {
-			PressPoint.Dispose();
+			RemoveInternal( PressPoint );
 
 			PressPoint = null;
 		}

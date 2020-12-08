@@ -11,8 +11,6 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTilePoint : DrawableHitokoriHitObject {
 		public TilePoint TilePoint;
-		public DrawableHitokori Hitokori => ( Parent as HitokoriTile ).Hitokori;
-
 		public TileMarker Marker;
 
 		public DrawableTilePoint ( HitokoriHitObject hitObject ) : base( hitObject ) {
@@ -65,7 +63,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			if ( wasReverted && Clock.CurrentTime > revertedTimestamp )
 				TryToHitAt( revertedTimestamp ); // HACK this fixes https://github.com/ppy/osu/issues/10811
-			
+
 			// to make sure a result is set
 			if ( !TilePoint.CanBeHitAfter( TilePoint.TimeAtOffset( timeOffset ) ) || timeOffset > TilePoint.Duration / 2 ) {
 				SetResult( HitResult.Miss ); // NOTE when rewinding this sets off on first tile, at an offset from its actual hit time

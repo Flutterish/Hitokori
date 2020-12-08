@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -9,6 +10,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject>, IHasDisposeEvent {
 		protected DrawableHitokoriHitObject ( HitokoriHitObject hitObject ) : base( hitObject ) { }
 
+		[Resolved]
+		public DrawableHitokori Hitokori { get; private set; }
 		[Resolved]
 		public HitokoriPlayfield Playfield { get; private set; }
 

@@ -4,7 +4,6 @@ using osu.Framework.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hitokori.Settings;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
