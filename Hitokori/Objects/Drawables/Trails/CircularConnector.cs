@@ -21,6 +21,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			}
 		}
 		protected Vector2 Around;
+		public double Angle {
+			get => angle;
+			set {
+				if ( angle == value ) return;
+
+				angle = value;
+				isInvalidated = true;
+			}
+		}
 		protected double angle;
 
 		public CircularConnector ( Vector2 from, Vector2 around, double angle ) : this() {
@@ -53,6 +62,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		new public TilePoint From;
 		new public TilePoint Around;
 
+		public CircularTileConnector () { }
 		public CircularTileConnector ( TilePoint from, TilePoint around, double angle ) {
 			From = from;
 			Around = around;
@@ -60,7 +70,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 
 		protected override void Update () {
-			if ( From.TilePosition != base.From || Around.TilePosition != base.Around ) {
+			if ( From is null || Around is null ) {
+				base.Update();
+				return;
+			}
+			else if ( From.TilePosition != base.From || Around.TilePosition != base.Around ) {
 				base.From = From.TilePosition;
 				base.Around = Around.TilePosition;
 				isInvalidated = true;

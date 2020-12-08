@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public override DrawableHitokoriHitObject AsDrawable ()
-			=> new DrawableHoldTile( this );
+			=> null;
 
 		public override void StylizeTiles () {
 			EndPoint.Distance = StartPoint.Distance;

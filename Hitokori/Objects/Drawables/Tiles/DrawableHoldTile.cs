@@ -10,8 +10,8 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
-	public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> {
-		new public readonly HoldTile Tile;
+	public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO hold tiles should reverse at the end, not start. it will make them more readable
+		new public HoldTile Tile => HitObject as HoldTile;
 
 		DrawableTilePoint StartPoint;
 		DrawableTilePoint EndPoint;
@@ -19,18 +19,26 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		CircularTileConnector Curve;
 
 		public DrawableHoldTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
-			Tile = hitObject as HoldTile;
 			this.Center();
 
-			AddInternal(
-				Curve = new CircularTileConnector( Tile.StartPoint, Tile.EndPoint.Parent, Tile.StartPoint.AngleOffset ) {
-					Colour = Tile.StartPoint.Color,
-					Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition,
-					Depth = 1
-				}
-			);
+			AddInternal( Curve = new CircularTileConnector() { Depth = 1 } );
+		}
+		public DrawableHoldTile () : this( null ) { }
 
+		protected override void OnApply () {
+			base.OnApply();
 			NormalizedTilePosition = Tile.EndPoint.NormalizedTilePosition;
+
+			Curve.Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition;
+			Curve.From = Tile.StartPoint;
+			Curve.Around = Tile.EndPoint.Parent;
+			Curve.Angle = Tile.StartPoint.AngleOffset;
+			Curve.Colour = Tile.StartPoint.Color;
+		}
+		protected override void OnFree () {
+			base.OnFree();
+			Curve.From = null;
+			Curve.Around = null;
 		}
 
 		protected override void UpdateInitialTransforms () {
@@ -95,7 +103,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				StartPoint.Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition;
 				StartPoint.Marker.ConnectFrom( Tile.StartPoint.Previous );
 
-				StartPoint.OnNewResult += ( a, b ) => { // BUG when rewound the first tile gets missed when the previous tap tile is hit, in general
+				StartPoint.OnNewResult += ( a, b ) => {
 					SendClickEvent( AutoClickType.Down );
 
 					ReleaseMissed = b.Type == HitResult.Miss;
@@ -116,8 +124,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void ClearNestedHitObjects () {
 			// TODO unify releasing nested hit objects?
-			StartPoint.Dispose();
-			EndPoint.Dispose();
+			RemoveInternal( StartPoint );
+			RemoveInternal( EndPoint );
 
 			StartPoint = null;
 			EndPoint = null;

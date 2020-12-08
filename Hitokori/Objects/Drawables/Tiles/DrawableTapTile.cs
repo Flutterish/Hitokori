@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTapTile : HitokoriTile, IKeyBindingHandler<HitokoriAction> {
-		new public TapTile Tile { get; private set; }
+		new public TapTile Tile => HitObject as TapTile;
 
 		DrawableTilePoint PressPoint;
 
@@ -16,7 +16,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public DrawableTapTile () : this( null ) { }
 		protected override void OnApply () {
 			base.OnApply();
-			Tile = HitObject as TapTile;
 			NormalizedTilePosition = Tile.PressPoint.NormalizedTilePosition;
 
 			PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );

@@ -73,7 +73,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Hitokori.AddTriplet();
 			}
 
-			RegisterPool<TapTile, DrawableTapTile>( 50 );
+			RegisterPool<TapTile, DrawableTapTile>( 20 );
+			RegisterPool<HoldTile, DrawableHoldTile>( 10 );
 		}
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject ) => new HitokoriHitObjectLifetimeEntry( hitObject );
 
