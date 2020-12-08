@@ -3,6 +3,7 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTapTile : HitokoriTile, IKeyBindingHandler<HitokoriAction> {
@@ -18,10 +19,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			base.OnApply();
 			NormalizedTilePosition = Tile.PressPoint.NormalizedTilePosition;
 
+			PressPoint.Position = Vector2.Zero;
 			PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
 			PressPoint.OnNewResult += ( a, b ) => SendClickEvent();
 		}
-		protected override void UpdateInitialTransforms () { }
+		protected override void UpdateInitialTransforms () {
+			PressPoint.Marker.Appear();
+		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.PressTime + 1000;

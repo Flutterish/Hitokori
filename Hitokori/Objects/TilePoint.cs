@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Hitokori.Scoring;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Judgements;
@@ -245,7 +244,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		}
 
 		public override DrawableHitokoriHitObject AsDrawable ()
-			=> new DrawableTilePoint( this );
+			=> null;
 
 		public override Judgement CreateJudgement ()
 			=> new HitokoriJudgement();

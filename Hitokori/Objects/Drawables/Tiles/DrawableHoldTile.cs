@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO hold tiles should reverse at the end, not start. it will make them more readable
@@ -51,6 +52,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.EndTime + 1000;
+			StartPoint.Marker.Appear();
+			EndPoint.Marker.Appear();
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
@@ -115,6 +118,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			}
 			else if ( tile.TilePoint == Tile.EndPoint ) {
 				AddInternal( EndPoint = tile );
+				EndPoint.Position = Vector2.Zero;
 				EndPoint.OnNewResult += ( a, b ) => {
 					Hitokori.OnRelease();
 					SendClickEvent( AutoClickType.Up );

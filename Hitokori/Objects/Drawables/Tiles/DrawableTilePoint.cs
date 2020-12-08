@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
@@ -10,37 +11,40 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTilePoint : DrawableHitokoriHitObject {
-		public TilePoint TilePoint;
+		public TilePoint TilePoint => HitObject as TilePoint;
 		public TileMarker Marker;
 
 		public DrawableTilePoint ( HitokoriHitObject hitObject ) : base( hitObject ) {
-			TilePoint = hitObject as TilePoint;
-
 			AddInternal(
-				Marker = new TileMarker( TilePoint ).Center()
+				Marker = new TileMarker().Center()
 			);
 
 			this.Center();
 
-			if ( TilePoint.ChangedDirection ) {
-				Marker.Reverse( TilePoint.IsClockwise );
-			}
-
 			OnNewResult += ( x, y ) => OnHit();
 			OnRevertResult += ( x, y ) => OnRevert();
 		}
+		public DrawableTilePoint () : this( null ) { }
 
-		[BackgroundDependencyLoader( true )]
-		private void load ( HitokoriSettingsManager config ) {
-			if ( TilePoint.IsDifferentSpeed ) {
-				if ( config?.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ?? true ) {
-					Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
-				}// TODO dynamic text
+		protected override void OnApply () {
+			base.OnApply();
+			Marker.OnApply( TilePoint );
+			if ( TilePoint.ChangedDirection ) {
+				Marker.Reverse( TilePoint.IsClockwise );
 			}
+			if ( TilePoint.IsDifferentSpeed && showSpeedChange.Value ) {
+				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
+			} // TODO dynamic text
+		}
+		protected override void OnFree () {
+			base.OnFree();
+			Marker.OnFree();
 		}
 
-		protected override void UpdateInitialTransforms () {
-			Marker.Appear();
+		Bindable<bool> showSpeedChange = new();
+		[BackgroundDependencyLoader( true )]
+		private void load ( HitokoriSettingsManager config ) {
+			config?.BindWith( HitokoriSetting.ShowSpeeedChange, showSpeedChange );
 		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {

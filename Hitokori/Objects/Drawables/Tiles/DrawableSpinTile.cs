@@ -11,7 +11,7 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO join paths
 		new public SpinTile Tile => HitObject as SpinTile;
-		List<DrawableTilePoint> Points = new List<DrawableTilePoint>(); // TODO rework drawable tile logic
+		List<DrawableTilePoint> Points = new List<DrawableTilePoint>();
 
 		public double EndTime => ( (IHasDuration)Tile ).EndTime;
 		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
@@ -23,9 +23,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void OnApply () {
 			base.OnApply();
 		}
-		public override Vector2 NormalizedTilePosition { 
-			get => Tile.LastPoint.Parent.NormalizedTilePosition; 
-			set => base.NormalizedTilePosition = value; 
+		public override Vector2 NormalizedTilePosition {
+			get => Tile.LastPoint.Parent.NormalizedTilePosition;
+			set => base.NormalizedTilePosition = value;
 		}
 		protected override void OnFree () {
 			base.OnFree();
@@ -33,6 +33,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.EndTime + 1000;
+			foreach ( var i in Points ) {
+				i.Marker.Appear();
+			}
 		}
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
