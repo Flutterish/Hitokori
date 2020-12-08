@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		public static Vector2 DOWN => new Vector2( 0, SPACING );
 		#endregion
 		#region Positioning
-		public Vector2 NormalizedTilePosition;
+		public virtual Vector2 NormalizedTilePosition { get; set; }
 		public Vector2 TilePosition {
 			get => NormalizedTilePosition * SPACING;
 			set => NormalizedTilePosition = value / SPACING;

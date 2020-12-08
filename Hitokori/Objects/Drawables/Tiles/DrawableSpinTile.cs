@@ -4,22 +4,31 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Objects.Types;
+using osuTK;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO join paths
-		new public readonly SpinTile Tile; // TODO default parameters should be zero
+		new public SpinTile Tile => HitObject as SpinTile;
 		List<DrawableTilePoint> Points = new List<DrawableTilePoint>(); // TODO rework drawable tile logic
 
 		public double EndTime => ( (IHasDuration)Tile ).EndTime;
 		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
 
 		public DrawableSpinTile ( HitokoriTileObject tile ) : base( tile ) {
-			Tile = tile as SpinTile;
 			this.Center();
-
-			NormalizedTilePosition = Tile.LastPoint.Parent.NormalizedTilePosition;
+		}
+		public DrawableSpinTile () : this( null ) { }
+		protected override void OnApply () {
+			base.OnApply();
+		}
+		public override Vector2 NormalizedTilePosition { 
+			get => Tile.LastPoint.Parent.NormalizedTilePosition; 
+			set => base.NormalizedTilePosition = value; 
+		}
+		protected override void OnFree () {
+			base.OnFree();
 		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
@@ -44,7 +53,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void ClearNestedHitObjects () {
 			foreach ( var i in Points ) {
-				i.Dispose();
+				RemoveInternal( i );
 			}
 
 			Points.Clear();

@@ -75,6 +75,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			RegisterPool<TapTile, DrawableTapTile>( 20 );
 			RegisterPool<HoldTile, DrawableHoldTile>( 10 );
+			RegisterPool<SpinTile, DrawableSpinTile>( 3 );
 		}
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject ) => new HitokoriHitObjectLifetimeEntry( hitObject );
 

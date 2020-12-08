@@ -64,6 +64,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public override DrawableHitokoriHitObject AsDrawable ()
-			=> new DrawableSpinTile( this );
+			=> null;
 	}
 }
