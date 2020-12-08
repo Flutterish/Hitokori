@@ -2,6 +2,7 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
@@ -15,6 +16,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
+using System;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
@@ -42,7 +44,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private bool reverseSpin;
 
 		Bot AutoBot;
-		public HitokoriPlayfield ( bool auto, bool triplets, bool reverseSpin ) {
+		Beatmap<HitokoriHitObject> beatmap;
+		public HitokoriPlayfield ( bool auto, bool triplets, bool reverseSpin, Beatmap<HitokoriHitObject> beatmap ) {
+			this.beatmap = beatmap;
 			this.reverseSpin = reverseSpin;
 			CameraPosition = new AnimatedVector( parent: this );
 
@@ -74,20 +78,19 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject ) => new HitokoriHitObjectLifetimeEntry( hitObject );
 
 		public bool Auto = false;
-
-		bool hasStarted = false;
-		protected override void UpdateAfterChildren () {
-			if ( !hasStarted ) {
-				var head = Tiles.AliveObjects.OrderBy( x => x.LifetimeStart ).FirstOrDefault();
-				if ( head is HitokoriTile Head ) {
-					if ( Clock.CurrentTime >= Head.Tile.Previous.LastPoint.HitTime ) {
-						hasStarted = true;
-
-						Hitokori.Swap( Head.Tile.Previous.LastPoint );
+		protected override void LoadComplete () {
+			base.LoadComplete();
+			ScheduleAfterChildren( () => {
+				var head = beatmap.HitObjects.First();
+				if ( head is HitokoriTileObject Head ) {
+					using ( BeginAbsoluteSequence( Head.Previous.LastPoint.HitTime, true ) ) {
+						Hitokori.Swap( Head.Previous.LastPoint );
 					}
 				}
-			}
-
+				else throw new InvalidOperationException( "What the fuck" );
+			} );
+		}
+		protected override void UpdateAfterChildren () {
 			if ( reverseSpin ) {
 				Everything.Rotation = -Hitokori.StableAngle.ToDegreesF() * 0.7f;
 			}
@@ -118,32 +121,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			tile.OnTileClick += OnClickEvent;
 			tile.OnNewResult += OnTileResult;
 		}
-
-		//public override void Add ( DrawableHitObject hitObject ) {
-		//	if ( hitObject is HitokoriTile tile ) {
-		//		tile.OnTileClick += OnClickEvent;
-		//		tile.OnNewResult += OnTileResult;
-		//		Tiles.Add( tile );
-		//	}
-		//	else {
-		//		base.Add( hitObject );
-		//	}
-		//}
-
-		//public override bool Remove ( DrawableHitObject h ) {
-		//	if ( h is HitokoriTile tile ) {
-		//		tile.OnTileClick -= OnClickEvent;
-		//		tile.OnNewResult -= OnTileResult;
-		//
-		//		Tiles.Remove( tile );
-		//		tile.RemoveNested();
-		//	}
-		//	else {
-		//		base.Remove( h );
-		//	}
-		//
-		//	return true;
-		//}
 
 		private void OnClickEvent ( HitokoriTile tile, AutoClickType type ) {
 			if ( type == AutoClickType.Down )

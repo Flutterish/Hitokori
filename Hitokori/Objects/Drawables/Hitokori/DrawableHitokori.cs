@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public double EndTime { get; private set; }
 		private double lastDistance = DrawableTapTile.SPACING;
 		public void Swap ( TilePoint hit ) {
-			if ( EndTime > Clock.CurrentTime )
+			if ( EndTime >= Clock.CurrentTime )
 				NextOrbital.AnimateEarly( Math.Min( 140, hit.Duration ) );
 			else
 				NextOrbital.AnimateLate( Math.Min( 140, hit.Duration ) );
@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 			RotateTo( hit.OutAngle, hit.HitTime, hit.HitTime + hit.Duration );
 			lastDistance = DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 );
-			AnimateDistance( duration: hit.StartTime + hit.Duration - Clock.CurrentTime, distance: lastDistance, easing: Easing.None );
+			AnimateDistance( duration: hit.StartTime + hit.Duration - TransformStartTime, distance: lastDistance, easing: Easing.None );
 		}
 
 		public void Swap () {
