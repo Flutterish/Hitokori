@@ -6,10 +6,8 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
-using osuTK.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class TileMarker : Container {
@@ -21,33 +19,52 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
 		List<Connector> LinesToMe = new();
-		ArchedPathTileConnector c;
+		ArchedPathTileConnector pathConnector;
 		SpriteText Label;
 
-		public TileMarker ( TilePoint tile, Color4 color, TickSize size = TickSize.Auto ) {
-			Tile = tile;
-
-			if ( size == TickSize.Auto ) {
-				size = Tile.Size;
-			}
-
-			TickSize = size;
+		public TileMarker () {
+			this.Center();
 
 			AddInternal(
-				Circle = new Circle {
-					Width = (float)TickSize.Size(),
-					Height = (float)TickSize.Size(),
-					Colour = color,
-					Alpha = 0
-				}.Center()
+				Circle = new Circle { Alpha = 0 }.Center()
 			);
-
-			this.Center();
 		}
 
-		public TileMarker ( TilePoint tile ) : this( tile, tile.Color, tile.Size ) { }
+		public void Apply ( TilePoint tile ) {
+			Tile = tile;
 
-		public double Appear () {
+			TickSize = tile.Size;
+			Circle.Size = new Vector2( (float)TickSize.Size() );
+			Circle.Colour = tile.Color;
+			Circle.Alpha = 0;
+		}
+		public void Free () {
+			RemoveAll( x => x != Circle );
+			ClearTransforms( true );
+			Circle.Alpha = 0;
+			LinesToMe.Clear();
+			lastAnimation = null;
+			ReverseMarker = null;
+			ImportantMarker = null;
+			pathConnector = null;
+			Label = null;
+		}
+
+		Action lastAnimation;
+		double lastAnimationTime;
+		void playLastAnimation () {
+			if ( lastAnimation is not null ) {
+				ClearTransformsAfter( lastAnimationTime, true );
+				using ( BeginAbsoluteSequence( lastAnimationTime, true ) ) {
+					lastAnimation();
+				}
+			}
+		}
+
+		public void Appear () {
+			lastAnimation = Appear;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.FadeInFromZero( 700, Easing.Out );
 			Circle.ScaleTo( 1.6f, 200, Easing.Out )
 				.Then()
@@ -58,35 +75,41 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			ImportantMarker?.Spin();
 			Label?.FadeInFromZero( 700 );
 
-			double lineDuration = LinesToMe.Select( line => line.Appear() ).Append( 0 ).Max();
-			c?.Appear();
-
-			return new[] { 700, ReverseMarker?.Appear(), lineDuration }.Max().Value;
+			foreach ( var line in LinesToMe )
+				line.Appear();
+			pathConnector?.Appear();
+			ReverseMarker?.Appear();
 		}
 
-		public double Hit () {
+		public void Hit () {
+			lastAnimation = Hit;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.ScaleTo( new Vector2( 4 ), 300 )
 				.FadeColour( Colour4.Green, 300 )
 				.FadeOut( 300 );
 
-			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
-			c?.Disappear();
+			foreach ( var line in LinesToMe )
+				line.Disappear();
+			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
+			ReverseMarker?.Disappear();
 			Label?.FadeOutFromOne( 300 );
-
-			return new[] { 300, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
 		}
 		// or
-		public double Miss () {
+		public void Miss () {
+			lastAnimation = Miss;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.ScaleTo( new Vector2( 2 ), 700 )
 				.FadeColour( Colour4.Red, 700 )
 				.FadeOut( 700 );
 
-			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
-			c?.Disappear();
+			foreach ( var line in LinesToMe )
+				line.Disappear();
+			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
-
-			return new[] { 700, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
+			ReverseMarker?.Disappear();
 		}
 		// I guess they never miss, h u h?
 
@@ -96,12 +119,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal(
 				ReverseMarker = new ReverseMarker( isClockwise ) { Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ) }.Center()
 			);
+
+			playLastAnimation();
 		}
 
 		public void MarkImportant () {
 			AddInternal(
 				ImportantMarker = new ImportantMarker( TickSize ).Center()
 			);
+
+			playLastAnimation();
 		}
 		public void ConnectFrom ( TilePoint from ) {
 			LineTileConnector line;
@@ -111,6 +138,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				}
 			);
 			LinesToMe.Add( line );
+
+			playLastAnimation();
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
@@ -126,7 +155,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					Position = around.TilePosition - Tile.TilePosition
 				}
 			);
-			c = line;
+			pathConnector = line;
+
+			playLastAnimation();
 		}
 
 		public void AddLabel ( string text ) {
@@ -138,6 +169,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				Position = new Vector2( 0, 18 ),
 				Scale = new Vector2( 0.8f )
 			} );
+
+			playLastAnimation();
 		}
 	}
 

@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
@@ -6,56 +7,65 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTilePoint : DrawableHitokoriHitObject {
-		public TilePoint TilePoint;
+		public TilePoint TilePoint => HitObject as TilePoint;
 		public TileMarker Marker;
 
-		public DrawableTilePoint ( HitokoriHitObject hitObject ) : base( hitObject ) {
-			TilePoint = hitObject as TilePoint;
-
-			AddInternal(
-				Marker = new TileMarker( TilePoint ).Center()
-			);
-
+		public DrawableTilePoint () : base( null ) {
 			this.Center();
-
-			if ( TilePoint.ChangedDirection ) {
-				Marker.Reverse( TilePoint.IsClockwise );
-			}
+			AddInternal(
+				Marker = new TileMarker().Center()
+			);
 
 			OnNewResult += ( x, y ) => OnHit();
 			OnRevertResult += ( x, y ) => OnRevert();
 		}
 
+		Bindable<bool> showSpeedChange = new( true );
 		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			if ( TilePoint.IsDifferentSpeed ) {
-				if ( config?.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ?? true ) {
-					Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
-				} // TODO dynamic text
+			config?.BindWith( HitokoriSetting.ShowSpeeedChange, showSpeedChange );
+		}
+
+		protected override void OnApply () {
+			base.OnApply();
+			Marker.Apply( TilePoint );
+			Position = Vector2.Zero;
+
+			if ( showSpeedChange.Value && TilePoint.IsDifferentSpeed ) {
+				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
+			} // TODO dynamic text
+			if ( TilePoint.ChangedDirection ) {
+				Marker.Reverse( TilePoint.IsClockwise );
 			}
+		}
+
+		protected override void OnFree () {
+			base.OnFree();
+			Marker.Free();
+			wasReverted = false;
 		}
 
 		protected override void UpdateInitialTransforms () {
 			Marker.Appear();
 		}
-		
+
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			if ( state == ArmedState.Miss )
 				Marker.Miss();
 			else if ( state == ArmedState.Hit )
 				Marker.Hit();
+
+			LifetimeEnd = TilePoint.HitTime + 1000;
 		}
 
 		public void SetResult ( HitResult result ) {
-			if ( result != HitResult.None ) {
-				ApplyResult( j => {
-					j.Type = result;
-				} );
-			}
+			if ( result != HitResult.None )
+				ApplyResult( j => j.Type = result );
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
