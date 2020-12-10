@@ -51,6 +51,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.EndTime + 1000;
+			StartPoint.Marker.Appear();
+			EndPoint.Marker.Appear();
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
@@ -117,6 +119,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			}
 			else if ( tile.TilePoint == Tile.EndPoint ) {
 				AddInternal( EndPoint = tile );
+				EndPoint.Position = Vector2.Zero;
 				EndPoint.OnNewResult += ( a, b ) => {
 					Hitokori.OnRelease();
 				};
