@@ -8,26 +8,26 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO hold tiles should reverse at the end, not start. it will make them more readable
 		new public HoldTile Tile => HitObject as HoldTile;
+		public override Vector2 NormalizedTilePosition => Tile.EndPoint.NormalizedTilePosition;
 
 		DrawableTilePoint StartPoint;
 		DrawableTilePoint EndPoint;
 
 		CircularTileConnector Curve;
 
-		public DrawableHoldTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
+		public DrawableHoldTile () : base( null ) {
 			this.Center();
 
 			AddInternal( Curve = new CircularTileConnector() { Depth = 1 } );
 		}
-		public DrawableHoldTile () : this( null ) { }
 
 		protected override void OnApply () {
 			base.OnApply();
-			NormalizedTilePosition = Tile.EndPoint.NormalizedTilePosition;
 
 			Curve.Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition;
 			Curve.From = Tile.StartPoint;
@@ -55,12 +55,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			if ( ( StartPoint.Judged && !EndPoint.Judged ) && ( ReleaseMissed && timeOffset >= 0 ) ) {
-				TryToSetResult( EndPoint, HitResult.Miss );
+				EndPoint.SetResult( HitResult.Miss );
 			}
 		}
 
-		public double EndTime => ( (IHasDuration)Tile ).EndTime;
-		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
+		public double EndTime => Tile.EndTime;
+		public double Duration { get => Tile.Duration; set => Tile.Duration = value; }
 
 		HitokoriAction? HoldButton;
 		public bool OnPressed ( HitokoriAction action ) { // BUG beatmaps that have a hold tile last end prematurely?
@@ -76,6 +76,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		void BeginHold ( HitokoriAction action ) {
+			Playfield.Click( AutoClickType.Down );
 			HoldButton = action;
 
 			Hitokori.OnHold();
@@ -84,6 +85,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		bool ReleaseMissed;
 		void Release ( HitokoriAction action ) {
+			if ( action == HoldButton )
+				Playfield.Click( AutoClickType.Up );
+
 			if ( action != HoldButton || ReleaseMissed ) {
 				return;
 			}
@@ -104,8 +108,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				StartPoint.Marker.ConnectFrom( Tile.StartPoint.Previous );
 
 				StartPoint.OnNewResult += ( a, b ) => {
-					SendClickEvent( AutoClickType.Down );
-
 					ReleaseMissed = b.Type == HitResult.Miss;
 				};
 				StartPoint.OnRevertResult += ( a, b ) => {
@@ -117,13 +119,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				AddInternal( EndPoint = tile );
 				EndPoint.OnNewResult += ( a, b ) => {
 					Hitokori.OnRelease();
-					SendClickEvent( AutoClickType.Up );
 				};
 			}
 		}
 
 		protected override void ClearNestedHitObjects () {
-			// TODO unify releasing nested hit objects?
 			RemoveInternal( StartPoint );
 			RemoveInternal( EndPoint );
 

@@ -13,17 +13,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 	public class DrawableHitokori : Container, IHasTilePosition {
 		public List<Orbital> Orbitals = new List<Orbital>();
 		private int OrbitalIndex;
+		private int NextOrbitalIndex => ( OrbitalIndex + 1 ) % Orbitals.Count;
 		public Orbital HoldingOrbital { get; private set; }
 
 		private Orbital SwitchToNextOrbital () {
-			HoldingOrbital = Orbitals[ OrbitalIndex = ( OrbitalIndex + 1 ) % Orbitals.Count ];
+			HoldingOrbital = Orbitals[ OrbitalIndex = NextOrbitalIndex ];
 
 			NextOrbital.MakeImportant();
 			HoldingOrbital.RevokeImportant();
 
 			return HoldingOrbital;
 		}
-		private Orbital NextOrbital => Orbitals[ ( OrbitalIndex + 1 ) % Orbitals.Count ];
+		private Orbital NextOrbital => Orbitals[ NextOrbitalIndex ];
 		private IEnumerable<Orbital> FreeOrbitals => Orbitals.Where( x => x != HoldingOrbital );
 		bool Triplets;
 
@@ -57,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		public double EndTime { get; private set; }
-		private double lastDistance = DrawableTapTile.SPACING;
+		private double lastDistance = HitokoriTile.SPACING;
 		public void Swap ( TilePoint hit ) {
 			if ( EndTime >= Clock.CurrentTime )
 				NextOrbital.AnimateEarly( Math.Min( 140, hit.Duration ) );
@@ -69,7 +70,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			TilePosition = hit.TilePosition;
 
 			RotateTo( hit.OutAngle, hit.HitTime, hit.HitTime + hit.Duration );
-			lastDistance = DrawableTapTile.SPACING * ( hit.Next?.Distance ?? 1 );
+			lastDistance = HitokoriTile.SPACING * ( hit.Next?.Distance ?? 1 );
 			AnimateDistance( duration: hit.StartTime + hit.Duration - TransformStartTime, distance: lastDistance, easing: Easing.None );
 		}
 

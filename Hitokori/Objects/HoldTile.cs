@@ -1,5 +1,4 @@
 ﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Objects.Types;
 using System.Collections.Generic;
 
@@ -29,13 +28,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		new public double StartTime {
 			get => base.StartTime;
 			set {
-				var duration = ( this as IHasDuration ).Duration;
+				var duration = Duration;
 				base.StartTime = value;
 				StartPoint.HitTime = value;
 				( this as IHasDuration ).Duration = duration;
 			}
 		}
-		double IHasDuration.Duration {
+		public double Duration {
 			get => StartPoint.Duration;
 			set => EndPoint.HitTime = StartPoint.HitTime + value;
 		}

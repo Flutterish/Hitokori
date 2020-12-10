@@ -125,7 +125,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			return Previous.Speed.ToDegrees() * TimeOffsetAt( time );
 		}
 		public bool CanBeHitAfter ( double time ) {
-			return TimeHitWindows.CanBeHit( TimeOffsetAt( time ) );// && AngleHitWindows.CanBeHit( AngleOffsetAt( time ) );
+			return TimeHitWindows.CanBeHit( TimeOffsetAt( time ) );
 		}
 		public HitResult ResultAt ( double time ) {
 			var result = TimeHitWindows.ResultFor( TimeOffsetAt( time ) );

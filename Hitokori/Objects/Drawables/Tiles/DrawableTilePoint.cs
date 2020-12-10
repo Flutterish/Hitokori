@@ -35,21 +35,19 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			if ( TilePoint.IsDifferentSpeed ) {
 				if ( config?.Get<bool>( HitokoriSetting.ShowSpeeedChange ) ?? true ) {
 					Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
-				}// TODO dynamic text
+				} // TODO dynamic text
 			}
 		}
 
 		protected override void UpdateInitialTransforms () {
 			Marker.Appear();
 		}
-
+		
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
-			if ( state == ArmedState.Miss ) {
-				LifetimeEnd = TilePoint.HitTime + Marker.Miss();
-			}
-			else {
-				LifetimeEnd = TilePoint.HitTime + Marker.Hit();
-			}
+			if ( state == ArmedState.Miss )
+				Marker.Miss();
+			else if ( state == ArmedState.Hit )
+				Marker.Hit();
 		}
 
 		public void SetResult ( HitResult result ) {

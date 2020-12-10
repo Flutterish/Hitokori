@@ -120,11 +120,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			base.OnNewDrawableHitObject( drawableHitObject );
 
 			if ( drawableHitObject is not HitokoriTile tile ) return;
-			tile.OnTileClick += OnClickEvent;
 			tile.OnNewResult += OnTileResult;
 		}
 
-		private void OnClickEvent ( HitokoriTile tile, AutoClickType type ) {
+		public void Click ( AutoClickType type ) {
 			if ( type == AutoClickType.Down )
 				AutoBot?.Hold();
 			else if ( type == AutoClickType.Up )

@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
+using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -11,24 +12,14 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableSpinTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO join paths
 		new public SpinTile Tile => HitObject as SpinTile;
-		List<DrawableTilePoint> Points = new List<DrawableTilePoint>(); // TODO rework drawable tile logic
+		public override Vector2 NormalizedTilePosition => Tile.LastPoint.Parent.NormalizedTilePosition;
+		List<DrawableTilePoint> Points = new List<DrawableTilePoint>();
 
-		public double EndTime => ( (IHasDuration)Tile ).EndTime;
-		public double Duration { get => ( (IHasDuration)Tile ).Duration; set => ( (IHasDuration)Tile ).Duration = value; }
+		public double EndTime => Tile.EndTime;
+		public double Duration { get => Tile.Duration; set => Tile.Duration = value; }
 
-		public DrawableSpinTile ( HitokoriTileObject tile ) : base( tile ) {
+		public DrawableSpinTile () : base( null ) {
 			this.Center();
-		}
-		public DrawableSpinTile () : this( null ) { }
-		protected override void OnApply () {
-			base.OnApply();
-		}
-		public override Vector2 NormalizedTilePosition { 
-			get => Tile.LastPoint.Parent.NormalizedTilePosition; 
-			set => base.NormalizedTilePosition = value; 
-		}
-		protected override void OnFree () {
-			base.OnFree();
 		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
@@ -42,13 +33,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			AddInternal( tile );
 
 			tile.Position = tile.TilePoint.TilePosition - TilePosition;
-			tile.Marker.ConnectFrom( tile.TilePoint.Previous, tile.TilePoint.Parent );
+			tile.Marker.ConnectFrom( tile.TilePoint.Previous, around: tile.TilePoint.Parent );
 
 			if ( tile.TilePoint == Tile.LastPoint || tile.TilePoint == Tile.TilePoints.First() ) {
 				tile.Marker.MarkImportant();
 			}
-
-			tile.OnNewResult += ( a, b ) => SendClickEvent();
 		}
 
 		protected override void ClearNestedHitObjects () {
@@ -61,7 +50,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			if ( userTriggered ) {
-				var next = Points.First( X => !X.Judged );
+				var next = Points.First( x => !x.Judged );
 				Hitokori.OnPress();
 				next.TryToHit();
 			}
@@ -70,6 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public bool OnPressed ( HitokoriAction action ) {
 			var next = Points.FirstOrDefault( X => !X.Judged );
 			if ( next is null ) return false;
+			Playfield.Click( AutoClickType.Press );
 			UpdateResult( true );
 			return true;
 		}

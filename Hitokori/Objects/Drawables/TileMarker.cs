@@ -45,13 +45,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			this.Center();
 		}
 
-		public void ChangeTickSize ( TickSize size ) {
-			Circle.Width = (float)size.Size();
-			Circle.Height = (float)size.Size();
-
-			TickSize = size;
-		}
-
 		public TileMarker ( TilePoint tile ) : this( tile, tile.Color, tile.Size ) { }
 
 		public double Appear () {

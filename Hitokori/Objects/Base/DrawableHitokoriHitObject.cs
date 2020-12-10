@@ -8,7 +8,7 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject>, IHasDisposeEvent {
-		protected DrawableHitokoriHitObject ( HitokoriHitObject hitObject ) : base( hitObject ) { }
+		protected DrawableHitokoriHitObject ( HitokoriHitObject hitObject = null ) : base( hitObject ) { }
 
 		[Resolved]
 		public DrawableHitokori Hitokori { get; private set; }
@@ -21,13 +21,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 		protected override void Dispose ( bool isDisposing ) {
 			base.Dispose( isDisposing );
 			OnDispose?.Invoke();
+			OnDispose = null;
 		}
 
 		protected override DrawableHitObject CreateNestedHitObject ( HitObject hitObject )
 			=> ( hitObject as HitokoriHitObject ).AsDrawable();
-
-		public void RemoveNested () {
-			ClearNestedHitObjects();
-		}
 	}
 }

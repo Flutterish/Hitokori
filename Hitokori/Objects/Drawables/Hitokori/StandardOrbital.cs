@@ -73,8 +73,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			}
 		}
 
-		private DrawableHitokori Hitokori => Parent as DrawableHitokori; // TODO supply these properly, its ok for now as the hierarchy wont change soon
-		private HitokoriPlayfield Playfield => Hitokori.Parent.Parent as HitokoriPlayfield;
+		[Resolved]
+		private DrawableHitokori Hitokori { get; set; }
+		[Resolved]
+		private HitokoriPlayfield Playfield { get; set; }
 		protected override void Update () {
 			base.Update();
 
