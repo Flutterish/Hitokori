@@ -41,6 +41,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			To = to;
 			InternalChild.Alpha = 0.2f;
 		}
+		public LineTileConnector () {
+			InternalChild.Alpha = 0.2f;
+		}
 
 		protected override void Update () {
 			if ( From.TilePosition != base.From || To.TilePosition != base.To ) {

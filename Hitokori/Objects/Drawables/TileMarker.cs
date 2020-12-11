@@ -2,6 +2,7 @@
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Utils;
@@ -15,10 +16,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		TickSize TickSize;
 
+		ReverseMarker cachedReverseMarker = new ReverseMarker().Center();
+		ImportantMarker cachedImportantMarker = new ImportantMarker().Center();
+		LineTileConnector cachedLineToMe = new LineTileConnector();
+		ArchedPathTileConnector cachedPathConnector = new ArchedPathTileConnector();
+		SpriteText cachedLabel = new OsuSpriteText {
+			Anchor = Anchor.BottomCentre,
+			Origin = Anchor.TopCentre,
+			Position = new Vector2( 0, 18 ),
+			Scale = new Vector2( 0.8f )
+		};
+
 		Circle Circle;
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
-		List<Connector> LinesToMe = new();
+		LineTileConnector LineToMe; // TODO move these to the playfield
 		ArchedPathTileConnector pathConnector;
 		SpriteText Label;
 
@@ -42,7 +54,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			RemoveAll( x => x != Circle );
 			ClearTransforms( true );
 			Circle.Alpha = 0;
-			LinesToMe.Clear();
+			LineToMe = null;
 			lastAnimation = null;
 			ReverseMarker = null;
 			ImportantMarker = null;
@@ -75,8 +87,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			ImportantMarker?.Spin();
 			Label?.FadeInFromZero( 700 );
 
-			foreach ( var line in LinesToMe )
-				line.Appear();
+			LineToMe?.Appear();
 			pathConnector?.Appear();
 			ReverseMarker?.Appear();
 		}
@@ -89,8 +100,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				.FadeColour( Colour4.Green, 300 )
 				.FadeOut( 300 );
 
-			foreach ( var line in LinesToMe )
-				line.Disappear();
+			LineToMe?.Disappear();
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
@@ -105,8 +115,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				.FadeColour( Colour4.Red, 700 )
 				.FadeOut( 700 );
 
-			foreach ( var line in LinesToMe )
-				line.Disappear();
+			LineToMe?.Disappear();
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
@@ -116,60 +125,50 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		// ----------------
 
 		public void Reverse ( bool isClockwise ) {
-			AddInternal(
-				ReverseMarker = new ReverseMarker( isClockwise ) { Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ) }.Center()
-			);
+			AddInternal( ReverseMarker = cachedReverseMarker );
+			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 );
+			ReverseMarker.SetClockwise( isClockwise );
 
 			playLastAnimation();
 		}
 
 		public void MarkImportant () {
-			AddInternal(
-				ImportantMarker = new ImportantMarker( TickSize ).Center()
-			);
+			AddInternal( ImportantMarker = cachedImportantMarker );
+			ImportantMarker.SetTickSize( TickSize );
 
 			playLastAnimation();
 		}
 		public void ConnectFrom ( TilePoint from ) {
-			LineTileConnector line;
-			AddInternal(
-				line = new LineTileConnector( from, Tile ) {
-					Position = from.TilePosition - Tile.TilePosition
-				}
-			);
-			LinesToMe.Add( line );
+			AddInternal( LineToMe = cachedLineToMe );
+			LineToMe.Reset();
+			LineToMe.From = from;
+			LineToMe.To = Tile;
+			LineToMe.Position = from.TilePosition - Tile.TilePosition;
 
 			playLastAnimation();
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
-			ArchedPathTileConnector line;
-
 			var a = from.TilePosition - around.TilePosition;
 			var b = Tile.TilePosition - around.TilePosition;
 
 			var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
 
-			AddInternal(
-				line = new ArchedPathTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
-					Position = around.TilePosition - Tile.TilePosition
-				}
-			);
-			pathConnector = line;
+			AddInternal( pathConnector = cachedPathConnector );
+			pathConnector.Reset();
+			pathConnector.From = from;
+			pathConnector.To = Tile;
+			pathConnector.Around = around;
+			pathConnector.Angle = Tile.IsClockwise ? angle : -angle;
+			pathConnector.Position = around.TilePosition - Tile.TilePosition;
 
 			playLastAnimation();
 		}
 
 		public void AddLabel ( string text ) {
-			AddInternal( Label = new SpriteText {
-				Text = text,
-				Colour = Circle.Colour,
-				Anchor = Anchor.BottomCentre,
-				Origin = Anchor.TopCentre,
-				Position = new Vector2( 0, 18 ),
-				Scale = new Vector2( 0.8f )
-			} );
-
+			AddInternal( Label = cachedLabel );
+			Label.Text = text;
+			Label.Colour = Circle.Colour;
 			playLastAnimation();
 		}
 	}

@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public double Angle;
 
-		public void RotateTo ( double angle ) { // TODO move trail to StandardOrbital, Relace all InterpolateTrailTo with virtual InterpolateTo
+		public void RotateTo ( double angle ) {
 			double deltaTime = ( angle - Angle ) / Velocity;
 			if ( double.IsFinite( deltaTime ) ) {
 				if ( deltaTime < 0 ) {

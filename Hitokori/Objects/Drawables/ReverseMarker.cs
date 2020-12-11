@@ -5,17 +5,20 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class ReverseMarker : Container {
+	public class ReverseMarker : Container { // TODO dear princess celestia, why the fuck did i use containers instead of composite drawables?
 		bool ToClockwise;
-		public ReverseMarker ( bool toClockwise = true ) {
+		public ReverseMarker () {
 			InternalChild = new SpriteIcon {
 				Icon = FontAwesome.Solid.RedoAlt,
 				Width = HitokoriTile.SIZE * 2,
 				Height = HitokoriTile.SIZE * 2,
 				Colour = Colour4.Yellow
 			}.Center();
+		}
 
+		public void SetClockwise ( bool toClockwise = true ) {
 			if ( !( ToClockwise = toClockwise ) ) InternalChild.Scale = new osuTK.Vector2( -1, 1 );
+			else InternalChild.Scale = new osuTK.Vector2( 1, 1 );
 		}
 
 		public void Spin () {

@@ -74,7 +74,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 			// to make sure a result is set
 			if ( !TilePoint.CanBeHitAfter( TilePoint.TimeAtOffset( timeOffset ) ) || timeOffset > TilePoint.Duration / 2 ) {
-				SetResult( HitResult.Miss ); // NOTE when rewinding this sets off on first tile, at an offset from its actual hit time
+				SetResult( HitResult.Miss );
 			}
 		}
 

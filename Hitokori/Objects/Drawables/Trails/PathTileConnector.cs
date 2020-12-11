@@ -133,6 +133,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 
 			return 500;
 		}
+		public void Reset () {
+			ClearTransforms( true );
+			Progress.A = 0;
+			Progress.B = 0;
+		}
 
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {
 			Progress.AnimateATo( 1, duration, easing );

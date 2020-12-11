@@ -13,7 +13,7 @@ using Vector2 = osuTK.Vector2;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawableHitokoriJudgement : DrawableJudgement, IHasTilePosition {
-		private HitResult Type; // TODO somehow, this rid itself of animations
+		private HitResult Type;
 		private double Offset;
 
 		public DrawableHitokoriJudgement ( JudgementResult result, DrawableTilePoint judgedObject ) : base( result, judgedObject ) {

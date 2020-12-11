@@ -40,6 +40,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {
 			progress.AnimateATo( 1, duration, easing );
 		}
+		public void Reset () {
+			ClearTransforms( true );
+			progress.A = 0;
+			progress.B = 0;
+		}
 
 		public virtual double Appear ( double duration = 500, Easing easing = Easing.In ) {
 			this.FadeInFromZero( duration );
