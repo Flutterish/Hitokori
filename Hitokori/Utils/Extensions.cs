@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Transforms;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 using System;
@@ -86,5 +87,22 @@ namespace osu.Game.Rulesets.Hitokori.Utils {
 			=> ( a - b ).Length;
 		public static float AngleFromXAxis ( this Vector2 a )
 			=> MathF.Atan2( a.Y, a.X );
+
+		public static TransformSequence<T> Shake<T> ( this T self, double duration, double magnitude ) where T : Drawable {
+			Vector2 pos = self.Position;
+			TransformSequence<T> seq = new TransformSequence<T>( self );
+
+			for ( double i = 0; i < duration; ) {
+				var dur = Math.Min( duration - i, 30 + random.NextDouble() * 30 );
+				var mag = random.NextDouble() * magnitude;
+				var angle = random.NextDouble() * Math.PI * 2;
+				var dir = new Vector2( MathF.Cos( (float)angle ), MathF.Sin( (float)angle ) );
+				i += dur;
+
+				seq = seq.Then().MoveToOffset( dir * (float)mag, dur / 2 ).Then().MoveTo( pos, dur / 2 );
+			}
+
+			return seq;
+		}
 	}
 }

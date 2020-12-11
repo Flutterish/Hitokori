@@ -4,7 +4,6 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK;
-using osuTK.Graphics.ES11;
 using System;
 using System.Collections.Generic;
 

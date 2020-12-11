@@ -33,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void OnApply () {
 			base.OnApply();
+			attempts = 2;
 			Marker.Apply( TilePoint );
 			Position = Vector2.Zero;
 
@@ -91,7 +92,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				}
 				if ( result == HitResult.Miss ) {
 					attempts--;
-					if ( attempts > 0 ) return false;
+					if ( attempts > 0 ) {
+						Playfield.AttemptLost( this );
+						return false;
+					}
 				}
 				SetResult( result );
 				return true;

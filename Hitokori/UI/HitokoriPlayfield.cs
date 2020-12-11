@@ -40,6 +40,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		HitObjectContainer Tiles;
 		[Cached]
 		public readonly DrawableHitokori Hitokori;
+		private Container HitokoriShakeContainer;
 
 		private bool reverseSpin;
 
@@ -56,7 +57,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			};
 
 			Everything.AddRange( new Drawable[] {
-				Hitokori = new DrawableHitokori { Depth = -1 }.Center(),
+				HitokoriShakeContainer = new Container { Child = Hitokori = new DrawableHitokori { Depth = -1 }.Center() }.Center(),
 				Tiles = HitObjectContainer.Center(),
 				Judgements = new JudgementContainer<DrawableHitokoriJudgement>().Center()
 			} );
@@ -93,6 +94,11 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				else throw new InvalidOperationException( "What the fuck" );
 			} );
 		}
+
+		public void AttemptLost ( DrawableTilePoint drawableTilePoint ) {
+			HitokoriShakeContainer.Shake( 200, 20 );
+		}
+
 		protected override void UpdateAfterChildren () {
 			if ( reverseSpin ) {
 				Everything.Rotation = -Hitokori.StableAngle.ToDegreesF() * 0.7f;

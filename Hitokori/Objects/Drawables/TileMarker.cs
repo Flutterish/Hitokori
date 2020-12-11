@@ -8,7 +8,6 @@ using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class TileMarker : Container {
