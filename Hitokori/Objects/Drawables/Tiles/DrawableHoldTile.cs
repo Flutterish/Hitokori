@@ -26,9 +26,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			AddInternal( Curve = new CircularTileConnector() { Depth = 1 } );
 		}
 
+		public override void ChildTargeted ( DrawableTilePoint child ) {
+			if ( child != StartPoint ) return;
+			Curve.FadeColour( AccentColour.Value, 200 );
+		}
+
 		protected override void OnApply () {
 			base.OnApply();
-
 			Curve.Position = Tile.StartPoint.TilePosition - Tile.EndPoint.TilePosition;
 			Curve.From = Tile.StartPoint;
 			Curve.Around = Tile.EndPoint.Parent;

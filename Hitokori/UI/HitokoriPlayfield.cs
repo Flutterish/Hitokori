@@ -26,6 +26,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public readonly SparklePool SparklePool = new SparklePool();
 		[Cached]
 		public readonly PathPool PathPool = new PathPool();
+		[Cached]
+		public readonly Bindable<Colour4> accentColour = new( Colour4.FromHex( "#ff7be0" ) );
 
 		/// <summary>
 		/// Camera position. Used because offsetting containers clips children.
@@ -57,7 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			};
 
 			Everything.AddRange( new Drawable[] {
-				HitokoriShakeContainer = new Container { Child = Hitokori = new DrawableHitokori { Depth = -1 }.Center() }.Center(),
+				HitokoriShakeContainer = new Container { Child = Hitokori = new DrawableHitokori { Depth = -1 }.Center(), AutoSizeAxes = Axes.None }.Center(),
 				Tiles = HitObjectContainer.Center(),
 				Judgements = new JudgementContainer<DrawableHitokoriJudgement>().Center()
 			} );
@@ -96,7 +98,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 
 		public void AttemptLost ( DrawableTilePoint drawableTilePoint ) {
-			HitokoriShakeContainer.Shake( 200, 20 );
+			Hitokori.Shake( 200, 20 );
 		}
 
 		protected override void UpdateAfterChildren () {
@@ -118,9 +120,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
 			CameraPosition.AnimateTo( averagePosition, 300 / CameraSpeed.Value );
 
-			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori ) ) {
+			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ) ) {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;
 			}
+			HitokoriShakeContainer.Position = Hitokori.TilePosition - CameraPosition;
 		}
 
 		protected override void OnNewDrawableHitObject ( DrawableHitObject drawableHitObject ) {

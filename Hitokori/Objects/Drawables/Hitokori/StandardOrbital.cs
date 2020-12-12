@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.Utils;
+using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
@@ -62,14 +63,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				var sparkle = sparklePool.Borrow( duration: 300 );
 
 				sparkle.Colour = colour.Lighten( 0.3f );
-				sparkle.Size = new osuTK.Vector2( 20 );
+				sparkle.Size = new Vector2( 20 );
 
-				sparkle.gravity = new osuTK.Vector2( 0, 2000 );
-				sparkle.velocity = new osuTK.Vector2( starRandomizer.Next( -300, 300 ), starRandomizer.Next( -500, 200 ) );
+				sparkle.gravity = new Vector2( 0, 2000 );
+				sparkle.velocity = new Vector2( starRandomizer.Next( -300, 300 ), starRandomizer.Next( -500, 200 ) );
 				sparkle.angularVelocity = starRandomizer.Next( -200, 200 );
 
 				Playfield.SFX.Add( sparkle );
-				sparkle.Position = Playfield.Everything.ToParentSpace( Hitokori.Position + Position ) - Playfield.LayoutSize / 2;
+				sparkle.Position = ToSpaceOfOtherDrawable( Vector2.Zero, Playfield ) - Playfield.LayoutSize / 2;
 			}
 		}
 

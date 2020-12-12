@@ -50,13 +50,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void ApplyHitAnimations () {
-			Text.FadeInFromZero( 80 ).TransformSpacingTo( new Vector2( 10 ), 500, Easing.Out ).Then().Delay( 300 ).Then().FadeOut( 300, Easing.Out );
+			Text.FadeInFromZero( 50 ).TransformSpacingTo( new Vector2( 10 ), 400, Easing.Out ).Then().Delay( 200 ).Then().FadeOut( 200, Easing.Out );
 			LifetimeEnd = LifetimeStart + 2000;
 			base.ApplyHitAnimations();
 		}
 
 		protected override void ApplyMissAnimations () {
-			Text.FadeInFromZero( 80 ).TransformSpacingTo( new Vector2( 10 ), 500, Easing.Out ).Then().Delay( 300 ).Then().FadeOut( 300, Easing.Out );
+			Text.FadeInFromZero( 50 ).TransformSpacingTo( new Vector2( 10 ), 400, Easing.Out ).Then().Delay( 200 ).Then().FadeOut( 200, Easing.Out );
 			LifetimeEnd = LifetimeStart + 2000;
 			base.ApplyMissAnimations();
 		}

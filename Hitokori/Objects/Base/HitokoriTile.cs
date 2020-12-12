@@ -13,6 +13,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 			};
 		}
 
+		public virtual void ChildTargeted ( DrawableTilePoint child ) { }
+		public virtual void ChildUntargeted ( DrawableTilePoint child ) { }
+
 		public const float SPACING = 140;
 		public const float SIZE = 15;
 

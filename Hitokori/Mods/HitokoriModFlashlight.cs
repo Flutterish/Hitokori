@@ -5,6 +5,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 using osuTK;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModFlashlight : ModFlashlight<HitokoriHitObject>, IUpdatableByPlayfield {
@@ -23,7 +24,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		}
 
 		private class HitokoriFlashlight : Flashlight {
-			float FLASHLIGHT_SIZE => (float)( Playfield?.Hitokori.Radius.Length ?? 200 ) * 1.1f;
+			float FLASHLIGHT_SIZE => (float)Math.Max( ( Playfield?.Hitokori.Radius.Length ?? 200 ), 200 ) * 1.1f;
 			public HitokoriFlashlight () {
 				FlashlightSize = new Vector2( 0, FLASHLIGHT_SIZE );
 			}
@@ -43,7 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			public void Update ( Playfield playfield ) {
 				Playfield = playfield as HitokoriPlayfield;
 
-				FlashlightPosition = Playfield.Everything.ToParentSpace( Playfield.Hitokori.Position + Playfield.Hitokori.HiOffset );
+				FlashlightPosition = Playfield.Hitokori.Hi.ToSpaceOfOtherDrawable( Vector2.Zero, Playfield );
 				FlashlightSize = new Vector2( FLASHLIGHT_SIZE * (float)comboModifier.Value );
 			}
 

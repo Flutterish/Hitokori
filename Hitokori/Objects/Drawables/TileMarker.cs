@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -13,7 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class TileMarker : Container {
 		TilePoint Tile;
 
-		TickSize TickSize;
+		TickSize TickSize => Tile.Size;
 
 		ReverseMarker cachedReverseMarker = new ReverseMarker().Center();
 		ImportantMarker cachedImportantMarker = new ImportantMarker().Center();
@@ -24,12 +25,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Origin = Anchor.TopCentre,
 			Position = new Vector2( 0, 18 ),
 			Scale = new Vector2( 0.8f )
-		};
+		}; // NOTE with these, in theory i dont have to null check the actually used elements
 
 		Circle Circle;
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
 		LineTileConnector LineToMe; // TODO move these to the playfield
+		public readonly Bindable<bool> showLabel = new();
+
 		ArchedPathTileConnector pathConnector;
 		SpriteText Label;
 
@@ -39,12 +42,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal(
 				Circle = new Circle { Alpha = 0 }.Center()
 			);
+
+			showLabel.BindValueChanged( v => {
+				if ( v.NewValue ) {
+					Label?.FadeIn( 200 );
+				}
+				else {
+					Label?.FadeOut( 200 );
+				} // TODO this can be opaque if shown after hit/miss
+			} );
 		}
 
 		public void Apply ( TilePoint tile ) {
 			Tile = tile;
 
-			TickSize = tile.Size;
 			Circle.Size = new Vector2( (float)TickSize.Size() );
 			Circle.Colour = tile.Color;
 			Circle.Alpha = 0;
@@ -84,7 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			ReverseMarker?.Spin();
 			ImportantMarker?.Appear();
 			ImportantMarker?.Spin();
-			Label?.FadeInFromZero( 700 );
+			if ( showLabel.Value ) Label?.FadeInFromZero( 700 );
 
 			LineToMe?.Appear();
 			pathConnector?.Appear();
@@ -103,7 +114,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
-			Label?.FadeOutFromOne( 300 );
+			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
 		}
 		// or
 		public void Miss () {
@@ -118,6 +129,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
+			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
 		}
 		// I guess they never miss, h u h?
 
@@ -125,7 +137,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		public void Reverse ( bool isClockwise ) {
 			AddInternal( ReverseMarker = cachedReverseMarker );
-			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 );
+			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ); // BUG with hold tiles these are sometimes big instead on regular
 			ReverseMarker.SetClockwise( isClockwise );
 
 			playLastAnimation();
@@ -166,6 +178,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		public void AddLabel ( string text ) {
 			AddInternal( Label = cachedLabel );
+			Label.Alpha = 0;
 			Label.Text = text;
 			Label.Colour = Circle.Colour;
 			playLastAnimation();

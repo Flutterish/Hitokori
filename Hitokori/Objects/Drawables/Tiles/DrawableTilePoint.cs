@@ -29,17 +29,19 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
 			config?.BindWith( HitokoriSetting.ShowSpeeedChange, showSpeedChange );
+			Marker.showLabel.BindTo( showSpeedChange );
 		}
 
 		protected override void OnApply () {
 			base.OnApply();
 			attempts = 2;
 			Marker.Apply( TilePoint );
+			Colour = Colour4.White;
 			Position = Vector2.Zero;
 
 			if ( showSpeedChange.Value && TilePoint.IsDifferentSpeed ) {
 				Marker.AddLabel( $"{TilePoint.SpeedDifferencePercent:+####%;-####%}" );
-			} // TODO dynamic text
+			}
 			if ( TilePoint.ChangedDirection ) {
 				Marker.Reverse( TilePoint.IsClockwise );
 			}
@@ -49,6 +51,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			base.OnFree();
 			Marker.Free();
 			wasReverted = false;
+			wasTarget = false;
+		}
+
+		bool wasTarget = false;
+		protected override void Update () {
+			if ( Hitokori.Target == TilePoint.Previous && !wasTarget ) {
+				wasTarget = true;
+				this.FadeColour( AccentColour.Value, 100 );
+				( ParentHitObject as HitokoriTile )?.ChildTargeted( this );
+			}
+			else if ( Hitokori.Target != TilePoint.Previous && wasTarget ) {
+				wasTarget = false;
+				this.FadeColour( Colour4.White, 100 );
+				( ParentHitObject as HitokoriTile )?.ChildUntargeted( this );
+			}
 		}
 
 		protected override void UpdateInitialTransforms () {
@@ -119,7 +136,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		private static void Attach ( TilePoint TilePoint, DrawableHitokori Hitokori ) {
 			if ( TilePoint.Parent == TilePoint.Next?.Parent ) {
 				Hitokori.RotateTo( TilePoint.OutAngle + Math.PI - TilePoint.Offset, TilePoint.HitTime, TilePoint.HitTime + TilePoint.Duration );
-				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None );
+				Hitokori.AnimateDistance( duration: TilePoint.Duration, distance: DrawableTapTile.SPACING * ( TilePoint.Next?.Distance ?? 1 ), easing: Easing.None ); // TODO move this to hitokori
+
+				Hitokori.Target = TilePoint;
 			}
 			else {
 				Hitokori.Swap( TilePoint );

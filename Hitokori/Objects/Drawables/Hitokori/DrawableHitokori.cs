@@ -57,9 +57,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			Orbitals.Add( Kori );
 		}
 
+		public TilePoint Target;
 		public double EndTime { get; private set; }
 		private double lastDistance = HitokoriTile.SPACING;
 		public void Swap ( TilePoint hit ) {
+			Target = hit;
+
 			if ( EndTime >= Clock.CurrentTime )
 				NextOrbital.AnimateEarly( Math.Min( 140, hit.Duration ) );
 			else
