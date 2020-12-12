@@ -2,6 +2,6 @@
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModNoFail : ModNoFail {
-		public override string Description => "Got any backup tinder?";
+		public override string Description => "True legends never die";
 	}
 }

@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -32,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		ImportantMarker ImportantMarker;
 		LineTileConnector LineToMe; // TODO move these to the playfield
 		public readonly Bindable<bool> showLabel = new();
+		TargetMarker TargetMarker;
 
 		ArchedPathTileConnector pathConnector;
 		SpriteText Label;
@@ -42,6 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal(
 				Circle = new Circle { Alpha = 0 }.Center()
 			);
+			AddInternal( TargetMarker = new TargetMarker { Depth = -99999 }.Center() );
 
 			showLabel.BindValueChanged( v => {
 				if ( v.NewValue ) {
@@ -49,7 +52,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				}
 				else {
 					Label?.FadeOut( 200 );
-				} // TODO this can be opaque if shown after hit/miss
+				} // BUG this can be opaque if shown after hit/miss
 			} );
 		}
 
@@ -61,7 +64,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Circle.Alpha = 0;
 		}
 		public void Free () {
-			RemoveAll( x => x != Circle );
+			RemoveAll( x => x != Circle && x != TargetMarker );
 			ClearTransforms( true );
 			Circle.Alpha = 0;
 			LineToMe = null;
@@ -91,11 +94,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Circle.ScaleTo( 1.6f, 200, Easing.Out )
 				.Then()
 				.ScaleTo( 1, 300, Easing.In );
+			TargetMarker.FadeInFromZero( 700, Easing.Out );
+			TargetMarker.ScaleTo( 1.6f, 200, Easing.Out )
+				.Then()
+				.ScaleTo( 1, 300, Easing.In );
 
 			ReverseMarker?.Spin();
 			ImportantMarker?.Appear();
 			ImportantMarker?.Spin();
 			if ( showLabel.Value ) Label?.FadeInFromZero( 700 );
+			TargetMarker.PlayLastAnimation();
 
 			LineToMe?.Appear();
 			pathConnector?.Appear();
@@ -109,12 +117,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Circle.ScaleTo( new Vector2( 4 ), 300 )
 				.FadeColour( Colour4.Green, 300 )
 				.FadeOut( 300 );
+			TargetMarker.ScaleTo( new Vector2( 4 ), 300 )
+				.FadeOut( 300 );
 
 			LineToMe?.Disappear();
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
 			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
+			TargetMarker.PlayLastAnimation();
 		}
 		// or
 		public void Miss () {
@@ -124,12 +135,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Circle.ScaleTo( new Vector2( 2 ), 700 )
 				.FadeColour( Colour4.Red, 700 )
 				.FadeOut( 700 );
+			TargetMarker.ScaleTo( new Vector2( 2 ), 700 )
+				.FadeOut( 700 );
 
 			LineToMe?.Disappear();
 			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
 			ReverseMarker?.Disappear();
 			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
+			TargetMarker.PlayLastAnimation();
 		}
 		// I guess they never miss, h u h?
 
@@ -137,7 +151,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		public void Reverse ( bool isClockwise ) {
 			AddInternal( ReverseMarker = cachedReverseMarker );
-			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ); // BUG with hold tiles these are sometimes big instead on regular
+			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 );
 			ReverseMarker.SetClockwise( isClockwise );
 
 			playLastAnimation();
@@ -182,6 +196,24 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Label.Text = text;
 			Label.Colour = Circle.Colour;
 			playLastAnimation();
+		}
+
+		public readonly Bindable<Colour4> accentColour = new();
+		[BackgroundDependencyLoader]
+		private void load ( Bindable<Colour4> accent ) {
+			accentColour.BindTo( accent );
+		}
+
+		public void Target () {
+			TargetMarker.Appear( TickSize );
+			if ( !Tile.IsDifferentSpeed )
+				Circle.FadeColour( accentColour.Value, 100 );
+		}
+
+		public void Untarget () {
+			TargetMarker.Disappear();
+			if ( !Tile.IsDifferentSpeed )
+				Circle.FadeColour( Tile.Color, 100 );
 		}
 	}
 

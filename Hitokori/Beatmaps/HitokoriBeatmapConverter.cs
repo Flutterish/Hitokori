@@ -17,8 +17,6 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmapConverter : BeatmapConverter<HitokoriHitObject> {
 		#region Mods
 		[Moddable]
-		public bool DoubleTrouble { get; set; }
-		[Moddable]
 		public bool NoHolds { get; set; } = true;
 		[Moddable]
 		public bool GenerateSpins { get; set; }
@@ -174,7 +172,6 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 			if ( NoHolds ) generator.AddPattern( new FuckHoldsPatern() );
 			generator.AddPattern( new ReverseHoldPattern() );
-			if ( DoubleTrouble ) generator.AddPattern( new DoubleTilePattern() );
 			if ( GenerateSpins ) generator.AddPattern( new SpinPattern() );
 			generator.AddPattern( new StairsPattern() );
 
@@ -210,7 +207,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			tiles.First().FirstPoint.RefreshChain();
 		}
 
-		void GenerateBreaks ( HitokoriBeatmap Beatmap ) { // BUG doubleTile mod breaks break generation? Idk it it works at all tbh
+		void GenerateBreaks ( HitokoriBeatmap Beatmap ) {
 			List<BreakPeriod> breaks = new List<BreakPeriod>();
 
 			foreach ( var i in Beatmap.HitObjects.OfType<HitokoriTileObject>() ) {

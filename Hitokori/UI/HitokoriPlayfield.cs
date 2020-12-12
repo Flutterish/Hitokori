@@ -124,6 +124,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;
 			}
 			HitokoriShakeContainer.Position = Hitokori.TilePosition - CameraPosition;
+			foreach ( var i in Hitokori.Orbitals )
+				i.Position = i.TilePosition - Hitokori.TilePosition; // NOTE orbitals can jerk sometimes after a miss without this. fix update order?
 		}
 
 		protected override void OnNewDrawableHitObject ( DrawableHitObject drawableHitObject ) {

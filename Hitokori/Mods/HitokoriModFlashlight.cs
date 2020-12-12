@@ -10,7 +10,7 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModFlashlight : ModFlashlight<HitokoriHitObject>, IUpdatableByPlayfield {
 		public override double ScoreMultiplier => 1.12;
-		public override string Description => "The fire dims";
+		public override string Description => "Welcome to Night City";
 
 		public override bool HasImplementation => true;
 

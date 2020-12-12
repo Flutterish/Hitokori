@@ -3,6 +3,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class ReverseMarker : Container { // TODO dear princess celestia, why the fuck did i use containers instead of composite drawables?
@@ -32,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public double Appear () {
+			Scale = Vector2.One;
 			InternalChild.FadeInFromZero( 500 );
 
 			return 500;

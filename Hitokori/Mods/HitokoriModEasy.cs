@@ -2,6 +2,6 @@
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModEasy : ModEasy {
-		public override string Description => "It doesn't even burn";
+		public override string Description => "I don't play with fire";
 	}
 }

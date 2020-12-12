@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModHidden : ModHidden {
 		public override double ScoreMultiplier => 1.10;
 
-		public override string Description => "Where's the track?";
+		public override string Description => "Just like your feelings";
 
 		protected override void ApplyNormalVisibilityState ( DrawableHitObject hitObject, ArmedState state ) {
 			if ( hitObject is DrawableTilePoint tile ) {

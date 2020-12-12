@@ -225,7 +225,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			=> Velocity - Previous.Velocity;
 		public bool IsDifferentSpeed => IsFaster || IsSlower;
 
-		public Colour4 Color
+		public Colour4 Color // TODO make the intensity depened on SpeedDifferencePercent
 			=> IsFaster ? Colour4.Orange
 			: IsSlower ? Colour4.DodgerBlue
 			: Colour4.White;

@@ -17,9 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		public DrawableTilePoint () : base( null ) {
 			this.Center();
-			AddInternal(
-				Marker = new TileMarker().Center()
-			);
+			AddInternal( Marker = new TileMarker().Center() );
 
 			OnNewResult += ( x, y ) => OnHit();
 			OnRevertResult += ( x, y ) => OnRevert();
@@ -58,12 +56,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		protected override void Update () {
 			if ( Hitokori.Target == TilePoint.Previous && !wasTarget ) {
 				wasTarget = true;
-				this.FadeColour( AccentColour.Value, 100 );
+				Marker.Target();
 				( ParentHitObject as HitokoriTile )?.ChildTargeted( this );
 			}
 			else if ( Hitokori.Target != TilePoint.Previous && wasTarget ) {
 				wasTarget = false;
-				this.FadeColour( Colour4.White, 100 );
+				Marker.Untarget();
 				( ParentHitObject as HitokoriTile )?.ChildUntargeted( this );
 			}
 		}

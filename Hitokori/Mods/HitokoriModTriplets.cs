@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModTriplets : AutoImplementedMod {
 		public override string Name => "Triplets";
 		public override string Acronym => "TR";
-		public override string Description => "Mom said it's my turn on the rythms";
+		public override string Description => "Trice the fun";
 
 		public override double ScoreMultiplier => 1;
 
