@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModSpinTiles : AutoImplementedMod {
 		public override string Name => "Spin Tiles";
 		public override string Acronym => "SPT";
-		public override string Description => "Replaces longer streams with spin tiles";
+		public override string Description => "Prepare for a spin";
 
 		public override double ScoreMultiplier => 1;
 

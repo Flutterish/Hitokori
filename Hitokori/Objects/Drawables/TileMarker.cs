@@ -1,150 +1,219 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
-using osuTK.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class TileMarker : Container {
 		TilePoint Tile;
 
-		TickSize TickSize;
+		TickSize TickSize => Tile.Size;
+
+		ReverseMarker cachedReverseMarker = new ReverseMarker().Center();
+		ImportantMarker cachedImportantMarker = new ImportantMarker().Center();
+		LineTileConnector cachedLineToMe = new LineTileConnector();
+		ArchedPathTileConnector cachedPathConnector = new ArchedPathTileConnector();
+		SpriteText cachedLabel = new OsuSpriteText {
+			Anchor = Anchor.BottomCentre,
+			Origin = Anchor.TopCentre,
+			Position = new Vector2( 0, 18 ),
+			Scale = new Vector2( 0.8f )
+		}; // NOTE with these, in theory i dont have to null check the actually used elements
 
 		Circle Circle;
 		ReverseMarker ReverseMarker;
 		ImportantMarker ImportantMarker;
-		List<Connector> LinesToMe = new();
-		ArchedPathTileConnector c;
+		LineTileConnector LineToMe; // TODO move these to the playfield
+		public readonly Bindable<bool> showLabel = new();
+		TargetMarker TargetMarker;
+
+		ArchedPathTileConnector pathConnector;
 		SpriteText Label;
 
-		public TileMarker ( TilePoint tile, Color4 color, TickSize size = TickSize.Auto ) {
-			Tile = tile;
-
-			if ( size == TickSize.Auto ) {
-				size = Tile.Size;
-			}
-
-			TickSize = size;
+		public TileMarker () {
+			this.Center();
 
 			AddInternal(
-				Circle = new Circle {
-					Width = (float)TickSize.Size(),
-					Height = (float)TickSize.Size(),
-					Colour = color,
-					Alpha = 0
-				}.Center()
+				Circle = new Circle { Alpha = 0 }.Center()
 			);
+			AddInternal( TargetMarker = new TargetMarker { Depth = -99999 }.Center() );
 
-			this.Center();
+			showLabel.BindValueChanged( v => {
+				if ( v.NewValue ) {
+					Label?.FadeIn( 200 );
+				}
+				else {
+					Label?.FadeOut( 200 );
+				} // BUG this can be opaque if shown after hit/miss
+			} );
 		}
 
-		public void ChangeTickSize ( TickSize size ) {
-			Circle.Width = (float)size.Size();
-			Circle.Height = (float)size.Size();
+		public void Apply ( TilePoint tile ) {
+			Tile = tile;
 
-			TickSize = size;
+			Circle.Size = new Vector2( (float)TickSize.Size() );
+			Circle.Colour = tile.Color;
+			Circle.Alpha = 0;
+		}
+		public void Free () {
+			RemoveAll( x => x != Circle && x != TargetMarker );
+			ClearTransforms( true );
+			Circle.Alpha = 0;
+			LineToMe = null;
+			lastAnimation = null;
+			ReverseMarker = null;
+			ImportantMarker = null;
+			pathConnector = null;
+			Label = null;
 		}
 
-		public TileMarker ( TilePoint tile ) : this( tile, tile.Color, tile.Size ) { }
+		Action lastAnimation;
+		double lastAnimationTime;
+		void playLastAnimation () {
+			if ( lastAnimation is not null ) {
+				ClearTransformsAfter( lastAnimationTime, true );
+				using ( BeginAbsoluteSequence( lastAnimationTime, true ) ) {
+					lastAnimation();
+				}
+			}
+		}
 
-		public double Appear () {
+		public void Appear () {
+			lastAnimation = Appear;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.FadeInFromZero( 700, Easing.Out );
 			Circle.ScaleTo( 1.6f, 200, Easing.Out )
+				.Then()
+				.ScaleTo( 1, 300, Easing.In );
+			TargetMarker.FadeInFromZero( 700, Easing.Out );
+			TargetMarker.ScaleTo( 1.6f, 200, Easing.Out )
 				.Then()
 				.ScaleTo( 1, 300, Easing.In );
 
 			ReverseMarker?.Spin();
 			ImportantMarker?.Appear();
 			ImportantMarker?.Spin();
-			Label?.FadeInFromZero( 700 );
+			if ( showLabel.Value ) Label?.FadeInFromZero( 700 );
+			TargetMarker.PlayLastAnimation();
 
-			double lineDuration = LinesToMe.Select( line => line.Appear() ).Append( 0 ).Max();
-			c?.Appear();
-
-			return new[] { 700, ReverseMarker?.Appear(), lineDuration }.Max().Value;
+			LineToMe?.Appear();
+			pathConnector?.Appear();
+			ReverseMarker?.Appear();
 		}
 
-		public double Hit () {
+		public void Hit () {
+			lastAnimation = Hit;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.ScaleTo( new Vector2( 4 ), 300 )
 				.FadeColour( Colour4.Green, 300 )
 				.FadeOut( 300 );
+			TargetMarker.ScaleTo( new Vector2( 4 ), 300 )
+				.FadeOut( 300 );
 
-			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
-			c?.Disappear();
+			LineToMe?.Disappear();
+			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
-			Label?.FadeOutFromOne( 300 );
-
-			return new[] { 300, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
+			ReverseMarker?.Disappear();
+			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
+			TargetMarker.PlayLastAnimation();
 		}
 		// or
-		public double Miss () {
+		public void Miss () {
+			lastAnimation = Miss;
+			lastAnimationTime = TransformStartTime;
+
 			Circle.ScaleTo( new Vector2( 2 ), 700 )
 				.FadeColour( Colour4.Red, 700 )
 				.FadeOut( 700 );
+			TargetMarker.ScaleTo( new Vector2( 2 ), 700 )
+				.FadeOut( 700 );
 
-			double lineDuration = LinesToMe.Select( line => line.Disappear() ).Append( 0 ).Max();
-			c?.Disappear();
+			LineToMe?.Disappear();
+			pathConnector?.Disappear();
 			ImportantMarker?.Disappear();
-
-			return new[] { 700, ReverseMarker?.Disappear(), lineDuration }.Max().Value;
+			ReverseMarker?.Disappear();
+			if ( showLabel.Value ) Label?.FadeOutFromOne( 300 );
+			TargetMarker.PlayLastAnimation();
 		}
 		// I guess they never miss, h u h?
 
 		// ----------------
 
 		public void Reverse ( bool isClockwise ) {
-			AddInternal(
-				ReverseMarker = new ReverseMarker( isClockwise ) { Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 ) }.Center()
-			);
+			AddInternal( ReverseMarker = cachedReverseMarker );
+			ReverseMarker.Scale = new Vector2( ( 1 + (float)TickSize.Size() / HitokoriTile.SIZE ) / 2 );
+			ReverseMarker.SetClockwise( isClockwise );
+
+			playLastAnimation();
 		}
 
 		public void MarkImportant () {
-			AddInternal(
-				ImportantMarker = new ImportantMarker( TickSize ).Center()
-			);
+			AddInternal( ImportantMarker = cachedImportantMarker );
+			ImportantMarker.SetTickSize( TickSize );
+
+			playLastAnimation();
 		}
 		public void ConnectFrom ( TilePoint from ) {
-			LineTileConnector line;
-			AddInternal(
-				line = new LineTileConnector( from, Tile ) {
-					Position = from.TilePosition - Tile.TilePosition
-				}
-			);
-			LinesToMe.Add( line );
+			AddInternal( LineToMe = cachedLineToMe );
+			LineToMe.Reset();
+			LineToMe.From = from;
+			LineToMe.To = Tile;
+			LineToMe.Position = from.TilePosition - Tile.TilePosition;
+
+			playLastAnimation();
 		}
 
 		public void ConnectFrom ( TilePoint from, TilePoint around ) {
-			ArchedPathTileConnector line;
-
 			var a = from.TilePosition - around.TilePosition;
 			var b = Tile.TilePosition - around.TilePosition;
 
 			var angle = Math.Acos( Vector2.Dot( a, b ) / a.Length / b.Length );
 
-			AddInternal(
-				line = new ArchedPathTileConnector( from, Tile, around, Tile.IsClockwise ? angle : -angle ) {
-					Position = around.TilePosition - Tile.TilePosition
-				}
-			);
-			c = line;
+			AddInternal( pathConnector = cachedPathConnector );
+			pathConnector.Reset();
+			pathConnector.From = from;
+			pathConnector.To = Tile;
+			pathConnector.Around = around;
+			pathConnector.Angle = Tile.IsClockwise ? angle : -angle;
+			pathConnector.Position = around.TilePosition - Tile.TilePosition;
+
+			playLastAnimation();
 		}
 
 		public void AddLabel ( string text ) {
-			AddInternal( Label = new SpriteText {
-				Text = text,
-				Colour = Circle.Colour,
-				Anchor = Anchor.BottomCentre,
-				Origin = Anchor.TopCentre,
-				Position = new Vector2( 0, 18 ),
-				Scale = new Vector2( 0.8f )
-			} );
+			AddInternal( Label = cachedLabel );
+			Label.Alpha = 0;
+			Label.Text = text;
+			Label.Colour = Circle.Colour;
+			playLastAnimation();
+		}
+
+		public readonly Bindable<Colour4> accentColour = new();
+		[BackgroundDependencyLoader]
+		private void load ( Bindable<Colour4> accent ) {
+			accentColour.BindTo( accent );
+		}
+
+		public void Target () {
+			TargetMarker.Appear( TickSize );
+			if ( !Tile.IsDifferentSpeed )
+				Circle.FadeColour( accentColour.Value, 100 );
+		}
+
+		public void Untarget () {
+			TargetMarker.Disappear();
+			if ( !Tile.IsDifferentSpeed )
+				Circle.FadeColour( Tile.Color, 100 );
 		}
 	}
 

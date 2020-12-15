@@ -32,10 +32,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			base.Update();
 		}
 
-		BindableDouble width = new();
-		[BackgroundDependencyLoader]
+		BindableDouble width = new( 1 );
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			config.BindWith( HitokoriSetting.ConnectorWidth, width );
+			config?.BindWith( HitokoriSetting.ConnectorWidth, width );
 			width.BindValueChanged( v => LineRadius = HitokoriTile.SIZE / 8f * (float)width.Value, true );
 		}
 	}
@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 				Line.Anchor = Anchor.TopLeft;
 				Line.Origin = Anchor.TopLeft;
 				AutoSizeAxes = Axes.None;
-				Line.AutoSizeAxes = Axes.None;
+				Line.AutoSizeAxes = Axes.Both;
 			}
 
 			if ( Line != null ) {
@@ -102,12 +102,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 
 		private void setLineSize () {
-			var requiredSize = getMaxRequiredSize();
-			if ( requiredSize.X > Line.Size.X || requiredSize.Y > Line.Size.Y ) {
-				Line.Size = new Vector2( MathF.Max( requiredSize.X, Line.Size.X ), MathF.Max( requiredSize.Y, Line.Size.Y ) );
-				//Size = requiredSize;
-			}
-		}
+			//var requiredSize = getMaxRequiredSize();
+			//if ( requiredSize.X > Line.Size.X || requiredSize.Y > Line.Size.Y ) {
+			//	Line.Size = new Vector2( MathF.Max( requiredSize.X, Line.Size.X ), MathF.Max( requiredSize.Y, Line.Size.Y ) );
+			//}
+		} // BUG something is wrong here. On some maps these clip. setting Line.AutoSizeAxes = Axes.Both for now
 
 		protected void UpdateConnector () {
 			Line.ClearVertices();
@@ -133,6 +132,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			Disconnect( 300, Easing.Out );
 
 			return 500;
+		}
+		public void Reset () {
+			ClearTransforms( true );
+			Progress.A = 0;
+			Progress.B = 0;
 		}
 
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {

@@ -1,5 +1,6 @@
 ﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Patterns.Selectors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,7 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 			=> new WhereSelector<HitokoriTileObject>(
 				tile => {
 					var first = tile.FirstPoint;
+					if ( first.AngleOffset >= Math.PI / 3 ) return false;
 					var previous = first.GetPrevious( TANGLE_LENGHT );
 
 					var normalDistance = previous.Sum( tile => ( tile.NormalizedTilePosition - first.NormalizedTilePosition ).Length );

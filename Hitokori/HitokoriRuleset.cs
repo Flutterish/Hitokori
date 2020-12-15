@@ -75,7 +75,6 @@ namespace osu.Game.Rulesets.Hitokori {
 			switch ( type ) {
 				case ModType.DifficultyReduction:
 					return new Mod[] {
-						new HitokoriModSquashed(),
 						new HitokoriModEasy(),
 						new HitokoriModNoFail(),
 						new MultiMod( new HitokoriModHalfTime(), new HitokoriModDaycore() )
@@ -83,7 +82,6 @@ namespace osu.Game.Rulesets.Hitokori {
 
 				case ModType.DifficultyIncrease:
 					return new Mod[] {
-						new HitokoriModStretched(),
 						new HitokoriModHardRock(),
 						new MultiMod( new HitokoriModSuddenDeath(), new HitokoriModPerfect() ),
 						new MultiMod( new HitokoriModDoubleTime(), new HitokoriModNightcore() ),
@@ -95,7 +93,6 @@ namespace osu.Game.Rulesets.Hitokori {
 					return new Mod[] {
 						new HitokoriModHoldTiles(),
 						new HitokoriModSpinTiles(),
-						new HitokoriModDoubleTile(),
 						new HitokoriModUntangle()
 					};
 

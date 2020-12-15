@@ -8,9 +8,7 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class ImportantMarker : Container { // BUG important marker can overlap reverse marker
 		TickSize TickSize;
-		public ImportantMarker ( TickSize size ) {
-			TickSize = size;
-
+		public ImportantMarker () {
 			for ( int i = 0; i < 3; i++ ) {
 				var pointer = new SpriteIcon {
 					Icon = FontAwesome.Solid.ArrowDown,
@@ -19,11 +17,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					Colour = Colour4.Yellow
 				}.Center();
 
-				pointer.Rotation = 360 / 3 * i + 90;
-				var angle = Math.PI * 2 / 3 * i;
-				pointer.Position = new Vector2( (float)Math.Cos( angle ), (float)Math.Sin( angle ) ) * (float)size.Size() * 1.3f;
-
 				AddInternal( pointer );
+			}
+		}
+
+		public void SetTickSize ( TickSize size ) {
+			TickSize = size;
+			for ( int i = 0; i < Children.Count; i++ ) {
+				var pointer = Children[ i ];
+				var angle = Math.PI * 2 / 3 * i;
+
+				pointer.Rotation = 360 / 3 * i + 90;
+				pointer.Position = new Vector2( (float)Math.Cos( angle ), (float)Math.Sin( angle ) ) * (float)size.Size() * 1.3f;
 			}
 		}
 

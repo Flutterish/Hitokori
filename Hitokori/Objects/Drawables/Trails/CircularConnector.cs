@@ -1,20 +1,18 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	public class CircularConnector : Connector {
 		private Vector2 from;
-		public Vector2 From { 
-			get => from; 
+		public Vector2 From {
+			get => from;
 			set {
 				if ( from == value ) return;
 
@@ -23,6 +21,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			}
 		}
 		protected Vector2 Around;
+		public double Angle {
+			get => angle;
+			set {
+				if ( angle == value ) return;
+
+				angle = value;
+				isInvalidated = true;
+			}
+		}
 		protected double angle;
 
 		public CircularConnector ( Vector2 from, Vector2 around, double angle ) : this() {
@@ -55,6 +62,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		new public TilePoint From;
 		new public TilePoint Around;
 
+		public CircularTileConnector () { }
 		public CircularTileConnector ( TilePoint from, TilePoint around, double angle ) {
 			From = from;
 			Around = around;
@@ -62,7 +70,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 
 		protected override void Update () {
-			if ( From.TilePosition != base.From || Around.TilePosition != base.Around ) {
+			if ( From is null || Around is null ) {
+				base.Update();
+				return;
+			}
+			else if ( From.TilePosition != base.From || Around.TilePosition != base.Around ) {
 				base.From = From.TilePosition;
 				base.Around = Around.TilePosition;
 				isInvalidated = true;
@@ -71,10 +83,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			base.Update();
 		}
 
-		BindableDouble width = new();
-		[BackgroundDependencyLoader]
+		BindableDouble width = new( 1 );
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			config.BindWith( HitokoriSetting.HoldConnectorWidth, width );
+			config?.BindWith( HitokoriSetting.HoldConnectorWidth, width );
 			width.BindValueChanged( v => TrailRadius = HitokoriTile.SIZE / 4f * (float)v.NewValue, true );
 		}
 	}

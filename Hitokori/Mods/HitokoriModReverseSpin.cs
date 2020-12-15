@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModReverseSpin : Mod {
 		public override string Name => "Reverse Spin";
 		public override string Acronym => "RS";
-		public override string Description => "Make the world spin";
+		public override string Description => "You make me spin right round, baby right round";
 
 		public override double ScoreMultiplier => 1;
 

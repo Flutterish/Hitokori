@@ -1,6 +1,9 @@
-﻿using osu.Framework.Graphics.Containers;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
+using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using System;
 
@@ -11,6 +14,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		protected Radius Radius;
 		bool isCentered = false;
 		public double Distance => isCentered ? 0 : Radius.Length;
+		private Vector2 targetTilePosition => Parent.TilePosition + RotationVector * (float)Distance;
+		public Vector2 TilePosition {
+			get {
+				animationCurve.End = targetTilePosition;
+				return animationCurve.Evaluate( (float)animationProgress.Value );
+			}
+		}
 
 		/// <summary>
 		/// Velocity in radians per millisecond
@@ -29,14 +39,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 
 		public double Angle;
 
-		public void RotateTo ( double angle ) { // TODO move trail to StandardOrbital, Relace all InterpolateTrailTo with virtual InterpolateTo
+		public void RotateTo ( double angle ) {
 			double deltaTime = ( angle - Angle ) / Velocity;
 			if ( double.IsFinite( deltaTime ) ) {
 				if ( deltaTime < 0 ) {
-					Velocity = -Velocity;
-					InterpolateTrailTo( Clock.CurrentTime - deltaTime );
 					trailTimer = Clock.CurrentTime;
-					Velocity = -Velocity;
 				}
 				else {
 					InterpolateTrailTo( Clock.CurrentTime + deltaTime );
@@ -46,6 +53,22 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		new IHasTilePosition Parent;
+		private QuadraticBezier animationCurve;
+		private Bindable<double> animationProgress = new( 1 );
+		public void AnimateLate ( double duration ) {
+			animationCurve.Start = TilePosition;
+			animationCurve.Control = animationCurve.Start + VectorVelocity * 4000;
+			animationProgress.Value = 0;
+			this.TransformBindableTo( animationProgress, 1, duration, Easing.In );
+		}
+		public void AnimateEarly ( double duration ) {
+			animationCurve.Start = TilePosition;
+			animationCurve.Control = animationCurve.Start;
+			animationProgress.Value = 0;
+			this.TransformBindableTo( animationProgress, 1, duration, Easing.InBounce );
+		}
+
+		public Vector2 VectorVelocity => (float)Velocity * (float)( Distance / HitokoriTile.SPACING ) * RotationVector.PerpendicularLeft;
 
 		public Orbital ( IHasTilePosition parent, Radius radius ) {
 			AddInternal( Trail = new Trail() );
@@ -80,9 +103,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				while ( trailTimer + trailMSPV < time ) {
 					trailTimer += trailMSPV; // interpolating the position
 					Angle = Velocity * ( trailTimer - startTime ) + startAngle;
-					Position = RotationVector * (float)Distance;
 
+					Position = TilePosition - Parent.TilePosition;
 					Trail.Offset = Parent.TilePosition + Position;
+
 					Trail.AddVertice( Trail.Offset );
 				}
 			}
@@ -90,10 +114,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				// if time goes backward we dont want the trail to stop
 				trailTimer = time;
 			}
-
 			Angle = Velocity * ( Clock.CurrentTime - startTime ) + startAngle;
-			Position = RotationVector * (float)Distance;
 
+			Position = TilePosition - Parent.TilePosition;
 			Trail.Offset = Parent.TilePosition + Position;
 		}
 

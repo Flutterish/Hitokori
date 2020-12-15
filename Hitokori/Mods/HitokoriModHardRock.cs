@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override double ScoreMultiplier => 1.1;
 		public override string Name => "Hard Rock";
 		public override string Acronym => "HR";
-		public override string Description => "Through the fire and the flames you go";
+		public override string Description => "Through the fire and the flames";
 
 		public override Type[] IncompatibleMods => base.IncompatibleMods.Concat( new[] { typeof( ModEasy ), typeof( ModDifficultyAdjust ) } ).ToArray();
 
@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override ModType Type => ModType.DifficultyIncrease;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Speed ) )]
-		private double Speed => 1.5;
+		private double Speed => 3d/2;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Flip ) )]
 		private bool Flip => true;

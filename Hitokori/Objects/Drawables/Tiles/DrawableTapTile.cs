@@ -1,58 +1,50 @@
 ﻿using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
+using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 	public class DrawableTapTile : HitokoriTile, IKeyBindingHandler<HitokoriAction> {
-		new public readonly TapTile Tile;
+		new public TapTile Tile => HitObject as TapTile;
+		public override Vector2 NormalizedTilePosition => Tile.PressPoint.NormalizedTilePosition;
 
 		DrawableTilePoint PressPoint;
 
-		public DrawableTapTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
-			Tile = hitObject as TapTile;
+		public DrawableTapTile () : base( null ) {
 			this.Center();
-
-			NormalizedTilePosition = Tile.PressPoint.NormalizedTilePosition;
 		}
+		protected override void OnApply () {
+			base.OnApply();
 
-		protected override void UpdateInitialTransforms () { }
+			PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
+		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			LifetimeEnd = Tile.PressTime + 1000;
 		}
-
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-
-		}
-
-		public bool OnPressed ( HitokoriAction action ) {
-			if ( Tile.PressPoint.IsNext ) {
+			if ( userTriggered ) {
 				Hitokori.OnPress();
-				PressPoint.TryToHit();
-				return true;
+				PressPoint.TryToHitAtOffset( timeOffset );
 			}
-			return false;
 		}
-
-		public void OnReleased ( HitokoriAction action ) {
-
+		public bool OnPressed ( HitokoriAction action ) {
+			if ( PressPoint.Judged ) return false;
+			Playfield.Click( AutoClickType.Press );
+			UpdateResult( userTriggered: true );
+			return true;
 		}
+		public void OnReleased ( HitokoriAction action ) { }
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
-			var tile = hitObject as DrawableTilePoint;
-
-			if ( tile.TilePoint == Tile.PressPoint ) {
-				AddInternal( PressPoint = tile );
-				PressPoint.Marker.ConnectFrom( Tile.PressPoint.Previous );
-
-				PressPoint.OnNewResult += ( a, b ) => SendClickEvent();
-			}
+			AddInternal( PressPoint = hitObject as DrawableTilePoint );
 		}
 
 		protected override void ClearNestedHitObjects () {
-			PressPoint.Dispose();
+			RemoveInternal( PressPoint );
 
 			PressPoint = null;
 		}

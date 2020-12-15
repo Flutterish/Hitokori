@@ -1,11 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Input.Handlers;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	public abstract class Connector : CompositeDrawable {
@@ -43,6 +39,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		}
 		public void Disconnect ( double duration, Easing easing = Easing.None ) {
 			progress.AnimateATo( 1, duration, easing );
+		}
+		public void Reset () {
+			ClearTransforms( true );
+			progress.A = 0;
+			progress.B = 0;
 		}
 
 		public virtual double Appear ( double duration = 500, Easing easing = Easing.In ) {

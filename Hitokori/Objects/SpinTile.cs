@@ -1,5 +1,4 @@
 ﻿using osu.Game.Rulesets.Hitokori.Objects.Base;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Objects.Types;
 using System;
 using System.Collections.Generic;
@@ -64,6 +63,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public override DrawableHitokoriHitObject AsDrawable ()
-			=> new DrawableSpinTile( this );
+			=> null;
 	}
 }

@@ -5,7 +5,6 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
-using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 using System.ComponentModel;
@@ -41,13 +40,25 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					Text = Type.GetDescription().ToUpperInvariant(),
 					Font = OsuFont.Numeric.With( size: 20 ),
 					Colour = colours.ForHitResult( Type ),
-					Scale = new Vector2( 0.7f ),
-					Position = new Vector2( 0, -50 )
+					Scale = new Vector2( 0.5f ),
+					Position = new Vector2( 0, -45 )
 				}
 			};
 
 			var result = GetADOFAIResult();
 			Text.Text = result.GetDescription().ToUpperInvariant();
+		}
+
+		protected override void ApplyHitAnimations () {
+			Text.FadeInFromZero( 50 ).TransformSpacingTo( new Vector2( 10 ), 400, Easing.Out ).Then().Delay( 200 ).Then().FadeOut( 200, Easing.Out );
+			LifetimeEnd = LifetimeStart + 2000;
+			base.ApplyHitAnimations();
+		}
+
+		protected override void ApplyMissAnimations () {
+			Text.FadeInFromZero( 50 ).TransformSpacingTo( new Vector2( 10 ), 400, Easing.Out ).Then().Delay( 200 ).Then().FadeOut( 200, Easing.Out );
+			LifetimeEnd = LifetimeStart + 2000;
+			base.ApplyMissAnimations();
 		}
 
 		public ADOFAIResult GetADOFAIResult () {

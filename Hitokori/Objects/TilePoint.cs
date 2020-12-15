@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
-using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Hitokori.Scoring;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Judgements;
@@ -13,11 +12,8 @@ using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate everything recursively with children ( for animated/rotating tiles )
 	public class TilePoint : /*Nested*/HitokoriHitObject, IHasTilePosition {
-		public bool WasHit;
 		public bool useTripletAngles;
 		public double Offset => ( useTripletAngles ? ( Math.PI / 3 ) : 0 );
-		public bool IsNext
-			=> !WasHit && Previous.WasHit;
 
 		/// <summary>
 		/// <see cref="TilePoint"/> around which this tile rotates
@@ -37,10 +33,38 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			set => IsClockwise = ( ChangedDirection == value ) ? IsClockwise : !IsClockwise;
 		}
 
-		public double Distance = 1;
+		public bool AllowDynamicDistance = true;
+		private double distance = 1;
+		private double maxDynamicDistance = 2;
+		public double Distance {
+			get {
+				if ( AllowDynamicDistance && !IsFirst ) {
+					return Math.Min( Previous.NextRequestedDistance, maxDynamicDistance );
+				}
+				else return distance;
+			}
+			set {
+				distance = value;
+				AllowDynamicDistance = false;
+			}
+		}
+		/// <summary>
+		/// The next tile should be this distance, if possible.
+		/// </summary>
+		public double NextRequestedDistance {
+			get {
+				if ( arclength / distance > MAX_ANGLE ) {
+					return BEAT_STRETCH / MAX_ANGLE * Beats * SpeedModifier; // TODO request contant speed instead of angle
+				}
+				else return Next.distance;
+			}
+		}
 
 		public const double MAX_ANGLE = Math.PI * 1.75;
-		public double BEAT_STRETCH => useTripletAngles ? ( Math.PI * 2 / 3 ) : Math.PI;
+		/// <summary>
+		/// Arclength per beat
+		/// </summary>
+		private double BEAT_STRETCH => useTripletAngles ? ( Math.PI * 2 / 3 ) : Math.PI * 2 / 3;
 
 		public double BPMS;
 		public double HitTime {
@@ -48,12 +72,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			set => StartTime = value;
 		}
 		public double TimeToRotate ( double radians )
-			=> radians / BPMS / SpeedModifier / BEAT_STRETCH;
+			=> radians / BPMS / SpeedModifier / BEAT_STRETCH * distance;
 		public double Duration => Math.Max( IsLast ? TimeToRotate( MAX_ANGLE ) : Next.HitTime - HitTime, 0 );
 		public double TimeToStart ( double currentTime ) => HitTime - currentTime;
 		public double Beats => BPMS * Duration;
 
-		public double AngleOffset => Direction * Math.Clamp( Beats * SpeedModifier * BEAT_STRETCH, 0, MAX_ANGLE );
+		private double arclength => Beats * SpeedModifier * BEAT_STRETCH;
+		public double AngleOffset => Direction * Math.Clamp( arclength / Distance, 0, MAX_ANGLE );
 		public double AngleFromStraight => AngleOffset - Math.PI;
 
 		protected bool isOutAngleCached = false;
@@ -99,15 +124,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			return Previous.Speed.ToDegrees() * TimeOffsetAt( time );
 		}
 		public bool CanBeHitAfter ( double time ) {
-			return TimeHitWindows.CanBeHit( TimeOffsetAt( time ) ) || AngleHitWindows.CanBeHit( AngleOffsetAt( time ) );
+			return TimeHitWindows.CanBeHit( TimeOffsetAt( time ) );
 		}
 		public HitResult ResultAt ( double time ) {
-			var result = TimeHitWindows.ResultFor( TimeOffsetAt( time ) ).OrBetter( AngleHitWindows.ResultFor( AngleOffsetAt( time ) ) );
-			if ( result is HitResult.Perfect or HitResult.Miss ) return result;
-			return TimeOffsetAt( time ) > 0 ? HitResult.Great : HitResult.Ok;
-		}
-		public bool IgnoresInputAt ( double time ) {
-			return time < Previous.HitTime || TimeOffsetAt( time ) < -Math.Max( TimeHitWindows.WindowFor( HitResult.Meh ), AngleHitWindows.WindowFor( HitResult.Meh ) / Previous.Speed );
+			var result = TimeHitWindows.ResultFor( TimeOffsetAt( time ) );
+			if ( result == HitResult.None && TimeOffsetAt( time ) > -500 ) return HitResult.Miss;
+			if ( result is HitResult.Perfect or HitResult.Miss or HitResult.None ) return result;
+			if ( TimeOffsetAt( time ) > 0 )
+				return HitResult.Great;
+			else
+				return HitResult.Ok;
 		}
 
 		protected bool isPositionCached = false;
@@ -178,11 +204,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		/// <summary>
 		/// ( Unsigned ) Speed in radians per millisecond
 		/// </summary>
-		public double Speed => Math.Abs( AngleOffset / Duration );
+		public double Speed => Math.Abs( Velocity );
 		/// <summary>
 		/// ( Signed ) Speed in radians per millisecond
 		/// </summary>
-		public double Velocity => AngleOffset / Duration;
+		public double Velocity => AngleOffset * Distance / Duration;
 		/// <summary>
 		/// Is this tile slower than the previous one?
 		/// </summary>
@@ -195,11 +221,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 			=> Speed - Previous.Speed;
 		public double SpeedDifferencePercent
 			=> ( Speed / Previous.Speed ) - 1;
-		public double VelocityDifferece
+		public double VelocityDifference
 			=> Velocity - Previous.Velocity;
 		public bool IsDifferentSpeed => IsFaster || IsSlower;
 
-		public Colour4 Color
+		public Colour4 Color // TODO make the intensity depened on SpeedDifferencePercent
 			=> IsFaster ? Colour4.Orange
 			: IsSlower ? Colour4.DodgerBlue
 			: Colour4.White;
@@ -218,7 +244,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects { // TODO ability to recalculate ev
 		}
 
 		public override DrawableHitokoriHitObject AsDrawable ()
-			=> new DrawableTilePoint( this );
+			=> null;
 
 		public override Judgement CreateJudgement ()
 			=> new HitokoriJudgement();

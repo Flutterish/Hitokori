@@ -13,34 +13,46 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 	/// if you set its position to `<c>around - to</c>` its start will be centered at "around";
 	/// </summary>
 	public class ArchedPathTileConnector : ArchedPathConnector {
-		new TilePoint Around;
-		new TilePoint From;
-		new TilePoint To;
+		new public TilePoint Around;
+		new public TilePoint From;
+		new public TilePoint To;
 
 		public ArchedPathTileConnector ( TilePoint from, TilePoint to, TilePoint around, double angle, float alpha = 0.2F ) : base( angle, alpha ) {
 			Around = around;
 			From = from;
 			To = to;
 		}
+		public ArchedPathTileConnector ( float alpha = 0.2F ) : base( 0, alpha ) { }
 
 		protected override void Update () {
-			base.From = From.TilePosition;
-			base.To = To.TilePosition;
-			base.Around = Around.TilePosition;
+			if ( Around is not null && From is not null && To is not null ) {
+				base.From = From.TilePosition;
+				base.To = To.TilePosition;
+				base.Around = Around.TilePosition;
+			}
+
 			base.Update();
 		}
 
-		BindableDouble width = new();
-		[BackgroundDependencyLoader]
+		BindableDouble width = new( 1 );
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			config.BindWith( HitokoriSetting.HoldConnectorWidth, width );
+			config?.BindWith( HitokoriSetting.HoldConnectorWidth, width );
 			width.BindValueChanged( v => LineRadius = HitokoriTile.SIZE / 4f * (float)width.Value, true );
 		}
 	}
 
 	public class ArchedPathConnector : PathConnector { // TODO on miss connectors
 		public Vector2 Around;
-		double Angle;
+		private double angle;
+		public double Angle {
+			get => angle;
+			set {
+				if ( angle == value ) return;
+
+				angle = value;
+			}
+		}
 
 		public ArchedPathConnector ( double angle, float alpha = 0.2F ) : base( alpha ) {
 			Angle = angle;

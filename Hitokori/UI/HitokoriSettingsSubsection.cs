@@ -16,17 +16,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var config = Config as HitokoriSettingsManager;
 
 			Children = new Drawable[] {
-				new SettingsEnumDropdown<MissCorrectionMode> {
-					LabelText = "Miss correction mode",
-					Current = config.GetBindable<MissCorrectionMode>( HitokoriSetting.MissCorrectionMode )
-				},
 				new SettingsSlider<double,SpeedSlider> {
 					LabelText = "Camera speed",
 					Current = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
-				},
-				new SettingsEnumDropdown<CameraFollowMode> {
-					LabelText = "Camera follow mode",
-					Current = config.GetBindable<CameraFollowMode>( HitokoriSetting.CameraFollowMode )
 				},
 				new SettingsSlider<double,PercentageSlider> {
 					LabelText = "Orbit ring opacity",
@@ -56,9 +48,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public string TooltipText { get; set; }
 	}
 	public class SpeedSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{Current.Value}ms";
+		public override string TooltipText => $"{Current.Value:N1}x";
 	}
 	public class PercentageSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{(int)( Current.Value * 100 )}%";
+		public override string TooltipText => $"{Current.Value:###%}";
 	}
 }

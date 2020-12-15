@@ -2,6 +2,8 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
@@ -11,35 +13,43 @@ using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
+using System;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
+	[Cached]
 	public class HitokoriPlayfield : Playfield {
 		[Cached]
 		public readonly SparklePool SparklePool = new SparklePool();
 		[Cached]
 		public readonly PathPool PathPool = new PathPool();
+		[Cached]
+		public readonly Bindable<Colour4> accentColour = new( Colour4.FromHex( "#ff7be0" ) );
 
 		/// <summary>
 		/// Camera position. Used because offsetting containers clips children.
 		/// </summary>
 		AnimatedVector CameraPosition;
-		Bindable<CameraFollowMode> FollowMode = new( CameraFollowMode.Smooth );
-		BindableDouble CameraSpeed = new( 300 );
+		BindableDouble CameraSpeed = new( 1 );
 
 		public readonly Container Everything;
 		public readonly Container SFX;
 
 		JudgementContainer<DrawableHitokoriJudgement> Judgements;
 		HitObjectContainer Tiles;
+		[Cached]
 		public readonly DrawableHitokori Hitokori;
+		private Container HitokoriShakeContainer;
 
 		private bool reverseSpin;
 
 		Bot AutoBot;
-		public HitokoriPlayfield ( bool auto, bool triplets, bool reverseSpin ) {
+		Beatmap<HitokoriHitObject> beatmap;
+		public HitokoriPlayfield ( bool auto, bool triplets, bool reverseSpin, Beatmap<HitokoriHitObject> beatmap ) {
+			this.beatmap = beatmap;
 			this.reverseSpin = reverseSpin;
 			CameraPosition = new AnimatedVector( parent: this );
 
@@ -49,7 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			};
 
 			Everything.AddRange( new Drawable[] {
-				Hitokori = new DrawableHitokori { Depth = -1 }.Center(),
+				HitokoriShakeContainer = new Container { Child = Hitokori = new DrawableHitokori { Depth = -1 }.Center(), AutoSizeAxes = Axes.None }.Center(),
 				Tiles = HitObjectContainer.Center(),
 				Judgements = new JudgementContainer<DrawableHitokoriJudgement>().Center()
 			} );
@@ -65,20 +75,33 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			if ( triplets ) {
 				Hitokori.AddTriplet();
 			}
+
+			RegisterPool<TapTile, DrawableTapTile>( 20 );
+			RegisterPool<HoldTile, DrawableHoldTile>( 10 );
+			RegisterPool<SpinTile, DrawableSpinTile>( 3 );
+			RegisterPool<TilePoint, DrawableTilePoint>( 50 );
 		}
+		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject ) => new HitokoriHitObjectLifetimeEntry( hitObject );
 
 		public bool Auto = false;
+		protected override void LoadComplete () {
+			base.LoadComplete();
+			ScheduleAfterChildren( () => {
+				var head = beatmap.HitObjects.First();
+				if ( head is HitokoriTileObject Head ) {
+					using ( BeginAbsoluteSequence( Head.Previous.LastPoint.HitTime, true ) ) {
+						Hitokori.Swap( Head.Previous.LastPoint );
+					}
+				}
+				else throw new InvalidOperationException( "What the fuck" );
+			} );
+		}
 
-		bool Started = false;
-		HitokoriTile HeadTile;
+		public void AttemptLost ( DrawableTilePoint drawableTilePoint ) {
+			Hitokori.Shake( 200, 20 );
+		}
 
 		protected override void UpdateAfterChildren () {
-			if ( !Started && HeadTile != null && Clock.CurrentTime >= HeadTile.Tile.Previous.LastPoint.HitTime ) {
-				Started = true;
-
-				Hitokori.Swap( HeadTile.Tile.Previous.LastPoint );
-			}
-
 			if ( reverseSpin ) {
 				Everything.Rotation = -Hitokori.StableAngle.ToDegreesF() * 0.7f;
 			}
@@ -94,78 +117,42 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var followTiles = Tiles.AliveObjects.OfType<HitokoriTile>()
 				.Where( x => x.LifetimeStart <= Clock.CurrentTime && x.LifetimeEnd >= Clock.CurrentTime );
 
-			if ( FollowMode.Value == CameraFollowMode.Smooth ) {
-				var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
-				CameraPosition.AnimateTo( averagePosition, CameraSpeed.Value );
-			}
+			var averagePosition = ( followTiles.AverageOr( x => x.TilePosition, Hitokori.TilePosition ) + Hitokori.TilePosition ) / 2;
+			CameraPosition.AnimateTo( averagePosition, 300 / CameraSpeed.Value );
 
-			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ).Append( Hitokori ) ) {
+			foreach ( var tile in Tiles.AliveObjects.OfType<IHasTilePosition>().Concat( Judgements ) ) {
 				if ( tile is Drawable drawable ) drawable.Position = tile.TilePosition - CameraPosition;
 			}
+			HitokoriShakeContainer.Position = Hitokori.TilePosition - CameraPosition;
+			foreach ( var i in Hitokori.Orbitals )
+				i.Position = i.TilePosition - Hitokori.TilePosition; // NOTE orbitals can jerk sometimes after a miss without this. fix update order?
 		}
 
-		public override void Add ( DrawableHitObject hitObject ) {
-			if ( hitObject is HitokoriTile tile ) {
-				tile.Hitokori = Hitokori;
+		protected override void OnNewDrawableHitObject ( DrawableHitObject drawableHitObject ) {
+			base.OnNewDrawableHitObject( drawableHitObject );
 
-				if ( HeadTile is null ) {
-					HeadTile = tile;
-				}
-
-				tile.OnTileClick += OnClickEvent;
-
-				tile.OnNewResult += OnTileResult;
-				Tiles.Add( tile );
-			}
-			else {
-				base.Add( hitObject );
-			}
+			if ( drawableHitObject is not HitokoriTile tile ) return;
+			tile.OnNewResult += OnTileResult;
 		}
 
-		public override bool Remove ( DrawableHitObject h ) {
-			if ( h is HitokoriTile tile ) {
-				tile.OnTileClick -= OnClickEvent;
-
-				tile.OnNewResult -= OnTileResult;
-				Tiles.Remove( tile );
-				tile.RemoveNested();
-			}
-			else {
-				base.Remove( h );
-			}
-
-			return true;
-		}
-
-		private void OnClickEvent ( HitokoriTile tile, AutoClickType type ) {
-			switch ( type ) {
-				case AutoClickType.Down:
-					AutoBot?.Hold();
-					break;
-
-				case AutoClickType.Up:
-					AutoBot?.Release();
-					break;
-
-				case AutoClickType.Press:
-					AutoBot?.Press();
-					break;
-			}
+		public void Click ( AutoClickType type ) {
+			if ( type == AutoClickType.Down )
+				AutoBot?.Hold();
+			else if ( type == AutoClickType.Up )
+				AutoBot?.Release();
+			else if ( type == AutoClickType.Press )
+				AutoBot?.Press();
 		}
 
 		private void OnTileResult ( DrawableHitObject obj, JudgementResult result ) {
 			if ( obj is HitokoriTile tile ) {
-				if ( FollowMode.Value == CameraFollowMode.Dynamic ) {
-					CameraPosition.AnimateTo( Hitokori.TilePosition, CameraSpeed.Value );
-				}
-
 				if ( tile.Tile.LastPoint.Duration > MinimumBreakTime || tile.Tile.IsLast ) {
 					Hitokori.Contract();
 					AutoBot?.AllowGhosting();
 
 					if ( !tile.Tile.IsLast ) {
 						this.Delay( tile.Tile.LastPoint.Duration - 1000 ).Schedule( () => {
-							Hitokori.AnimateDistance();
+							Hitokori.Expand();
 							AutoBot?.ForbidGhosting();
 						} );
 					}
@@ -178,9 +165,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		public static readonly double MinimumBreakTime = 1000;
 
-		[BackgroundDependencyLoader(true)]
+		[BackgroundDependencyLoader( true )]
 		private void load ( HitokoriSettingsManager config ) {
-			config?.BindWith( HitokoriSetting.CameraFollowMode, FollowMode );
 			config?.BindWith( HitokoriSetting.CameraSpeed, CameraSpeed );
 		}
 
