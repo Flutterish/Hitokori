@@ -10,8 +10,8 @@ namespace osu.Game.Rulesets.Hitokori.Patterns {
 
 		public override IEnumerable<HitokoriTileObject> Apply ( IEnumerable<HitokoriTileObject> selected ) {
 			foreach ( HoldTile hold in selected ) {
-				hold.StartPoint.IsClockwise = !hold.StartPoint.Previous.IsClockwise;
-				hold.EndPoint.IsClockwise = hold.StartPoint.IsClockwise;
+				hold.StartPoint.IsClockwise = hold.StartPoint.Previous.IsClockwise;
+				hold.EndPoint.IsClockwise = !hold.StartPoint.IsClockwise;
 			}
 
 			return selected;

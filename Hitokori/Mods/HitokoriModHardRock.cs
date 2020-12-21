@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override ModType Type => ModType.DifficultyIncrease;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Speed ) )]
-		private double Speed => 3d/2;
+		private double Speed => 3d / 2;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Flip ) )]
 		private bool Flip => true;

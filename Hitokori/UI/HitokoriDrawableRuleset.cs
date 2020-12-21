@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override Playfield CreatePlayfield ()
 			=> new HitokoriPlayfield( Mods.Any( x => x is HitokoriModAuto ), Mods.Any( X => X is HitokoriModTriplets ), Mods.Any( X => X is HitokoriModReverseSpin ), Beatmap );
 
-		protected override ReplayRecorder CreateReplayRecorder ( Replay replay )
-			=> new HitokoriReplayRecorder( replay );
+		protected override ReplayRecorder CreateReplayRecorder ( Score score )
+			=> new HitokoriReplayRecorder( score );
 	}
 }
