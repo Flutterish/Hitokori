@@ -113,25 +113,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot {
 		}
 
 		[BackgroundDependencyLoader]
-		private void load () {
-			RightTexture = GetTexture( "hitokori-BotRight" );
-			LeftTexture = GetTexture( "hitokori-BotLeft" );
-			NeutralTexture = GetTexture( "hitokori-BotNeutral" );
-			HoldTexture = GetTexture( "hitokori-BotHold" );
+		private void load ( TextureStore textures ) {
+			RightTexture = textures.Get( "hitokori-BotRight" );
+			LeftTexture = textures.Get( "hitokori-BotLeft" );
+			NeutralTexture = textures.Get( "hitokori-BotNeutral" );
+			HoldTexture = textures.Get( "hitokori-BotHold" );
 
 			Texture.FillAspectRatio = HoldTexture.Width / (float)HoldTexture.Height;
-		}
-
-		Texture GetTexture ( string name ) { // TODO please for the love of thfgjygdsf make this better ( and skinable! )
-			return new TextureStore(
-				new TextureLoaderStore(
-					new NamespacedResourceStore<byte[]>(
-						new DllResourceStore( GetType().Assembly ),
-						@"Resources"
-					)
-				),
-				false
-			).Get( name );
 		}
 	}
 }

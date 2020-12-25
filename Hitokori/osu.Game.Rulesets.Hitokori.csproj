@@ -6,36 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\hitokori-BotHold.png" />
-    <None Remove="Resources\hitokori-BotLeft.png" />
-    <None Remove="Resources\hitokori-BotNeutral.png" />
-    <None Remove="Resources\hitokori-BotRight.png" />
+    <PackageReference Include="ppy.osu.Game" Version="2020.1224.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\hitokori-BotHold.png" />
-    <EmbeddedResource Include="Resources\hitokori-BotLeft.png" />
-    <EmbeddedResource Include="Resources\hitokori-BotNeutral.png" />
-    <EmbeddedResource Include="Resources\hitokori-BotRight.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2020.1218.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\hitokori-BotHold.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\hitokori-BotLeft.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\hitokori-BotNeutral.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\hitokori-BotRight.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
 
 </Project>
