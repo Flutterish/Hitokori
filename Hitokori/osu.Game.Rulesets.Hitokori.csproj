@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2021.109.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2021.220.0" />
   </ItemGroup>
 
   <ItemGroup>
