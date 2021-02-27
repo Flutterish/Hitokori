@@ -7,7 +7,22 @@
 		HoldConnectorWidth,
 		ConnectorWidth,
 
-		ShowSpeeedChange
+		ShowSpeeedChange,
+
+		HiColor,
+		KoriColor,
+		GreenBitchColor,
+
+		// osu cant save color yet
+		_HiColorR,
+		_KoriColorR,
+		_GreenBitchColorR,
+		_HiColorG,
+		_KoriColorG,
+		_GreenBitchColorG,
+		_HiColorB,
+		_KoriColorB,
+		_GreenBitchColorB
 	}
 
 	public enum DashStyle {

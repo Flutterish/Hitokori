@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			this.ResizeTo( (float)length * 2, duration, easing );
 		}
 
-		public double Length => Width / 2;
+		public double Length => DrawWidth / 2;
 
 		protected override void Update () {
 			BeforeUpdate?.Invoke();

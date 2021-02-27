@@ -5,6 +5,7 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
+using osuTK.Graphics;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
@@ -16,15 +17,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				circle = new Circle {
 					Width = HitokoriTile.SIZE * 2,
 					Height = HitokoriTile.SIZE * 2,
-					Colour = colour
 				}.Center()
 			);
 
-			this.colour = colour;
-
-			Trail.Colour = colour;
+			Colour = colour;
 
 			RevokeImportant();
+		}
+
+		new public Color4 Colour {
+			get => colour;
+			set {
+				colour = value;
+				circle.Colour = value;
+				Trail.Colour = value;
+			}
 		}
 
 		public override void MakeImportant () {
@@ -41,7 +48,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		private double starTimer;
 		private double starInterval = 40;
 		private Random starRandomizer = new Random();
-		[Resolved]
+		[Resolved( canBeNull: true )]
 		private SparklePool sparklePool { get; set; }
 		public override void OnHold () {
 			isHolding = true;
@@ -57,6 +64,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		}
 
 		protected void ReleaseStars ( int count ) {
+			if ( sparklePool is null || Playfield is null ) return;
+
 			sparklePool.Clock = Clock;
 
 			while ( count-- > 0 ) {
@@ -74,9 +83,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 			}
 		}
 
-		[Resolved]
-		private DrawableHitokori Hitokori { get; set; }
-		[Resolved]
+		[Resolved( canBeNull: true )]
 		private HitokoriPlayfield Playfield { get; set; }
 		protected override void Update () {
 			base.Update();

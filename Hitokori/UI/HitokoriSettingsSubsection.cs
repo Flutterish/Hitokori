@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hitokori.Settings;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
@@ -39,14 +40,23 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				new SettingsCheckbox {
 					LabelText = "Show speed changes below cyan/orange tiles",
 					Current = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
-				}
+				},
+				new ColorPicker<OrbitalColorPicker> {
+					LabelText = "First orbital color",
+					Current = config.GetBindable<Color4>( HitokoriSetting.HiColor )
+				},
+				new ColorPicker<OrbitalColorPicker> {
+					LabelText = "Second orbital color",
+					Current = config.GetBindable<Color4>( HitokoriSetting.KoriColor )
+				},
+				new ColorPicker<OrbitalColorPicker> {
+					LabelText = "Third orbital color",
+					Current = config.GetBindable<Color4>( HitokoriSetting.GreenBitchColor )
+				},
 			};
 		}
 	}
 
-	public class SettingsCheckboxWithTooltip : SettingsCheckbox, IHasTooltip {
-		public string TooltipText { get; set; }
-	}
 	public class SpeedSlider : OsuSliderBar<double> {
 		public override string TooltipText => $"{Current.Value:N1}x";
 	}
