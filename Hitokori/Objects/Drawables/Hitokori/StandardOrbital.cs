@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
@@ -33,6 +34,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 				Trail.Colour = value;
 			}
 		}
+
+		protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
+			=> false;
 
 		public override void MakeImportant () {
 			circle.ScaleTo( 1.1f, 100 );

@@ -220,21 +220,46 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private class HueNotch : CompositeDrawable {
 			Drawable ring;
 			public Action<float> OnHueChange;
+			BindableInt interactionCount = new();
 
+			Box box;
 			public IBindable<float> HueBindable { get; init; }
 			public HueNotch ( Drawable ring ) {
-				InternalChild = new Box { RelativeSizeAxes = Axes.Both, AlwaysPresent = true };
 				Masking = true;
-				BorderThickness = 2;
+				BorderThickness = 3;
 				BorderColour = Color4.Black;
 
 				Size = new osuTK.Vector2( 12, delta + 12 );
 				CornerRadius = 5;
 				BypassAutoSizeAxes = Axes.Both;
 				this.ring = ring;
+				AddRangeInternal( new Drawable[] {
+					box = new Box { RelativeSizeAxes = Axes.Both, AlwaysPresent = true },
+					new HoverClickSounds()
+				} );
+
+				interactionCount.ValueChanged += v => {
+					if ( v.NewValue > 0 ) {
+						this.ScaleTo( 1.2f, 100 );
+					}
+					else {
+						this.ScaleTo( 1, 100 );
+					}
+				};
+			}
+
+			protected override bool OnHover ( HoverEvent e ) {
+				interactionCount.Value++;
+				return base.OnHover( e );
+			}
+
+			protected override void OnHoverLost ( HoverLostEvent e ) {
+				interactionCount.Value--;
+				base.OnHoverLost( e );
 			}
 
 			protected override bool OnDragStart ( DragStartEvent e ) {
+				interactionCount.Value++;
 				return true;
 			}
 
@@ -244,12 +269,17 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				OnHueChange?.Invoke( (float)angle );
 			}
 
+			protected override void OnDragEnd ( DragEndEvent e ) {
+				interactionCount.Value--;
+				base.OnDragEnd( e );
+			}
+
 			protected override void LoadComplete () {
 				base.LoadComplete();
 
 				HueBindable.BindValueChanged( v => {
 					var c = TextureGeneration.FromHSV( v.NewValue, 1, 1 );
-					InternalChild.Colour = new Colour4( c.R, c.G, c.B, 255 );
+					box.Colour = new Colour4( c.R, c.G, c.B, 255 );
 					Position = new osuTK.Vector2( MathF.Cos( v.NewValue * MathF.PI / 180 ), -MathF.Sin( v.NewValue * MathF.PI / 180 ) ) * ( MathF.Sqrt( 2 ) * size / 2 + delta / 2 );
 					Rotation = 90 - v.NewValue;
 				}, true );
@@ -266,13 +296,34 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			public IBindable<float> HueProgress { get; init; }
 			public IBindable<float> SaturationProgress { get; init; }
 			public IBindable<float> ValueProgress { get; init; }
+			BindableInt interactionCount = new();
 
 			public SVNotch () {
 				Size = new osuTK.Vector2( 15 );
 				Origin = Anchor.Centre;
 				RelativePositionAxes = Axes.Both;
-				BorderThickness = 2;
+				BorderThickness = 3;
 				BorderColour = Color4.Black;
+				Add( new HoverClickSounds() );
+
+				interactionCount.ValueChanged += v => {
+					if ( v.NewValue > 0 ) {
+						this.ScaleTo( 1.2f, 100 );
+					}
+					else {
+						this.ScaleTo( 1, 100 );
+					}
+				};
+			}
+
+			protected override bool OnHover ( HoverEvent e ) {
+				interactionCount.Value++;
+				return base.OnHover( e );
+			}
+
+			protected override void OnHoverLost ( HoverLostEvent e ) {
+				interactionCount.Value--;
+				base.OnHoverLost( e );
 			}
 
 			protected override void LoadComplete () {
@@ -293,7 +344,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			}
 
 			protected override bool OnDragStart ( DragStartEvent e ) {
+				interactionCount.Value++;
 				return true;
+			}
+
+			protected override void OnDragEnd ( DragEndEvent e ) {
+				interactionCount.Value--;
+				base.OnDragEnd( e );
 			}
 
 			public Action<float> OnSaturationChange;

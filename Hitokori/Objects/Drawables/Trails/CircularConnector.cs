@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Settings;
@@ -44,6 +45,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			InternalChild = arc = new CircularProgress().Center();
 			AutoSizeAxes = Axes.None;
 		}
+
+		protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
+			=> false;
 
 		protected override void render () {
 			var radius = TrailRadius + Around.DistanceTo( From );

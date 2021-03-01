@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
+using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
@@ -33,6 +34,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			AutoSizeAxes = Axes.None;
 			Line.Size = new Vector2( 400 );
 		}
+
+		protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
+			=> false;
 
 		public void AddVertice ( Vector2 position ) {
 			vertices.Add( position );
