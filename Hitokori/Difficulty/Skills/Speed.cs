@@ -1,5 +1,6 @@
 ﻿using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
+using osu.Game.Rulesets.Mods;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
@@ -16,6 +17,8 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 		/// The BPM where strain is 1.0
 		/// </summary>
 		private const double BASE_BPM = 120;
+
+		public Speed ( Mod[] mods ) : base( mods ) { }
 
 		protected override double StrainValueOf ( DifficultyHitObject current ) {
 			HitokoriDifficultyHitObject hitokoriCurrent = (HitokoriDifficultyHitObject)current;
