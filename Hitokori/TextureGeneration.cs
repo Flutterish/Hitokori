@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Hitokori {
 		public static TextureUpload HSVBoxWithSetHue ( int width, int height, float hueDeg )
 			=> Generate( width, height, (x,y) => FromHSV( hueDeg, (float)x / width, (float)y / height ) );
 
-		public static TextureUpload HSVCircle ( int size, float innerRadius, float outerRadius, float saturation = 1, float value = 1, float fadeDistance = 0 ) {
+		public static TextureUpload HSVCircle ( int size, float innerRadius, float outerRadius, float saturation = 1, float value = 1, float fadeDistance = 0, int? discreteCount = null ) {
 			if ( innerRadius > outerRadius ) {
 				var temp = innerRadius;
 				innerRadius = outerRadius;
@@ -75,6 +75,10 @@ namespace osu.Game.Rulesets.Hitokori {
 
 			return Generate( size, size, (x,y) => {
 				float angleDeg = MathF.Atan2( y-half, x-half ) / MathF.PI * 180;
+				if ( discreteCount.HasValue ) {
+					float step = 360 / discreteCount.Value;
+					angleDeg = MathF.Round( angleDeg / step ) * step;
+				}
 				float distance = MathF.Sqrt( (x-half)*(x-half) + (y-half)*(y-half) );
 				float alpha;
 				if ( distance < innerRadius ) {
