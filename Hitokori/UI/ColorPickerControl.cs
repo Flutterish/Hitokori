@@ -119,7 +119,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			}
 
 			hexPreview.Current.ValueChanged += v => {
-				if ( !hexPreview.HasFocus ) return;
+				if ( !hexPreview.HasFocus || lockedBindable.Value ) return;
 
 				var text = hexPreview.Text.TrimStart( '#' );
 				if ( text.Length == 6 && text.All( c => "0123456789aAbBcCdDeEfF".Contains( c ) ) ) {
@@ -129,10 +129,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					HSV.Color.Value = new Color4( r, g, b, 255 );
 				}
 			};
-
-			lockedBindable.BindValueChanged( v => {
-				hexPreview.ReadOnly = v.NewValue;
-			}, true );
 		}
 
 		const float COLOR_HEIGHT = 35;
@@ -155,6 +151,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			colorLockAndPreviewSide.Width = DrawWidth - pickerSide.DrawWidth;
 			previewSide.Height = colorLockAndPreviewSide.DrawHeight - lockToggle.DrawHeight - COLOR_HEIGHT;
 			hexPreview.Width = colorAndLockSide.DrawWidth - colorPreview.DrawWidth - 10;
+
+			if ( lockedBindable.Value ) {
+				hexPreview.Text = HSV.Color.Value.ToHex();
+			}
 		}
 	}
 }
