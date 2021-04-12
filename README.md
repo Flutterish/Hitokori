@@ -1,5 +1,5 @@
 # Hitokori
-Hitokori ( fire and ice ) is a custom [osu!](https://github.com/ppy/osu) ruleset based on `A Dance of Fire and Ice`. Click and hold to the rythm to watch the dance unfold!
+Hitokori ( fire and ice ) is a custom [osu!](https://github.com/ppy/osu) ruleset based on `A Dance of Fire and Ice`. Click and hold to the rhythm to watch the dance unfold!
 
 # Features
 Hitokori offers a variety of mods to spice up gameplay. Most of them are the same ones you'd exect from any other game mode, the unique ones are:
