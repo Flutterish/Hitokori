@@ -4,7 +4,7 @@ using osu.Game.Rulesets.Mods;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
-	public class Speed : Skill {
+	public class Speed : StrainSkill {
 		protected override double SkillMultiplier => 0.8;
 		protected override double StrainDecayBase => 0.6;
 

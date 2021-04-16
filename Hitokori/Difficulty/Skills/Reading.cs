@@ -4,7 +4,7 @@ using osu.Game.Rulesets.Mods;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
-	public class Reading : Skill {
+	public class Reading : StrainSkill {
 		protected override double SkillMultiplier => 0.6;
 		protected override double StrainDecayBase => 0.6;
 
