@@ -13,22 +13,22 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 		public HitokoriSettingsManager ( SettingsStore settings, RulesetInfo ruleset, int? variant = null ) : base( settings, ruleset, variant ) { }
 
 		protected override void InitialiseDefaults () {
-			Set( HitokoriSetting.CameraSpeed, 1, 1 / 2d, 3, 0.1 );
-			Set( HitokoriSetting.RingOpacity, 0.15, 0, 1, 0.01 );
-			Set( HitokoriSetting.RingDashStyle, DashStyle.Dashed );
-			Set( HitokoriSetting.ConnectorWidth, 1, 0.4, 4 );
-			Set( HitokoriSetting.HoldConnectorWidth, 1, 0.2, 2 );
-			Set( HitokoriSetting.ShowSpeeedChange, true );
+			SetDefault( HitokoriSetting.CameraSpeed, 1, 1 / 2d, 3, 0.1 );
+			SetDefault( HitokoriSetting.RingOpacity, 0.15, 0, 1, 0.01 );
+			SetDefault( HitokoriSetting.RingDashStyle, DashStyle.Dashed );
+			SetDefault( HitokoriSetting.ConnectorWidth, 1, 0.4, 4 );
+			SetDefault( HitokoriSetting.HoldConnectorWidth, 1, 0.2, 2 );
+			SetDefault( HitokoriSetting.ShowSpeeedChange, true );
 
-			Set( HitokoriSetting._HiColorR, 1f, 0, 1 );
-			Set( HitokoriSetting._HiColorG, 0f, 0, 1 );
-			Set( HitokoriSetting._HiColorB, 0f, 0, 1 );
-			Set( HitokoriSetting._KoriColorR, 0f, 0, 1 );
-			Set( HitokoriSetting._KoriColorG, 0f, 0, 1 );
-			Set( HitokoriSetting._KoriColorB, 1f, 0, 1 );
-			Set( HitokoriSetting._GreenBitchColorR, 0f, 0, 1 );
-			Set( HitokoriSetting._GreenBitchColorG, Color4.Green.G, 0, 1 );
-			Set( HitokoriSetting._GreenBitchColorB, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._HiColorR, 1f, 0, 1 );
+			SetDefault( HitokoriSetting._HiColorG, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._HiColorB, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._KoriColorR, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._KoriColorG, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._KoriColorB, 1f, 0, 1 );
+			SetDefault( HitokoriSetting._GreenBitchColorR, 0f, 0, 1 );
+			SetDefault( HitokoriSetting._GreenBitchColorG, Color4.Green.G, 0, 1 );
+			SetDefault( HitokoriSetting._GreenBitchColorB, 0f, 0, 1 );
 
 			GetOriginalBindable<float>( HitokoriSetting._HiColorR ).ValueChanged += v => HiColor.Value = new Color4( v.NewValue, HiColor.Value.G, HiColor.Value.B, 1 );
 			GetOriginalBindable<float>( HitokoriSetting._HiColorG ).ValueChanged += v => HiColor.Value = new Color4( HiColor.Value.R, v.NewValue, HiColor.Value.B, 1 );
