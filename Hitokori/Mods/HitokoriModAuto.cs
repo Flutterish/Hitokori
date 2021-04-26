@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics.Sprites;
+﻿using System.Collections.Generic;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -78,11 +79,14 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			"Merg"
 		};
 
-		public override Score CreateReplayScore ( IBeatmap beatmap ) {
-			return new Score {
-				ScoreInfo = new ScoreInfo { User = new User { Username = BotNames.Random() } },
-				Replay = new HitokoriAutoGenerator( beatmap as HitokoriBeatmap ).Generate()
+		public override Score CreateReplayScore ( IBeatmap beatmap, IReadOnlyList<Mod> mods)
+		{
+			var score = new Score
+			{
+				ScoreInfo = new ScoreInfo {User = new User {Username = BotNames.Random()}},
+				Replay = new HitokoriAutoGenerator(beatmap as HitokoriBeatmap).Generate()
 			};
+			return score;
 		}
 	}
 }
