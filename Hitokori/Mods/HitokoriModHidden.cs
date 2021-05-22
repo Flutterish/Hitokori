@@ -21,5 +21,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				}
 			}
 		}
+
+		protected override void ApplyIncreasedVisibilityState ( DrawableHitObject hitObject, ArmedState state ) { }
 	}
 }

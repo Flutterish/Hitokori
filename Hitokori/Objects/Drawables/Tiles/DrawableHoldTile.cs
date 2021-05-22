@@ -15,8 +15,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		new public HoldTile Tile => HitObject as HoldTile;
 		public override Vector2 NormalizedTilePosition => Tile.EndPoint.NormalizedTilePosition;
 
-		DrawableTilePoint StartPoint;
-		DrawableTilePoint EndPoint;
+		public DrawableTilePoint StartPoint { get; private set; }
+		public DrawableTilePoint EndPoint { get; private set; }
 
 		CircularTileConnector Curve;
 

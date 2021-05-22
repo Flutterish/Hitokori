@@ -34,6 +34,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 			base.OnApply();
 			attempts = 2;
 			Marker.Apply( TilePoint );
+			Marker.Untarget();
 			Colour = Colour4.White;
 			Position = Vector2.Zero;
 
