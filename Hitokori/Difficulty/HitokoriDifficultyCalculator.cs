@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 			}
 		}
 
-		protected override Skill[] CreateSkills ( IBeatmap beatmap, Mod[] mods ) {
+		protected override Skill[] CreateSkills ( IBeatmap beatmap, Mod[] mods, double clockRate ) {
 			return new Skill[] { new Reading( mods ), new Speed( mods ) };
 		}
 	}

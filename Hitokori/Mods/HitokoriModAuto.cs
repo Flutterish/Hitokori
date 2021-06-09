@@ -11,7 +11,7 @@ using osu.Game.Scoring;
 using osu.Game.Users;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
-	public class HitokoriModAuto : ModAutoplay<HitokoriHitObject> {
+	public class HitokoriModAuto : ModAutoplay {
 		public override string Name => "Auto";
 		public override string Acronym => "AT";
 		public override string Description => "Let the cute bot do all the hard work";
