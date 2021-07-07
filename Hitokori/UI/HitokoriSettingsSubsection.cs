@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hitokori.Settings;
@@ -58,9 +59,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	}
 
 	public class SpeedSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{Current.Value:N1}x";
+		public override LocalisableString TooltipText => $"{Current.Value:N1}x";
 	}
 	public class PercentageSlider : OsuSliderBar<double> {
-		public override string TooltipText => $"{Current.Value:##0%}";
+		public override LocalisableString TooltipText => $"{Current.Value:##0%}";
 	}
 }

@@ -12,8 +12,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override IconUsage? Icon => FontAwesome.Solid.HandHolding;
 
-		public override bool Ranked => false;
-
 		public override ModType Type => ModType.Conversion;
 
 		public override bool HasImplementation => true;

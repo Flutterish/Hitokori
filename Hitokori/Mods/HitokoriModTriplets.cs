@@ -12,8 +12,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override IconUsage? Icon => new IconUsage( '∴' );
 
-		public override bool Ranked => false;
-
 		public override ModType Type => ModType.Fun;
 
 		public override bool HasImplementation => true;
