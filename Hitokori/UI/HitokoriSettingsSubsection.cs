@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
 		public HitokoriSettingsSubsection ( Ruleset ruleset ) : base( ruleset ) { }
 
-		protected override string Header => HitokoriRuleset.SHORT_NAME;
+		protected override LocalisableString Header => HitokoriRuleset.SHORT_NAME;
 
 		[BackgroundDependencyLoader]
 		private void load () {
