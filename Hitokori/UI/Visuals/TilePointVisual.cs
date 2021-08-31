@@ -21,25 +21,22 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			Origin = Anchor.Centre;
 
 			AddInternal( lineInShadow = new Box {
-				Colour = Colour4.Black,
+				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16,
-				Alpha = 0.3f
+				Height = 16
 			} );
 			AddInternal( lineOutShadow = new Box {
-				Colour = Colour4.Black,
+				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16,
-				Alpha = 0.3f
+				Height = 16
 			} );
 			AddInternal( bodyShadow = new Circle {
-				Colour = Colour4.Black,
+				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
 				Size = new Vector2( 30 ),
-				Alpha = 0.3f,
 				Position = new Vector2( 3 )
 			} );
 
@@ -95,7 +92,6 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineOut.Show();
 				lineOutOutline.Show();
 				lineOutShadow.Show();
-				lineOutShadow.Alpha = 0.3f;
 			}
 
 			if ( AppliedHitObject.Previous is null ) {
@@ -107,7 +103,6 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineIn.Show();
 				lineInOutline.Show();
 				lineInShadow.Show();
-				lineInShadow.Alpha = 0.3f;
 			}
 
 			using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
