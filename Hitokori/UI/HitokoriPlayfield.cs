@@ -1,8 +1,6 @@
-﻿using NuGet.Protocol;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
@@ -18,7 +16,6 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]
 	public class HitokoriPlayfield : Playfield {
-		public readonly Container ConnectorContainer;
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
 		public readonly Container Everything;
 
@@ -43,11 +40,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
 				Children = new Drawable[] {
-					ConnectorContainer = new() {
-						AutoSizeAxes = Axes.Both,
-						Anchor = Anchor.Centre,
-						Origin = Anchor.Centre,
-					},
 					HitObjectContainer,
 				}
 			} );
@@ -70,22 +62,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 				if ( current.Previous is null )
 					addPath( current );
-
-				if ( current.Next is TilePoint next ) {
-					if ( current is SwapTilePoint && next is SwapTilePoint ) {
-						var child = new DrawableConnector( current.ToNext ) {
-							Depth = ConnectorContainer.Children.Any() ? ConnectorContainer.Max( x => x.Depth ) + 1 : 0
-						};
-						ConnectorContainer.Add( child );
-					}
-					else {
-						var child = new DrawableConnector( current.ToNext ) {
-							Depth = ConnectorContainer.Children.Any() ? ConnectorContainer.Max( x => x.Depth ) + 1 : 0,
-							Alpha = 0.3f
-						};
-						ConnectorContainer.Add( child );
-					}
-				}
 			};
 
 			return container;

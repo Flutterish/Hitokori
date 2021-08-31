@@ -1,44 +1,43 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.UI;
+using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawablePassThroughTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint> {
 		[Resolved]
 		private HitokoriPlayfield playfield { get; set; }
 
-		private Drawable icon;
+		private TapPointVisual visual;
 		public DrawablePassThroughTilePoint () {
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;
 
-			AddInternal( icon = new SpriteIcon() {
-				Origin = Anchor.Centre,
-				Anchor = Anchor.Centre,
-				Colour = Color4.HotPink,
-				Size = new Vector2( 12 ),
-				Icon = FontAwesome.Solid.Expand
-			} );
+			AddInternal( visual = new() );
 		}
 
 		protected override void OnApply () {
 			base.OnApply();
+			visual.AppliedHitObject = HitObject;
 		}
 
 		protected override void OnFree () {
 			base.OnFree();
+			visual.AppliedHitObject = null;
 		}
 
 		protected override void Update () {
 			base.Update();
 
 			Position = (Vector2)HitObject.Position * 100;
+		}
+
+		protected override void UpdateInitialTransforms () {
+			base.UpdateInitialTransforms();
+			visual.UpdateInitialTransforms();
 		}
 
 		//protected override void UpdateInitialTransforms () {

@@ -112,6 +112,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		double targetScale => Radius / From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
 
 		public override OrbitalState GetStateAt ( double progress )
-			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress );
+			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress ).WithOffset(
+				osuTK.Vector2d.One / 80 * progress
+			);
 	}
 }

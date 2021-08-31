@@ -18,12 +18,17 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			ActiveIndex = 0;
 			TotalRotation = 0;
 			Scale = 1;
+			Offset = Vector2d.Zero;
 		}
 
 		public double Scale { get; private set; }
 		public IReadOnlyList<Vector2d> InitialPositions { get; private set; }
 		private Vector2d internalPivotPosition => InitialPositions[ ActiveIndex.Mod( InitialPositions.Count ) ];
 		public Vector2d PivotPosition { get; private set; }
+		/// <summary>
+		/// Offset generally used to create stacks of tiles.
+		/// </summary>
+		public Vector2d Offset { get; private set; }
 
 		/// <summary>
 		/// Accumulated actual rotation.
@@ -38,11 +43,13 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// <summary>
 		/// Offset from the current pivot of Nth orbital from the pivot.
 		/// </summary>
-		public Vector2d OffsetOfNth ( int index ) => (InitialPositions[ (index + ActiveIndex).Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale;
+		public Vector2d OffsetOfNth ( int index ) => (InitialPositions[ (index + ActiveIndex).Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale
+			+ ( index.Mod( OrbitalCount ) == 0 ? Vector2d.Zero : Offset );
 		/// <summary>
 		///  Offset from the current pivot of Nth orbital.
 		/// </summary>
-		public Vector2d OffsetOfNthOriginal ( int index ) => (InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale;
+		public Vector2d OffsetOfNthOriginal ( int index ) => (InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale
+			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset ) ;
 
 		/// <summary>
 		/// Position of the Nth orbital from current pivot.
@@ -61,22 +68,31 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		};
 		
 		/// <summary>
-		/// Creates a new instance where the pivot changed by <paramref name="index"/> swaps.
+		/// Creates a new instance where the pivot changed by <paramref name="index"/> swaps. Resets <see cref="Offset"/>.
 		/// </summary>
 		public OrbitalState PivotNth ( int index ) => this with {
-			ActiveIndex = ActiveIndex + index
+			ActiveIndex = ActiveIndex + index,
+			Offset = Vector2d.Zero
 		};
 
 		/// <summary>
-		/// Creates a new instance where the pivot changed by <paramref name="index"/> clockwise swaps.
+		/// Creates a new instance where the pivot changed by <paramref name="index"/> clockwise swaps. Resets <see cref="Offset"/>.
 		/// </summary>
 		public OrbitalState PivotNth ( int index, Vector2d newPosition ) => this with {
 			ActiveIndex = ActiveIndex + index,
-			PivotPosition = newPosition
+			PivotPosition = newPosition,
+			Offset = Vector2d.Zero
 		};
 
 		public OrbitalState WithScale ( double scale ) => this with {
 			Scale = scale
+		};
+
+		/// <summary>
+		/// Creates a new instance where every oribital except the pivot is offset by the given amout. Gererally used to create stacks of tiles.
+		/// </summary>
+		public OrbitalState WithOffset ( Vector2d offset ) => this with {
+			Offset = offset
 		};
 	}
 }

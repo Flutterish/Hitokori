@@ -1,7 +1,6 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
-using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
