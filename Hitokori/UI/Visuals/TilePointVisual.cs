@@ -95,6 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineOut.Show();
 				lineOutOutline.Show();
 				lineOutShadow.Show();
+				lineOutShadow.Alpha = 0.3f;
 			}
 
 			if ( AppliedHitObject.Previous is null ) {
@@ -106,6 +107,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineIn.Show();
 				lineInOutline.Show();
 				lineInShadow.Show();
+				lineInShadow.Alpha = 0.3f;
 			}
 
 			using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
