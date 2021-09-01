@@ -1,7 +1,9 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osuTK;
 using osuTK.Graphics;
@@ -19,7 +21,13 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			CurrentTile = currentTile;
 			AutoSizeAxes = Axes.Both;
 			Alpha = 0;
-			Position = (Vector2)currentTile.OrbitalState.PivotPosition * HitokoriPlayfield.PositionScale;
+			updateState( currentTile.OrbitalState );
+		}
+
+		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );
+		[BackgroundDependencyLoader( permitNulls: true )]
+		private void load ( HitokoriConfigManager config ) {
+			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
 		}
 
 		protected override void LoadComplete () {
@@ -32,7 +40,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		public override bool IsPresent => true;
-		public TilePoint CurrentTile;
+		public TilePoint CurrentTile { get; private set; }
 
 		protected override void Update () {
 			base.Update();
@@ -86,10 +94,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 				RemoveInternal( last );
 			}
 
-			Position = (Vector2)state.PivotPosition * HitokoriPlayfield.PositionScale;
+			Position = (Vector2)state.PivotPosition * positionScale.Value;
 
 			for ( int i = 0; i < activeOrbitals.Count; i++ ) {
-				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * HitokoriPlayfield.PositionScale * animationProgress.Value;
+				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * positionScale.Value * animationProgress.Value;
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public Path Line;
 		public Vector2 Offset;
 		CircularBuffer<Vector2> vertices = new CircularBuffer<Vector2>( 100 );
-		public int VerticeCount => vertices.Length;
+		public int VerticeCount => vertices.Capacity;
 
 		public Trail () {
 			InternalChildren = new Drawable[] {
@@ -36,6 +36,12 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		public void AddVertice ( Vector2 position ) {
 			vertices.Add( position );
+		}
+
+		public void Rescale ( float scale ) {
+			for ( int i = 0; i < vertices.Count; i++ ) {
+				vertices[ i ] *= scale;
+			}
 		}
 
 		protected override void Update () {

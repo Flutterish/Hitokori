@@ -1,9 +1,13 @@
 ﻿using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
+using osu.Game.Configuration;
+using osu.Game.Overlays.Settings;
+using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Scoring;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
@@ -36,6 +40,11 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
 			=> new HitokoriDifficultyCalculator( this, beatmap );
+
+		public override IRulesetConfigManager CreateConfig ( SettingsStore settings )
+			=> new HitokoriConfigManager( settings, RulesetInfo );
+		public override RulesetSettingsSubsection CreateSettings ()
+			=> new HitokoriSettingsSubsection( this );
 
 		public override IEnumerable<KeyBinding> GetDefaultKeyBindings ( int variant = 0 ) {
 			return new KeyBinding[] {

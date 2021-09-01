@@ -1,7 +1,9 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
 using System.Linq;
@@ -145,12 +147,18 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			}
 		}
 
+		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );
+		[BackgroundDependencyLoader( permitNulls: true )]
+		private void load ( HitokoriConfigManager config ) {
+			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
+		}
+
 		protected override void Update () {
 			if ( !IsApplied ) return;
 
 			if ( AppliedHitObject.FromPrevious is not null ) {
 				lineIn.Rotation = lineInOutline.Rotation = lineInShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Previous.Position ).RadToDeg();
-				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * HitokoriPlayfield.PositionScale / 2 * inAnimationProgress.Value - 1;
+				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * positionScale.Value / 2 * inAnimationProgress.Value - 1;
 				lineInOutline.Width = lineInShadow.Width = lineIn.Width + 4;
 
 				lineIn.Position = lineInOutline.Position = lineIn.Rotation.DegToRad().AngleToVector() * lineIn.Width / 2;
@@ -159,7 +167,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 			if ( AppliedHitObject.ToNext is not null ) {
 				lineOut.Rotation = lineOutOutline.Rotation = lineOutShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Next.Position ).RadToDeg();
-				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * HitokoriPlayfield.PositionScale / 2 * outAnimationProgress.Value - 1;
+				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * positionScale.Value / 2 * outAnimationProgress.Value - 1;
 				lineOutOutline.Width = lineOutShadow.Width = lineOut.Width + 4;
 
 				lineOut.Position = lineOutOutline.Position = lineOut.Rotation.DegToRad().AngleToVector() * lineOut.Width / 2;

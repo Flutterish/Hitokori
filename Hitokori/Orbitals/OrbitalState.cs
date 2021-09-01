@@ -19,6 +19,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			TotalRotation = 0;
 			Scale = 1;
 			Offset = Vector2d.Zero;
+
+			var centre = InitialPositions.Aggregate( Vector2d.Zero, ( a, b ) => a + b ) / InitialPositions.Count;
+			var radius = InitialPositions.Max( x => ( x - centre ).Length );
+			OriginalEnclosingCircle = (centre, radius);
 		}
 
 		public double Scale { get; private set; }
@@ -59,6 +63,16 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// Position of the Nth orbital.
 		/// </summary>
 		public Vector2d PositionOfNthOriginal ( int index ) => PivotPosition + OffsetOfNthOriginal( index );
+
+		/// <summary>
+		/// A circle that encloses all the original orbitals. This might not be the smallest possible circle that achieves this.
+		/// </summary>
+		public (Vector2d centre, double radius) OriginalEnclosingCircle { get; private set; }
+
+		/// <summary>
+		/// A circle that encloses all the orbitals. This might not be the smallest possible circle that achieves this.
+		/// </summary>
+		public (Vector2d offsetFromPivot, double radius) EnclosingCircle => ( (OriginalEnclosingCircle.centre - internalPivotPosition).Rotate( TotalRotation ), OriginalEnclosingCircle.radius * Scale );
 
 		/// <summary>
 		/// Creates a new instance rotated by <paramref name="angle"/> radians clockwise.
