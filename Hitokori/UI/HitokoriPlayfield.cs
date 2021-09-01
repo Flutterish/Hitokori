@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 
 		void updateCamera () { // TODO this could probably be precomputed
-			var objects = ( HitObjectContainer.AliveObjects as IEnumerable<Drawable> ).Concat( paths.Keys );
+			var objects = ( HitObjectContainer.AliveObjects as IEnumerable<Drawable> ).Concat( paths.Keys.Where( x => x.Parent is not null ) );
 			if ( !objects.Any() ) return;
 			var first = objects.First(); // TODO inflate the bounding box by half hax orbitals size in all directions
 

@@ -84,7 +84,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// <summary>
 		/// Modify and return an orbital state as appropriate for this <see cref="TilePoint"/>'s interaction.
 		/// </summary>
-		protected virtual OrbitalState ModifyOrbitalState ( OrbitalState original ) => original;
+		public virtual OrbitalState ModifyOrbitalState ( OrbitalState original ) => original;
 
 		private TilePointConnector? fromPrevious;
 		/// <summary>

@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.TilePoints {
 	/// A <see cref="TilePoint"/> to which the current orbital attaches, after which the next orbital is activated.
 	/// </summary>
 	public class SwapTilePoint : TilePoint {
-		protected override OrbitalState ModifyOrbitalState ( OrbitalState original )
+		public override OrbitalState ModifyOrbitalState ( OrbitalState original )
 			=> original.PivotNth( FromPrevious!.TargetOrbitalIndex, Position );
 	}
 }

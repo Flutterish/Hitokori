@@ -18,12 +18,15 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			CurrentTile = currentTile;
 			AutoSizeAxes = Axes.Both;
 			Alpha = 0;
+			Position = (Vector2)currentTile.OrbitalState.PivotPosition * 100;
 		}
 
 		protected override void LoadComplete () {
-			using ( BeginAbsoluteSequence( CurrentTile.StartTime - 2000 ) ) {
+			var duration = (CurrentTile.ToNext?.Duration * 2) ?? 500;
+
+			using ( BeginAbsoluteSequence( CurrentTile.StartTime - duration ) ) {
 				this.FadeIn( 150 )
-					.Then().TransformBindableTo( animationProgress, 1, CurrentTile.ToNext?.Duration ?? 500, Easing.Out );
+					.Then().TransformBindableTo( animationProgress, 1, duration, Easing.Out );
 			}
 		}
 
@@ -40,16 +43,17 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 				if ( CurrentTile.Next is null ) {
 					using ( BeginAbsoluteSequence( CurrentTile.StartTime ) ) {
 						this.TransformBindableTo( animationProgress, 0, 500, Easing.In )
-							.Then().FadeOut( 150 );
+							.Then().FadeOut( 150 )
+							.Then().Expire();
 					}
 				}
 			}
 
 			if ( CurrentTile.ToNext is TilePointConnector c ) {
-				updateState( c.GetStateAt( ( Time.Current - c.StartTime ) / c.Duration ) );
+				updateState( c.Duration == 0 ? c.GetEndState() : c.GetStateAt( ( Time.Current - c.StartTime ) / c.Duration ) );
 			}
 			else if ( CurrentTile.FromPrevious is TilePointConnector p ) {
-				updateState( p.GetStateAt( ( Time.Current - p.StartTime ) / p.Duration ) );
+				updateState( CurrentTile.ModifyOrbitalState( p.Duration == 0 ? p.GetEndState() : p.GetStateAt( ( Time.Current - p.StartTime ) / p.Duration ) ) );
 			}
 		}
 
