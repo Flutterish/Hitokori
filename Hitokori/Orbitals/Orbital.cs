@@ -10,9 +10,6 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	public class Orbital : CompositeDrawable {
-		[Resolved]
-		private HitokoriPlayfield playfield { get; set; }
-
 		private Circle circle;
 		private Trail trail;
 		
