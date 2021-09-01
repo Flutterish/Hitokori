@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriPlayfield : Playfield {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
 		public readonly Container Everything;
+		public const float PositionScale = 90;
 
 		OrbitalGroup addPath ( TilePoint firstTile ) {
 			var orbitals = new OrbitalGroup( firstTile );
@@ -112,7 +113,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			if ( HitObjectContainer.AliveObjects.LastOrDefault()?.HitObject is TilePoint tile && tile.ToNext is TilePointConnector connector ) {
 				var pos = (Vector2)(connector.From.OrbitalState.PivotPosition + ( connector.To.OrbitalState.PivotPosition - connector.From.OrbitalState.PivotPosition ) * (float)Math.Clamp( ( Time.Current - connector.StartTime ) / connector.Duration, 0, 1 ));
-				pos *= 100;
+				pos *= HitokoriPlayfield.PositionScale;
 				boundingBox = (
 					new Vector2( Math.Min( pos.X, boundingBox.min.X ), Math.Min( pos.Y, boundingBox.min.Y ) ),
 					new Vector2( Math.Max( pos.X, boundingBox.max.X ), Math.Max( pos.Y, boundingBox.max.Y ) )

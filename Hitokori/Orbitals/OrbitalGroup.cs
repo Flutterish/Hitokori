@@ -2,6 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.UI;
 using osuTK;
 using osuTK.Graphics;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			CurrentTile = currentTile;
 			AutoSizeAxes = Axes.Both;
 			Alpha = 0;
-			Position = (Vector2)currentTile.OrbitalState.PivotPosition * 100;
+			Position = (Vector2)currentTile.OrbitalState.PivotPosition * HitokoriPlayfield.PositionScale;
 		}
 
 		protected override void LoadComplete () {
@@ -85,10 +86,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 				RemoveInternal( last );
 			}
 
-			Position = (Vector2)state.PivotPosition * 100;
+			Position = (Vector2)state.PivotPosition * HitokoriPlayfield.PositionScale;
 
 			for ( int i = 0; i < activeOrbitals.Count; i++ ) {
-				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * 100 * animationProgress.Value;
+				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * HitokoriPlayfield.PositionScale * animationProgress.Value;
 			}
 		}
 	}

@@ -150,7 +150,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 			if ( AppliedHitObject.FromPrevious is not null ) {
 				lineIn.Rotation = lineInOutline.Rotation = lineInShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Previous.Position ).RadToDeg();
-				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * 100 / 2 * inAnimationProgress.Value - 1;
+				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * HitokoriPlayfield.PositionScale / 2 * inAnimationProgress.Value - 1;
 				lineInOutline.Width = lineInShadow.Width = lineIn.Width + 4;
 
 				lineIn.Position = lineInOutline.Position = lineIn.Rotation.DegToRad().AngleToVector() * lineIn.Width / 2;
@@ -159,7 +159,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 			if ( AppliedHitObject.ToNext is not null ) {
 				lineOut.Rotation = lineOutOutline.Rotation = lineOutShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Next.Position ).RadToDeg();
-				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * 100 / 2 * outAnimationProgress.Value - 1;
+				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * HitokoriPlayfield.PositionScale / 2 * outAnimationProgress.Value - 1;
 				lineOutOutline.Width = lineOutShadow.Width = lineOut.Width + 4;
 
 				lineOut.Position = lineOutOutline.Position = lineOut.Rotation.DegToRad().AngleToVector() * lineOut.Width / 2;
