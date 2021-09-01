@@ -1,11 +1,17 @@
-﻿using osu.Framework.Graphics.Containers;
+﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Objects.Drawables;
 using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 	public class AppliableVisual<T> : CompositeDrawable where T : HitObject {
+		public AppliableVisual () {
+			AutoSizeAxes = Axes.Both;
+		}
+
 		private T? appliedHitObject = null;
 		public T? AppliedHitObject {
 			get => appliedHitObject;
@@ -26,20 +32,17 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 		public bool IsApplied => AppliedHitObject is not null;
 
 		void apply ( T hitObject ) {
-			Alpha = 1;
-			ClearTransforms();
 			OnApply( hitObject );
 		}
 
 		void free () {
 			OnFree();
-			ClearTransforms();
-			Alpha = 0;
 		}
 
 		protected virtual void OnApply ( T hitObject ) { }
 		protected virtual void OnFree () { }
 
 		public virtual void UpdateInitialTransforms() { }
+		public virtual void UpdateHitStateTransforms ( ArmedState state ) { }
 	}
 }

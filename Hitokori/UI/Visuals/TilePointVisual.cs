@@ -2,7 +2,9 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 	public class TilePointVisual : AppliableVisual<TilePoint> {
@@ -92,6 +94,11 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineOut.Show();
 				lineOutOutline.Show();
 				lineOutShadow.Show();
+
+				this.TransformBindableTo( outAnimationProgress, 0 );
+				using ( BeginAbsoluteSequence( AppliedHitObject.Next.StartTime - 2000 ) ) {
+					this.TransformBindableTo( outAnimationProgress, 1, 750, Easing.Out );
+				}
 			}
 
 			if ( AppliedHitObject.Previous is null ) {
@@ -103,33 +110,56 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				lineIn.Show();
 				lineInOutline.Show();
 				lineInShadow.Show();
+
+				this.TransformBindableTo( inAnimationProgress, 0 );
+				using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
+					this.TransformBindableTo( inAnimationProgress, 1, 750, Easing.Out );
+				}
 			}
 
-			using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
-				inAnimationProgress.Value = 0;
-				this.TransformBindableTo( inAnimationProgress, 1, 750, Easing.Out );
-			}
-			using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
-				outAnimationProgress.Value = 0;
-				this.TransformBindableTo( outAnimationProgress, 1, 750, Easing.Out );
+			this.ScaleTo( 0 ).Then().ScaleTo( 1, 300, Easing.Out );
+		}
+
+		public override void UpdateHitStateTransforms ( ArmedState state ) {
+			var lightUpDuration = 180;
+			var lightUpEasing = Easing.None;
+			var fadeOutDuration = 300;
+			var fadeOutEasing = Easing.In;
+
+			if ( state is ArmedState.Hit or ArmedState.Miss ) {
+				lineInShadow.FadeOut( lightUpDuration, lightUpEasing );
+				lineOutShadow.FadeOut( lightUpDuration, lightUpEasing );
+				bodyShadow.FadeOut( lightUpDuration, lightUpEasing );
+
+				body.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+				lineIn.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+				lineOut.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+				bodyOutline.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+				lineInOutline.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+				lineOutOutline.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
+
+				var nextSwapTile = AppliedHitObject.AllNext.FirstOrDefault( x => x.OrbitalState.ActiveIndex != AppliedHitObject.OrbitalState.ActiveIndex );
+				using ( BeginAbsoluteSequence( nextSwapTile?.StartTime ?? LatestTransformEndTime ) ) {
+					this.ScaleTo( 0, fadeOutDuration, fadeOutEasing );
+				}
 			}
 		}
 
 		protected override void Update () {
 			if ( !IsApplied ) return;
 
-			if ( AppliedHitObject.FromPrevious is TilePointConnector ) {
+			if ( AppliedHitObject.FromPrevious is not null ) {
 				lineIn.Rotation = lineInOutline.Rotation = lineInShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Previous.Position ).RadToDeg();
-				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * 100 / 2 * inAnimationProgress.Value;
+				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * 100 / 2 * inAnimationProgress.Value - 1;
 				lineInOutline.Width = lineInShadow.Width = lineIn.Width + 4;
 
 				lineIn.Position = lineInOutline.Position = lineIn.Rotation.DegToRad().AngleToVector() * lineIn.Width / 2;
 				lineInShadow.Position = lineInOutline.Position + Vector2.One * 3;
 			}
 
-			if ( AppliedHitObject.ToNext is TilePointConnector ) {
+			if ( AppliedHitObject.ToNext is not null ) {
 				lineOut.Rotation = lineOutOutline.Rotation = lineOutShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Next.Position ).RadToDeg();
-				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * 100 / 2 * outAnimationProgress.Value;
+				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * 100 / 2 * outAnimationProgress.Value - 1;
 				lineOutOutline.Width = lineOutShadow.Width = lineOut.Width + 4;
 
 				lineOut.Position = lineOutOutline.Position = lineOut.Rotation.DegToRad().AngleToVector() * lineOut.Width / 2;

@@ -1,9 +1,10 @@
-﻿using osu.Game.Rulesets.Objects.Drawables;
+﻿using osu.Framework.Graphics;
+using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject> {
 		public DrawableHitokoriHitObject ( HitokoriHitObject hitObject = null ) : base( hitObject ) {
-			
+			AutoSizeAxes = Axes.Both;
 		}
 	}
 

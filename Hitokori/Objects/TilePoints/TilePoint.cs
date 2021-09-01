@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
+using System.Collections.Generic;
 
 #nullable enable
 
@@ -123,6 +124,48 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 
 		public TilePoint? Next => ToNext?.To;
 		public TilePoint? Previous => FromPrevious?.From;
+
+		public TilePoint First {
+			get {
+				TilePoint tp = this;
+				while ( tp.Previous is not null ) {
+					tp = tp.Previous;
+				}
+				return tp;
+			}
+		}
+		public TilePoint Last {
+			get {
+				TilePoint tp = this;
+				while ( tp.Next is not null ) {
+					tp = tp.Next;
+				}
+				return tp;
+			}
+		}
+
+		public IEnumerable<TilePoint> AllNext {
+			get {
+				TilePoint? tp = Next;
+				while ( tp is not null ) {
+					yield return tp;
+					tp = tp.Next;
+				}
+			}
+		}
+
+		public IEnumerable<TilePoint> AllPrevious {
+			get {
+				TilePoint? tp = Previous;
+				while ( tp is not null ) {
+					yield return tp;
+					tp = tp.Previous;
+				}
+			}
+		}
+
+		public IEnumerable<TilePoint> AllInChain
+			=> First.AllNext;
 
 		/// <summary>
 		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.

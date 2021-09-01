@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 
@@ -36,18 +37,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void UpdateInitialTransforms () {
-			base.UpdateInitialTransforms();
 			visual.UpdateInitialTransforms();
 		}
 
-		//protected override void UpdateInitialTransforms () {
-		//	this.FadeIn( 200, Easing.Out );
-		//}
-		//protected override void UpdateHitStateTransforms ( ArmedState state ) {
-		//	if ( state == ArmedState.Hit ) {
-		//		this.Delay( 2000 ).FadeOut( 100 );
-		//	}
-		//}
+		protected override void UpdateHitStateTransforms ( ArmedState state ) {
+			visual.UpdateHitStateTransforms( state );
+			LifetimeEnd = visual.LatestTransformEndTime;
+		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.Perfect );

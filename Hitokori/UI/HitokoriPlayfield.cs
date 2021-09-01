@@ -84,8 +84,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
 			=> new HitokoriLifetimeEntry( hitObject );
 
-		protected override void Update () {
-			base.Update();
+		protected override void UpdateAfterChildren () {
+			base.UpdateAfterChildren();
 
 			updateCamera();
 		}
@@ -93,7 +93,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		void updateCamera () { // TODO this could probably be precomputed
 			var objects = ( HitObjectContainer.AliveObjects as IEnumerable<Drawable> ).Concat( paths.Keys );
 			if ( !objects.Any() ) return;
-			var first = objects.First();
+			var first = objects.First(); // TODO inflate the bounding box by half hax orbitals size in all directions
 
 			var boundingBox = objects.Skip(1).Aggregate( (min: first.Position - first.Size / 2, max: first.Position + first.Size / 2), ( bounds, obj ) => {
 				return (
