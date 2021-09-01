@@ -1,7 +1,5 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
-using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -9,9 +7,6 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawablePassThroughTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint> {
-		[Resolved]
-		private HitokoriPlayfield playfield { get; set; }
-
 		private TapPointVisual visual;
 		public DrawablePassThroughTilePoint () {
 			Anchor = Anchor.Centre;
@@ -21,12 +16,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void OnApply () {
-			base.OnApply();
+			Position = (Vector2)HitObject.Position * 100;
 			visual.AppliedHitObject = HitObject;
 		}
 
 		protected override void OnFree () {
-			base.OnFree();
 			visual.AppliedHitObject = null;
 		}
 
