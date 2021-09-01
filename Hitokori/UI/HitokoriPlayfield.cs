@@ -109,7 +109,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			if ( !points.Any() ) return;
 
-			var maxInflate = paths.Keys.Select( x => x.CurrentTile.OrbitalState.EnclosingCircle.radius ).Append( 0.5 ).Max();
+			var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
 
 			var boundingBox = new Box2d(
 				points.Min( x => x.X ) - maxInflate,
@@ -133,7 +133,12 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			if ( !double.IsFinite( scale ) ) return;
 
-			this.TransformBindableTo( cameraScale, scale / 2, 4000 );
+			double speedup =
+				cameraScale.Value > scale
+				? cameraScale.Value / scale
+				: 1;
+
+			this.TransformBindableTo( cameraScale, scale / 2, 3000 / speedup );
 		}
 	}
 }

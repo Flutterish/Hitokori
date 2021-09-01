@@ -41,6 +41,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 		public override bool IsPresent => true;
 		public TilePoint CurrentTile { get; private set; }
+		public float NormalizedEnclosingCircleRadius { get; private set; }
 
 		protected override void Update () {
 			base.Update();
@@ -99,6 +100,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			for ( int i = 0; i < activeOrbitals.Count; i++ ) {
 				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * positionScale.Value * animationProgress.Value;
 			}
+
+			NormalizedEnclosingCircleRadius = (float)state.EnclosingCircle.radius * animationProgress.Value;
 		}
 	}
 }
