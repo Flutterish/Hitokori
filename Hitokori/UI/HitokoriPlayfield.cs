@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
 				Children = new Drawable[] {
-					HitObjectContainer,
+					HitObjectContainer
 				}
 			} );
 			HitObjectContainer.Origin = Anchor.Centre;
@@ -52,6 +52,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			RegisterPool<SwapTilePoint, DrawableSwapTilePoint>( 30 );
 			RegisterPool<PassThroughTilePoint, DrawablePassThroughTilePoint>( 30 );
+			RegisterPool<NoJudgementTilePoint, DrawableNoJudgementTilePoint>( 2 );
 		}
 
 		protected override HitObjectContainer CreateHitObjectContainer () {

@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osuTK;
@@ -9,13 +10,24 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	public class OrbitalGroup : CompositeDrawable {
+		BindableFloat animationProgress = new( 0 );
+
 		public OrbitalGroup ( TilePoint currentTile ) {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 			CurrentTile = currentTile;
 			AutoSizeAxes = Axes.Both;
+			Alpha = 0;
 		}
 
+		protected override void LoadComplete () {
+			using ( BeginAbsoluteSequence( CurrentTile.StartTime - 2000 ) ) {
+				this.FadeIn( 150 )
+					.Then().TransformBindableTo( animationProgress, 1, CurrentTile.ToNext?.Duration ?? 500, Easing.Out );
+			}
+		}
+
+		public override bool IsPresent => true;
 		public TilePoint CurrentTile;
 
 		protected override void Update () {
@@ -24,10 +36,20 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			while ( CurrentTile.ToNext is TilePointConnector connector && connector.To.StartTime <= Time.Current ) {
 				updateState( connector.GetEndState() );
 				CurrentTile = connector.To;
+
+				if ( CurrentTile.Next is null ) {
+					using ( BeginAbsoluteSequence( CurrentTile.StartTime ) ) {
+						this.TransformBindableTo( animationProgress, 0, 500, Easing.In )
+							.Then().FadeOut( 150 );
+					}
+				}
 			}
 
 			if ( CurrentTile.ToNext is TilePointConnector c ) {
 				updateState( c.GetStateAt( ( Time.Current - c.StartTime ) / c.Duration ) );
+			}
+			else if ( CurrentTile.FromPrevious is TilePointConnector p ) {
+				updateState( p.GetStateAt( ( Time.Current - p.StartTime ) / p.Duration ) );
 			}
 		}
 
@@ -44,6 +66,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		};
 
 		void updateState ( OrbitalState state ) {
+			Alpha = animationProgress.Value;
+
 			while ( activeOrbitals.Count < state.OrbitalCount ) {
 				var orbital = new Orbital {
 					Colour = orbitalColors[ activeOrbitals.Count % orbitalColors.Length ]
@@ -60,7 +84,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			Position = (Vector2)state.PivotPosition * 100;
 
 			for ( int i = 0; i < activeOrbitals.Count; i++ ) {
-				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * 100;
+				activeOrbitals[ i ].Position = (Vector2)state.OffsetOfNthOriginal( i ) * 100 * animationProgress.Value;
 			}
 		}
 	}

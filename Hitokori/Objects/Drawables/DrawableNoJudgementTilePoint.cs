@@ -6,9 +6,9 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class DrawablePassThroughTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint> {
-		private TapPointVisual visual;
-		public DrawablePassThroughTilePoint () {
+	public class DrawableNoJudgementTilePoint : DrawableHitokoriHitObject<NoJudgementTilePoint> {
+		private TilePointVisual visual;
+		public DrawableNoJudgementTilePoint () {
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;
 
@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.Perfect );
+			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.IgnoreHit );
 		}
 
 		protected override double InitialLifetimeOffset => 2000;

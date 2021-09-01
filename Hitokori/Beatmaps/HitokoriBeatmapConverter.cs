@@ -51,7 +51,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			beatmap.ControlPointInfo = original.ControlPointInfo;
 			beatmap.Breaks = original.Breaks;
 
-			beatmap.HitObjects.Add( new SwapTilePoint { // TODO this initial tile should not be judged
+			beatmap.HitObjects.Add( new NoJudgementTilePoint {
 				Position = Vector2d.Zero,
 				OrbitalState = new Orbitals.OrbitalState( new Vector2d[] {
 					(0.0).AngleToVector(0.5),

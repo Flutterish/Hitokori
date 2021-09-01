@@ -36,7 +36,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			visual.UpdateHitStateTransforms( state );
-			LifetimeEnd = visual.LatestTransformEndTime;
+			if ( state is ArmedState.Hit or ArmedState.Miss )
+				LifetimeEnd = visual.LatestTransformEndTime;
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
