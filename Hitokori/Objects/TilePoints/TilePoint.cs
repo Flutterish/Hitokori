@@ -168,6 +168,12 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			=> First.AllNext;
 
 		/// <summary>
+		/// To which chain this <see cref="TilePoint"/> belongs to.
+		/// Setting this value will only have impact during the <see cref="Beatmaps.HitokoriBeatmapProcessor"/> linking phase.
+		/// </summary>
+		public int ChainID;
+
+		/// <summary>
 		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.
 		/// </summary>
 		public static TilePoint Unit { get; } = new PassThroughTilePoint { Position = Vector2d.Zero };
