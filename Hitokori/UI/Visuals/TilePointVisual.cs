@@ -28,13 +28,13 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16
+				Height = 22
 			} );
 			AddInternal( lineOutShadow = new Box {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16
+				Height = 22
 			} );
 			AddInternal( bodyShadow = new Circle {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
@@ -159,19 +159,19 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			if ( AppliedHitObject.FromPrevious is not null ) {
 				lineIn.Rotation = lineInOutline.Rotation = lineInShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Previous.Position ).RadToDeg();
 				lineIn.Width = (float)( AppliedHitObject.Previous.Position - AppliedHitObject.Position ).Length * positionScale.Value / 2 * inAnimationProgress.Value - 1;
-				lineInOutline.Width = lineInShadow.Width = lineIn.Width + 4;
+				lineInOutline.Width = lineIn.Width + 4;
+				lineInShadow.Width = lineIn.Width + 2;
 
-				lineIn.Position = lineInOutline.Position = lineIn.Rotation.DegToRad().AngleToVector() * lineIn.Width / 2;
-				lineInShadow.Position = lineInOutline.Position + Vector2.One * 3;
+				lineInShadow.Position = lineIn.Position = lineInOutline.Position = lineIn.Rotation.DegToRad().AngleToVector() * lineIn.Width / 2;
 			}
 
 			if ( AppliedHitObject.ToNext is not null ) {
 				lineOut.Rotation = lineOutOutline.Rotation = lineOutShadow.Rotation = (float)AppliedHitObject.Position.AngleTo( AppliedHitObject.Next.Position ).RadToDeg();
 				lineOut.Width = (float)( AppliedHitObject.Next.Position - AppliedHitObject.Position ).Length * positionScale.Value / 2 * outAnimationProgress.Value - 1;
-				lineOutOutline.Width = lineOutShadow.Width = lineOut.Width + 4;
+				lineOutOutline.Width = lineOut.Width + 4;
+				lineOutShadow.Width = lineOut.Width + 2;
 
-				lineOut.Position = lineOutOutline.Position = lineOut.Rotation.DegToRad().AngleToVector() * lineOut.Width / 2;
-				lineOutShadow.Position = lineOutOutline.Position + Vector2.One * 3;
+				lineOutShadow.Position = lineOut.Position = lineOutOutline.Position = lineOut.Rotation.DegToRad().AngleToVector() * lineOut.Width / 2;
 			}
 		}
 	}
