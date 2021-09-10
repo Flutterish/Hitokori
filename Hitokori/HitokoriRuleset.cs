@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public class HitokoriRuleset : Ruleset {
-		public const string SHORT_NAME = "hitokoriv2";
+		public const string SHORT_NAME = "hitokori";
 		public override string Description => SHORT_NAME;
 		public override string ShortName => SHORT_NAME;
 		public override string PlayingVerb => "Playing with fire";
@@ -48,8 +48,10 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public override IEnumerable<KeyBinding> GetDefaultKeyBindings ( int variant = 0 ) {
 			return new KeyBinding[] {
-				new( new KeyCombination( InputKey.Z, InputKey.MouseLeft ), HitokoriAction.Action1 ),
-				new( new KeyCombination( InputKey.X, InputKey.MouseRight ), HitokoriAction.Action2 )
+				new( InputKey.Z, HitokoriAction.Action1 ),
+				new( InputKey.X, HitokoriAction.Action2 ),
+				new( InputKey.MouseLeft, HitokoriAction.Action1 ),
+				new( InputKey.MouseRight, HitokoriAction.Action2 )
 			};
 		}
 

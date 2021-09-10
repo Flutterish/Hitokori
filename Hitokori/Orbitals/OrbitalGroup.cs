@@ -14,6 +14,7 @@ using System.Collections.Generic;
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	public class OrbitalGroup : CompositeDrawable {
 		BindableFloat animationProgress = new( 0 );
+		public TilePoint CurrentTile { get; private set; }
 
 		public OrbitalGroup ( TilePoint currentTile ) {
 			Origin = Anchor.Centre;
@@ -23,6 +24,9 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			Alpha = 0;
 			updateState( currentTile.OrbitalState );
 		}
+
+		[Resolved]
+		private HitokoriPlayfield playfield { get; set; }
 
 		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );
 		[BackgroundDependencyLoader( permitNulls: true )]
@@ -40,15 +44,14 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		public override bool IsPresent => true;
-		public TilePoint CurrentTile { get; private set; }
 		public float NormalizedEnclosingCircleRadius { get; private set; }
 
 		protected override void Update () {
 			base.Update();
 
-			while ( CurrentTile.ToNext is TilePointConnector connector && connector.To.StartTime <= Time.Current ) {
-				updateState( connector.GetEndState() );
-				CurrentTile = connector.To;
+			while ( CurrentTile.ToNext is TilePointConnector toNext && playfield.TryGetResultFor( toNext.To, out var value ) && value.TimeAbsolute <= Time.Current ) {
+				updateState( toNext.GetEndState() );
+				CurrentTile = toNext.To;
 
 				if ( CurrentTile.Next is null ) {
 					using ( BeginAbsoluteSequence( CurrentTile.StartTime ) ) {

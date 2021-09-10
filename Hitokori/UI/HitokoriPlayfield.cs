@@ -7,13 +7,17 @@ using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Hitokori.Settings;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
+#nullable enable
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]
@@ -46,8 +50,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					HitObjectContainer
 				}
 			} );
-			HitObjectContainer.Origin = Anchor.Centre;
-			HitObjectContainer.Anchor = Anchor.Centre;
 		}
 
 		private BindableFloat positionScale = new( DefaultPositionScale );
@@ -56,16 +58,30 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
 		}
 
+		private Dictionary<HitObject, JudgementResult> results = new();
+		public bool TryGetResultFor ( HitObject hitObject, [NotNullWhen(true)] out JudgementResult? result )
+			=> results.TryGetValue( hitObject, out result ) && result.HasResult;
+
 		protected override void LoadComplete () {
 			base.LoadComplete();
 
 			RegisterPool<SwapTilePoint, DrawableSwapTilePoint>( 30 );
 			RegisterPool<PassThroughTilePoint, DrawablePassThroughTilePoint>( 30 );
 			RegisterPool<NoJudgementTilePoint, DrawableNoJudgementTilePoint>( 2 );
+
+			NewResult += (dho, result) => {
+				results.Add( dho.HitObject, result );
+			};
+			RevertResult += (dho, result) => {
+				results.Remove( dho.HitObject );
+			};
 		}
 
 		protected override HitObjectContainer CreateHitObjectContainer () {
-			var container = new MyHitObjectContainer();
+			var container = new MyHitObjectContainer() {
+				Origin = Anchor.Centre,
+				Anchor = Anchor.Centre
+			};
 
 			container.DrawableHitObjectAdded += dho => {
 				if ( dho.HitObject is not TilePoint current ) return;

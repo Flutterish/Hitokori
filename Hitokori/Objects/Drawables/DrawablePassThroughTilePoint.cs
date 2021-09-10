@@ -1,6 +1,8 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Input.Bindings;
+using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
@@ -9,7 +11,7 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class DrawablePassThroughTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint, TapPointVisual> {
+	public class DrawablePassThroughTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint, TapPointVisual>, IKeyBindingHandler<HitokoriAction> {
 		public DrawablePassThroughTilePoint () {
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;
@@ -33,8 +35,29 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.Perfect );
+			if ( userTriggered ) {
+				var result = HitObject.HitWindows.ResultFor( timeOffset );
+
+				if ( result is HitResult.None ) {
+					// TODO some animation to show the "too early"
+				}
+				else {
+					ApplyResult( j => j.Type = result );
+				}
+			}
+			else if ( !HitObject.HitWindows.CanBeHit( timeOffset ) ) {
+				ApplyResult( j => j.Type = HitResult.Miss );
+			}
 		}
+
+		public bool OnPressed ( HitokoriAction action ) {
+			if ( Judged ) return false;
+
+			UpdateResult( true );
+			return true;
+		}
+
+		public void OnReleased ( HitokoriAction action ) { }
 
 		protected override double InitialLifetimeOffset => 2000;
 	}
