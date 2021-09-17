@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails;
@@ -67,15 +68,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		public double Duration { get => Tile.Duration; set => Tile.Duration = value; }
 
 		HitokoriAction? HoldButton;
-		public bool OnPressed ( HitokoriAction action ) { // BUG beatmaps that have a hold tile last end prematurely?
+		public bool OnPressed ( KeyBindingPressEvent<HitokoriAction> action ) { // BUG beatmaps that have a hold tile last end prematurely?
 			if ( Clock.ElapsedFrameTime < 0 ) return true;
 			if ( StartPoint.Judged ) return false;
-			BeginHold( action );
+			BeginHold( action.Action );
 			return true;
 		}
 
-		public void OnReleased ( HitokoriAction action ) {
-			Release( action );
+		public void OnReleased ( KeyBindingReleaseEvent<HitokoriAction> action ) {
+			Release( action.Action );
 			HoldButton = null;
 		}
 

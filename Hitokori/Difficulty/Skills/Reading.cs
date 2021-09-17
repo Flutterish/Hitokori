@@ -5,14 +5,13 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 	public class Reading : StrainSkill {
-		protected override double SkillMultiplier => 0.6;
-		protected override double StrainDecayBase => 0.6;
+		protected override double DecayWeight => 0.6;
 
 		private const double DIRECTION_CHANGE_BONUS = 1.05;
 
 		public Reading ( Mod[] mods ) : base( mods ) { }
 
-		protected override double StrainValueOf ( DifficultyHitObject current ) {
+		protected override double StrainValueAt ( DifficultyHitObject current ) {
 			HitokoriDifficultyHitObject hitokoriCurrent = (HitokoriDifficultyHitObject)current;
 
 			double strain = CalculateAngleStrain( hitokoriCurrent.HitAngle );
@@ -30,5 +29,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 		private double CalculateAngleStrain ( double angle ) {
 			return Math.Abs( ( Math.Abs( angle ) - Math.PI ) / ( Math.PI * 3 / 2 ) );
 		}
+
+		protected override double CalculateInitialStrain ( double time ) => 0;
 	}
 }

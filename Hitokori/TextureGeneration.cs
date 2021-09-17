@@ -1,14 +1,8 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Textures;
+﻿using osu.Framework.Graphics.Textures;
 using osuTK;
-using osuTK.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public static class TextureGeneration {

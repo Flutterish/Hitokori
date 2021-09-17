@@ -1,12 +1,7 @@
 ﻿using osu.Framework.Bindables;
-using osu.Framework.Configuration;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Configuration;
-using osuTK;
 using osuTK.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Settings {
 	public class HitokoriSettingsManager : RulesetConfigManager<HitokoriSetting> {

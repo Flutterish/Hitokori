@@ -76,7 +76,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			Sample notchSample;
 			[BackgroundDependencyLoader]
 			private void load ( ISampleStore samples ) {
-				notchSample = samples.Get( "UI/sliderbar-notch" );
+				notchSample = samples.Get( "UI/notch-tick" );
 			}
 
 			protected override bool OnDragStart ( DragStartEvent e ) {

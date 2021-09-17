@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot;
 using osu.Game.Rulesets.Hitokori.Settings;
@@ -31,13 +32,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 				PressPoint.TryToHitAtOffset( timeOffset );
 			}
 		}
-		public bool OnPressed ( HitokoriAction action ) {
+		public bool OnPressed ( KeyBindingPressEvent<HitokoriAction> action ) {
 			if ( PressPoint.Judged ) return false;
 			Playfield.Click( AutoClickType.Press );
 			UpdateResult( userTriggered: true );
 			return true;
 		}
-		public void OnReleased ( HitokoriAction action ) { }
+		public void OnReleased ( KeyBindingReleaseEvent<HitokoriAction> action ) { }
 
 		protected override void AddNestedHitObject ( DrawableHitObject hitObject ) {
 			AddInternal( PressPoint = hitObject as DrawableTilePoint );

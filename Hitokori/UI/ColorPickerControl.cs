@@ -8,7 +8,6 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 using osuTK.Graphics;
-using Sentry;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {

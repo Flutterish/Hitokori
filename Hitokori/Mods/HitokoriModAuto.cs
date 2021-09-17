@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using osu.Framework.Graphics.Sprites;
+﻿using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Scoring;
 using osu.Game.Users;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModAuto : ModAutoplay {

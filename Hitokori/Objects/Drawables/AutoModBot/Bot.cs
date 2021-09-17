@@ -3,7 +3,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.IO.Stores;
 using osu.Game.Rulesets.Hitokori.Utils;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot {

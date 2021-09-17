@@ -1,16 +1,9 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori;
-using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class OrbitalColorPicker : ColorPickerControl {
