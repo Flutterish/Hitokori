@@ -104,7 +104,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				DrawableHitObjectAdded?.Invoke( drawable );
 			}
 
-			public event Action<DrawableHitObject> DrawableHitObjectAdded;
+			public event Action<DrawableHitObject>? DrawableHitObjectAdded;
 		}
 
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )

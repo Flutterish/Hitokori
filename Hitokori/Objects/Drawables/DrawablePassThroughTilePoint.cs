@@ -2,6 +2,7 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Settings;
@@ -50,14 +51,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			}
 		}
 
-		public bool OnPressed ( HitokoriAction action ) {
+		public bool OnPressed ( KeyBindingPressEvent<HitokoriAction> action ) {
 			if ( Judged ) return false;
 
 			UpdateResult( true );
 			return true;
 		}
 
-		public void OnReleased ( HitokoriAction action ) { }
+		public void OnReleased ( KeyBindingReleaseEvent<HitokoriAction> action ) { }
 
 		protected override double InitialLifetimeOffset => 2000;
 	}
