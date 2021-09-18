@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using osu.Game.Overlays.BeatmapSet.Buttons;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
@@ -95,22 +96,23 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			if (IsRadiusConstrained || IsAngleConstrained || IsVelocityConstrained) {
 				throw new NotImplementedException( "Respecting constraints is not implemented yet" ); // TODO constriants
 			}
-
-			var distance = distancePerBeat * Beats;
-			radius = From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
-			// TODO we are still travelling at angle/time instead of arclength/time. this here could be calculated with a spiral for a better approximation
-			angle = Math.Clamp( distance / radius, minAngle, maxAngle );
-
-
-			angle *= TargetOrbitalIndex > 0 ? 1 : -1;
-			velocity = ( angle * radius ) / (float)Duration;
+			else {
+				var distance = distancePerBeat * Beats;
+				radius = From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
+				// TODO This could be calculated with a spiral for a better approximation
+				angle = Math.Clamp( distance / radius, minAngle, maxAngle );
+				
+				
+				angle *= TargetOrbitalIndex > 0 ? 1 : -1;
+				velocity = ( angle * radius ) / Duration;
+			}
 
 			isRadiusComputed = true;
 			isAngleComputed = true;
 			isVelocityComputed = true;
 		}
 
-		double targetScale => Radius / From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
+		double targetScale => Radius / From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
 
 		public override OrbitalState GetStateAt ( double progress )
 			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress ).WithOffset(

@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		///  Offset from the current pivot of Nth orbital.
 		/// </summary>
 		public Vector2d OffsetOfNthOriginal ( int index ) => (InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale
-			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset ) ;
+			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset );
 
 		/// <summary>
 		/// Position of the Nth orbital from current pivot.
@@ -63,6 +63,26 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// Position of the Nth orbital.
 		/// </summary>
 		public Vector2d PositionOfNthOriginal ( int index ) => PivotPosition + OffsetOfNthOriginal( index );
+
+		/// <summary>
+		/// Offset from the current pivot of Nth orbital from the pivot without applying scaling.
+		/// </summary>
+		public Vector2d UnscaledOffsetOfNth ( int index ) => ( InitialPositions[ ( index + ActiveIndex ).Mod( InitialPositions.Count ) ] - internalPivotPosition ).Rotate( (float)TotalRotation )
+			+ ( index.Mod( OrbitalCount ) == 0 ? Vector2d.Zero : Offset );
+		/// <summary>
+		///  Offset from the current pivot of Nth orbital without applying scaling.
+		/// </summary>
+		public Vector2d UnscaledOffsetOfNthOriginal ( int index ) => ( InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition ).Rotate( (float)TotalRotation )
+			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset );
+
+		/// <summary>
+		/// Position of the Nth orbital from current pivot without applying scaling.
+		/// </summary>
+		public Vector2d UnscaledPositionOfNth ( int index ) => PivotPosition + UnscaledOffsetOfNth( index );
+		/// <summary>
+		/// Position of the Nth orbital without applying scaling.
+		/// </summary>
+		public Vector2d UnscaledPositionOfNthOriginal ( int index ) => PivotPosition + UnscaledOffsetOfNthOriginal( index );
 
 		/// <summary>
 		/// A circle that encloses all the original orbitals. This might not be the smallest possible circle that achieves this.
