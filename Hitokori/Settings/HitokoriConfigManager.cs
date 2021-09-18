@@ -7,6 +7,7 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 
 		protected override void InitialiseDefaults () {
 			SetDefault( HitokoriSetting.PositionScale, 90f, 90f * 0.5f, 90f * 1.5f, 1f );
+			SetDefault( HitokoriSetting.DoKiaiBeat, true );
 
 			base.InitialiseDefaults();
 		}

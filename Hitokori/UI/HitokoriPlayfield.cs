@@ -1,7 +1,9 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
@@ -25,6 +27,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
 		public readonly Container Everything;
 		public const float DefaultPositionScale = 90;
+		[Cached]
+		public readonly BeatProvider BeatProvider = new();
 
 		OrbitalGroup addPath ( TilePoint firstTile ) {
 			var orbitals = new OrbitalGroup( firstTile );
@@ -50,12 +54,25 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					HitObjectContainer
 				}
 			} );
+
+			AddInternal( BeatProvider );
 		}
 
 		private BindableFloat positionScale = new( DefaultPositionScale );
+		private BindableBool doKiaiBeat = new( true );
+
 		[BackgroundDependencyLoader( permitNulls: true )]
 		private void load ( HitokoriConfigManager config ) {
 			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
+			config?.BindWith( HitokoriSetting.DoKiaiBeat, doKiaiBeat );
+
+			BeatProvider.OnBeat += OnBeat;
+		}
+
+		private void OnBeat ( int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes, BeatProvider provider ) {
+			if ( effectPoint.KiaiMode ) {
+				this.TransformBindableTo( kiaiScale, 1.1, 0 ).Then().TransformBindableTo( kiaiScale, 1, timingPoint.BeatLength * 1.2, Easing.Out );
+			}
 		}
 
 		private Dictionary<HitObject, JudgementResult> results = new();
@@ -114,12 +131,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			base.UpdateAfterChildren();
 
 			updateCamera();
-			Scale = new Vector2( (float)cameraScale.Value / positionScale.Value );
+			Scale = new Vector2( (float)( cameraScale.Value * (doKiaiBeat.Value ? kiaiScale.Value : 1) ) / positionScale.Value );
 			Everything.Position = -cameraMiddle.Value * positionScale.Value;
 		}
 
 		private Bindable<Vector2> cameraMiddle = new();
 		private BindableDouble cameraScale = new( 1 );
+		private BindableDouble kiaiScale = new( 1 );
 		void updateCamera () { // TODO this could be precomputed
 			var points = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>().Select( x => x.Position );
 

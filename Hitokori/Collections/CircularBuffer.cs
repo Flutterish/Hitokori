@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace osu.Game.Rulesets.Hitokori {
+namespace osu.Game.Rulesets.Hitokori.Collections {
 	public class CircularBuffer<T> : IEnumerable<T> {
 		private List<T> list;
 		private int index;

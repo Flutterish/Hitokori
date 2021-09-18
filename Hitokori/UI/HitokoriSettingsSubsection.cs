@@ -15,6 +15,11 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Current = config.GetBindable<float>( HitokoriSetting.PositionScale ),
 				LabelText = "Distance scale"
 			} );
+
+			Add( new SettingsCheckbox {
+				Current = config.GetBindable<bool>( HitokoriSetting.DoKiaiBeat ),
+				LabelText = "Scale screen on kiai beats"
+			} );
 		}
 	}
 

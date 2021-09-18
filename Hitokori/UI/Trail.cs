@@ -2,6 +2,7 @@
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Primitives;
+using osu.Game.Rulesets.Hitokori.Collections;
 using osuTK;
 using System;
 using System.Linq;
