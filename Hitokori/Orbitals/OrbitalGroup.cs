@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osuTK;
 using osuTK.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
@@ -25,7 +26,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			updateState( currentTile.OrbitalState );
 		}
 
-		[Resolved]
+		[Resolved, MaybeNull, NotNull]
 		private HitokoriPlayfield playfield { get; set; }
 
 		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );

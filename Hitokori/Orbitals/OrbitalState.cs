@@ -90,7 +90,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		};
 
 		/// <summary>
-		/// Creates a new instance where the pivot changed by <paramref name="index"/> clockwise swaps. Resets <see cref="Offset"/>.
+		/// Creates a new instance where the pivot changed by <paramref name="index"/> swaps. Resets <see cref="Offset"/>.
 		/// </summary>
 		public OrbitalState PivotNth ( int index, Vector2d newPosition ) => this with {
 			ActiveIndex = ActiveIndex + index,
