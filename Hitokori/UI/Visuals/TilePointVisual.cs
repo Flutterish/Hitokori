@@ -3,9 +3,11 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
+using osuTK.Graphics;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
@@ -85,6 +87,29 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 		BindableFloat inAnimationProgress = new();
 		BindableFloat outAnimationProgress = new();
+
+		new public Color4 Colour {
+			get => body.Colour;
+			set {
+				body.Colour = lineIn.Colour = lineOut.Colour = value;
+			}
+		}
+
+		protected override void OnApply ( TilePoint hitObject ) {
+			base.OnApply( hitObject );
+
+			if ( hitObject.FromPrevious is IHasVelocity fromv && hitObject.ToNext is IHasVelocity tov ) {
+				if ( fromv.Speed / tov.Speed < 0.95 ) {
+					Colour = Colour4.Tomato;
+				}
+				else if ( tov.Speed / fromv.Speed < 0.95 ) {
+					Colour = Colour4.LightBlue;
+				}
+				else {
+					Colour = Colour4.HotPink;
+				}
+			}
+		}
 
 		public override void UpdateInitialTransforms () {
 			if ( AppliedHitObject.ToNext is null ) {

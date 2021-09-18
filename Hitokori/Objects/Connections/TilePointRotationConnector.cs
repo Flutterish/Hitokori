@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
 
@@ -7,7 +8,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
 	/// A connection between 2 <see cref="TilePoint"/>s where the orbital rotates around the <see cref="OrbitalState.PivotPosition"/> tile until it reaches the <see cref="TilePointConnector.To"/> tile.
 	/// </summary>
-	public class TilePointRotationConnector : TilePointConnector {
+	public class TilePointRotationConnector : TilePointConnector, IHasVelocity {
 		public bool IsRadiusConstrained { get; private set; } = false;
 		private bool isRadiusComputed = false;
 		private double radius = 1;
