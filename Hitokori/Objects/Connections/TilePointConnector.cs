@@ -70,8 +70,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public double EndTime => To.StartTime;
 		public double StartTime => From.StartTime;
 
-		private float beatsPerMS;
-		public float BPM {
+		private double beatsPerMS;
+		public double BPM {
 			get => beatsPerMS * 60000;
 			set {
 				beatsPerMS = value / 60000;
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 		}
 
-		public float Beats => (float)Duration * beatsPerMS;
+		public double Beats => Duration * beatsPerMS;
 
 		/// <summary>
 		/// Force this <see cref="TilePointConnector"/> and any subsequent <see cref="TilePoint"/>s to recalcuate their properties such as <see cref="TilePoint.Position"/>.

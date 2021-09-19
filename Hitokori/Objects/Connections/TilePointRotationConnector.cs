@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		private bool isRadiusComputed = false;
 		private double radius = 1;
 		/// <summary>
-		/// The normalized distance from the <see cref="Around"/>. Setting this property will contrain it to that value.
+		/// The normalized distance from the pivot. Setting this property will contrain it to that value.
 		/// </summary>
 		public double Radius {
 			get {
@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// </summary>
 		public double Speed => Math.Abs( Velocity );
 
-		private double distancePerBeat = 120f / 180 * Math.PI;
+		private double distancePerBeat = 120d / 180 * Math.PI;
 		/// <summary>
 		/// Distance in arclength per beat. This is essentially angle in radians per beat at <see cref="Radius"/> = 1.
 		/// </summary>
@@ -81,8 +81,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 		}
 
-		private const double maxAngle = Math.PI * 1.75f;
-		private const double minAngle = Math.PI * 0f;
+		private const double maxAngle = Math.PI * 1.75;
+		private const double minAngle = Math.PI * 0;
 
 		protected override void InvalidateProperties () {
 			base.InvalidateProperties();

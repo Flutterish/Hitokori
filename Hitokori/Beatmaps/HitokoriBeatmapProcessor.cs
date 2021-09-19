@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 					From = prevTile,
 					To = tile,
 					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile.StartTime ).BPM,
-					DistancePerBeat = 240f / 180 * MathF.PI,
+					DistancePerBeat = 240d / 180 * Math.PI,
 					TargetOrbitalIndex = direction
 				};
 
