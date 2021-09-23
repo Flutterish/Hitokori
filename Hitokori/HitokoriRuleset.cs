@@ -6,10 +6,13 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Input;
+using osu.Game.Rulesets.Hitokori.Mods;
+using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Hitokori.Scoring;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
 using System;
@@ -27,7 +30,15 @@ namespace osu.Game.Rulesets.Hitokori {
 		}
 
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
-			return Array.Empty<Mod>();
+			return type switch {
+				ModType.DifficultyReduction => Array.Empty<Mod>(),
+				ModType.DifficultyIncrease => Array.Empty<Mod>(),
+				ModType.Conversion => Array.Empty<Mod>(),
+				ModType.Automation => new Mod[] { new HitokoriModAutoplay() },
+				ModType.Fun => Array.Empty<Mod>(),
+				ModType.System => Array.Empty<Mod>(),
+				_ => Array.Empty<Mod>()
+			};
 		}
 
 		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod> mods = null )
@@ -45,6 +56,9 @@ namespace osu.Game.Rulesets.Hitokori {
 			=> new HitokoriConfigManager( settings, RulesetInfo );
 		public override RulesetSettingsSubsection CreateSettings ()
 			=> new HitokoriSettingsSubsection( this );
+
+		public override IConvertibleReplayFrame CreateConvertibleReplayFrame ()
+			=> new HitokoriReplayFrame();
 
 		public override IEnumerable<KeyBinding> GetDefaultKeyBindings ( int variant = 0 ) {
 			return new KeyBinding[] {

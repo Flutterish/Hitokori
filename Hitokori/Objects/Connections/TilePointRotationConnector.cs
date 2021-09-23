@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using osu.Game.Overlays.BeatmapSet.Buttons;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;

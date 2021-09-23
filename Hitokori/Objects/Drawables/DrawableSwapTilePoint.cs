@@ -36,8 +36,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
-			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.Perfect );
-
 			if ( userTriggered ) {
 				var result = HitObject.HitWindows.ResultFor( timeOffset );
 
