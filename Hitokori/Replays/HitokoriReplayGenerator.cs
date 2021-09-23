@@ -11,29 +11,50 @@ namespace osu.Game.Rulesets.Hitokori.Replays {
 		protected override void GenerateFrames () {
 			Frames.Clear();
 
-			double lastPressTime = ( Beatmap.HitObjects.FirstOrDefault()?.StartTime ?? 0 ) - 1000;
-			var actions = Enum.GetValues<HitokoriAction>();
-			int actionIndex = 0;
+			int nextButtonIndex = 0;
+			var buttons = new AutoButton<HitokoriAction>[] { 
+				new( HitokoriAction.Action1 ), 
+				new( HitokoriAction.Action2 )
+			};
 
-
-			void nextRelease ( double time ) {
-				if ( time - lastPressTime >= KEY_UP_DELAY ) {
-					Frames.Add( new HitokoriReplayFrame( lastPressTime + KEY_UP_DELAY, Array.Empty<HitokoriAction>() ) );
-				}
+			void nextFrame ( double time ) {
+				Frames.Add( new HitokoriReplayFrame( time, buttons.Where( x => x.IsDown ).Select( x => x.Action ) ) );
 			}
 
-			void nextPress ( double time ) {
-				Frames.Add( new HitokoriReplayFrame( lastPressTime = time, new HitokoriAction[] { actions[ actionIndex++ % actions.Length ] } ) );
-			}
-
-			Frames.Add( new HitokoriReplayFrame( lastPressTime, Array.Empty<HitokoriAction>() ) );
+			nextFrame( ( Beatmap.HitObjects.FirstOrDefault()?.StartTime ?? 0 ) - 1000 );
 			foreach ( var ho in Beatmap.HitObjects ) {
-				nextRelease( ho.StartTime );
+				var button = buttons[ nextButtonIndex++ % buttons.Length ];
+				var releases = buttons
+					.Where( x => x.IsDown )
+					.GroupBy( x => x == button ? Math.Min( ho.StartTime, x.PressTime + KEY_UP_DELAY ) : ( x.PressTime + KEY_UP_DELAY ) )
+					.OrderBy( x => x.Key );
 
-				nextPress( ho.StartTime );
+				foreach ( var i in releases ) {
+					if ( ho.StartTime >= i.Key ) {
+						foreach ( var k in i ) {
+							k.IsDown = false;
+						}
+						nextFrame( i.Key );
+					}
+				}
+
+				button.IsDown = true;
+				button.PressTime = ho.StartTime;
+
+				nextFrame( ho.StartTime );
 			}
 
-			Frames.Add( new HitokoriReplayFrame( lastPressTime + KEY_UP_DELAY, Array.Empty<HitokoriAction>() ) );
+			var finalReleases = buttons
+				.Where( x => x.IsDown )
+				.GroupBy( x => x.PressTime + KEY_UP_DELAY )
+				.OrderBy( x => x.Key );
+
+			foreach ( var i in finalReleases ) {
+				foreach ( var k in i ) {
+					k.IsDown = false;
+				}
+				nextFrame( i.Key );
+			}
 		}
 	}
 }
