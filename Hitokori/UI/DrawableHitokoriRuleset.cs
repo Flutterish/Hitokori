@@ -29,6 +29,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayRecorder( score );
 
 		protected override Playfield CreatePlayfield ()
-			=> new HitokoriPlayfield();
+			=> new HitokoriPlayfield( Beatmap );
 	}
 }

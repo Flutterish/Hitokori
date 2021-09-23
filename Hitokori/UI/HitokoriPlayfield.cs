@@ -3,6 +3,7 @@ using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
@@ -42,7 +43,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			group.Expire();
 		}
 
-		public HitokoriPlayfield () {
+		public HitokoriPlayfield ( Beatmap<HitokoriHitObject> beatmap ) {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 
@@ -56,6 +57,9 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			} );
 
 			AddInternal( BeatProvider );
+			foreach ( var tile in beatmap.HitObjects.OfType<TilePoint>().Where( x => x.Previous is null ) ) {
+				addPath( tile );
+			}
 		}
 
 		private BindableFloat positionScale = new( DefaultPositionScale );
@@ -98,13 +102,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			var container = new MyHitObjectContainer() {
 				Origin = Anchor.Centre,
 				Anchor = Anchor.Centre
-			};
-
-			container.DrawableHitObjectAdded += dho => {
-				if ( dho.HitObject is not TilePoint current ) return;
-
-				if ( current.Previous is null )
-					addPath( current );
 			};
 
 			return container;
