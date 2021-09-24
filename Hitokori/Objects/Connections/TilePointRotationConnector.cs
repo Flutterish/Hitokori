@@ -98,12 +98,22 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			else {
 				var distance = distancePerBeat * Beats;
 				radius = From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
-				// TODO This could be calculated with a spiral for a better approximation
-				angle = Math.Clamp( distance / radius, minAngle, maxAngle );
-				
-				
+				if ( radius != 0 ) {
+					// TODO This could be calculated with a spiral for a better approximation
+					angle = Math.Clamp( distance / radius, minAngle, maxAngle );
+				}
+				else {
+					angle = 0;
+				}
+
 				angle *= TargetOrbitalIndex > 0 ? 1 : -1;
-				velocity = ( angle * radius ) / Duration;
+
+				if ( Duration != 0 ) {
+					velocity = ( angle * radius ) / Duration;
+				}
+				else {
+					velocity = TargetOrbitalIndex > 0 ? double.PositiveInfinity : double.NegativeInfinity;
+				}
 			}
 
 			isRadiusComputed = true;
@@ -111,7 +121,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			isVelocityComputed = true;
 		}
 
-		double targetScale => Radius / From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
+		double targetScale {
+			get {
+				var unscaled = From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
+
+				if ( unscaled != 0 )
+					return Radius / unscaled;
+				else
+					return 1;
+			}
+		}
 
 		public override OrbitalState GetStateAt ( double progress )
 			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress ).WithOffset(

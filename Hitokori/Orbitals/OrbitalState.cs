@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public OrbitalState ( IEnumerable<Vector2d> positions, bool sortByAngle = true ) {
 			InitialPositions = sortByAngle ? positions.OrderByDescending( x => Vector2d.Zero.AngleTo( x ) ).ToArray() : positions.ToArray();
 
-			if ( InitialPositions.Count < 2 ) throw new InvalidOperationException( $"{nameof(OrbitalState)} needs at least 2 orbitals but was constructed with {InitialPositions.Count}" );
+			if ( InitialPositions.Count < 1 ) throw new InvalidOperationException( $"{nameof(OrbitalState)} needs at least 1 orbital but was constructed with {InitialPositions.Count}" );
 
 			PivotPosition = Vector2d.Zero;
 			ActiveIndex = 0;
