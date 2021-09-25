@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 #nullable enable
 
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
-	public class AppliableVisual<T> : CompositeDrawable where T : HitObject {
+	public abstract class AppliableVisual<T> : CompositeDrawable where T : HitObject {
 		public AppliableVisual () {
 			AutoSizeAxes = Axes.Both;
 		}
@@ -44,5 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 		public virtual void UpdateInitialTransforms() { }
 		public virtual void UpdateHitStateTransforms ( ArmedState state ) { }
+
+		public abstract double EndTime { get; }
 	}
 }

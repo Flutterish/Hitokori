@@ -50,5 +50,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				}
 			}
 		}
+
+		public override double EndTime => LatestTransformEndTime;
 	}
 }
