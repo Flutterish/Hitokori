@@ -7,12 +7,11 @@ using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
-using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class DrawableSwapTilePoint : DrawableHitokoriHitObject<SwapTilePoint, TilePoint, TilePointVisual>, IKeyBindingHandler<HitokoriAction> {
+	public class DrawableSwapTilePoint : DrawableTilePointWithConnections<SwapTilePoint>, IKeyBindingHandler<HitokoriAction> {
 		public DrawableSwapTilePoint () {
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;

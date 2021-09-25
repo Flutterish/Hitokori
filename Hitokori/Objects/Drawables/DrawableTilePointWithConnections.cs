@@ -1,28 +1,21 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Settings;
+using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Objects.Drawables;
 using System.Linq;
 
-#nullable enable
-
-namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
-	public class TilePointVisual : AppliableVisual<TilePoint> {
+namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
+	public class DrawableTilePointWithConnections<T> : DrawableHitokoriHitObject<T> where T : TilePoint {
 		TilePointVisualPiece piece;
 
-		public TilePointVisual () {
-			Anchor = Anchor.Centre;
-			Origin = Anchor.Centre;
-
+		public DrawableTilePointWithConnections () {
 			AddInternal( piece = new TilePointVisualPiece() );
 		}
 
-		protected override void OnApply ( TilePoint hitObject ) {
-			base.OnApply( hitObject );
-
-			if ( hitObject.FromPrevious is IHasVelocity fromv && hitObject.ToNext is IHasVelocity tov ) {
+		protected override void OnApply () {
+			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
 					piece.Colour = Colour4.Tomato;
 				}
@@ -35,17 +28,17 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			}
 		}
 
-		public override void UpdateInitialTransforms () {
-			if ( AppliedHitObject!.Next is not null ) {
+		protected override void UpdateInitialTransforms () {
+			if ( HitObject.Next is not null ) {
 				this.TransformBindableTo( piece.OutAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( AppliedHitObject.Next.StartTime - 2000 ) ) {
+				using ( BeginAbsoluteSequence( HitObject.Next.StartTime - 2000 ) ) {
 					this.TransformBindableTo( piece.OutAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
 
-			if ( AppliedHitObject.Previous is not null ) {
+			if ( HitObject.Previous is not null ) {
 				this.TransformBindableTo( piece.InAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( AppliedHitObject.StartTime - 2000 ) ) {
+				using ( BeginAbsoluteSequence( HitObject.StartTime - 2000 ) ) {
 					this.TransformBindableTo( piece.InAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
@@ -53,17 +46,19 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			piece.ScaleTo( 0 ).Then().ScaleTo( 1, 300, Easing.Out );
 		}
 
-		public override void UpdateHitStateTransforms ( ArmedState state ) {
+		protected override void UpdateHitStateTransforms ( ArmedState state ) {
 			var fadeOutDuration = 300;
 			var fadeOutEasing = Easing.In;
 
 			if ( state is ArmedState.Hit or ArmedState.Miss ) {
 				piece.LightUp();
 
-				var nextSwapTile = AppliedHitObject!.AllNext.FirstOrDefault( x => x.OrbitalState.ActiveIndex != AppliedHitObject.OrbitalState.ActiveIndex );
+				var nextSwapTile = HitObject.AllNext.FirstOrDefault( x => x.OrbitalState.ActiveIndex != HitObject.OrbitalState.ActiveIndex );
 				using ( BeginAbsoluteSequence( nextSwapTile?.StartTime ?? LatestTransformEndTime ) ) {
 					piece.ScaleTo( 0, fadeOutDuration, fadeOutEasing );
 				}
+
+				LifetimeEnd = piece.LatestTransformEndTime;
 			}
 		}
 
@@ -73,13 +68,9 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 		}
 
 		protected override void Update () {
-			if ( !IsApplied ) return;
-
-			piece.FromPosition.Value = AppliedHitObject.Previous?.Position;
-			piece.ToPosition.Value = AppliedHitObject.Next?.Position;
-			piece.AroundPosition.Value = AppliedHitObject.Position;
+			piece.FromPosition.Value = HitObject.Previous?.Position;
+			piece.ToPosition.Value = HitObject.Next?.Position;
+			piece.AroundPosition.Value = HitObject.Position;
 		}
-
-		public override double EndTime => piece.LatestTransformEndTime;
 	}
 }

@@ -4,12 +4,11 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
-using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class DrawableNoJudgementTilePoint : DrawableHitokoriHitObject<NoJudgementTilePoint, TilePoint, TilePointVisual> {
+	public class DrawableNoJudgementTilePoint : DrawableTilePointWithConnections<NoJudgementTilePoint> {
 		public DrawableNoJudgementTilePoint () {
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;

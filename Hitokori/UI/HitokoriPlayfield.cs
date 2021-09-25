@@ -87,7 +87,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			base.LoadComplete();
 
 			RegisterPool<SwapTilePoint, DrawableSwapTilePoint>( 30 );
-			RegisterPool<PassThroughTilePoint, DrawablePassThroughTilePoint>( 30 );
+			RegisterPool<PassThroughTilePoint, DrawableTapTilePoint>( 30 );
 			RegisterPool<NoJudgementTilePoint, DrawableNoJudgementTilePoint>( 2 );
 
 			NewResult += (dho, result) => {
