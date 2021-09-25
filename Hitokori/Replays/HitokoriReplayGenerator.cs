@@ -1,5 +1,7 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Input;
+using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Replays;
 using System;
 using System.Linq;
@@ -22,7 +24,9 @@ namespace osu.Game.Rulesets.Hitokori.Replays {
 			}
 
 			nextFrame( ( Beatmap.HitObjects.FirstOrDefault()?.StartTime ?? 0 ) - 1000 );
-			foreach ( var ho in Beatmap.HitObjects ) {
+			foreach ( var ho in Beatmap.HitObjects.OfType<TilePoint>() ) {
+				if ( ho is NoJudgementTilePoint ) continue;
+
 				var button = buttons[ nextButtonIndex++ % buttons.Length ];
 				var releases = buttons
 					.Where( x => x.IsDown )
