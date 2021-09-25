@@ -35,17 +35,26 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
 			=> false;
 
+		bool isInvalidated = false;
 		public void AddVertice ( Vector2 position ) {
+			isInvalidated = true;
 			vertices.Add( position );
 		}
 
 		public void Rescale ( float scale ) {
+			isInvalidated = true;
 			for ( int i = 0; i < vertices.Count; i++ ) {
 				vertices[ i ] *= scale;
 			}
 		}
 
 		protected override void Update () {
+			if ( isInvalidated )
+				FlushVertices();
+		}
+
+		public void FlushVertices () {
+			isInvalidated = false;
 			Line.ClearVertices();
 
 			foreach ( var i in vertices ) {

@@ -60,6 +60,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			foreach ( var tile in beatmap.HitObjects.OfType<TilePoint>().Where( x => x.Previous is null ) ) {
 				addPath( tile );
 			}
+
+			positionScale.BindValueChanged( _ => updateCameraViewport() );
 		}
 
 		private BindableFloat positionScale = new( DefaultPositionScale );
@@ -124,12 +126,16 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
 			=> new HitokoriLifetimeEntry( hitObject );
 
+		private void updateCameraViewport () {
+			updateCamera();
+			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / positionScale.Value );
+			Everything.Position = -cameraMiddle.Value * positionScale.Value;
+		}
+
 		protected override void UpdateAfterChildren () {
 			base.UpdateAfterChildren();
 
-			updateCamera();
-			Scale = new Vector2( (float)( cameraScale.Value * (doKiaiBeat.Value ? kiaiScale.Value : 1) ) / positionScale.Value );
-			Everything.Position = -cameraMiddle.Value * positionScale.Value;
+			updateCameraViewport();
 		}
 
 		private Bindable<Vector2> cameraMiddle = new();

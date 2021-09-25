@@ -42,6 +42,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 					i.Radius = v.NewValue;
 				}
 			} );
+
+			positionScale.ValueChanged += _ => SeekTo( Time.Current );
 		}
 
 		protected override void LoadComplete () {
@@ -71,19 +73,23 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		protected override void Update () {
 			base.Update();
 
-			while ( CurrentTile.FromPrevious is TilePointConnector fromPrevious && ( !playfield.TryGetResultFor( CurrentTile, out var j ) || j.TimeAbsolute >= Time.Current ) ) {
+			SeekTo( Time.Current );
+		}
+
+		public void SeekTo ( double time ) {
+			while ( CurrentTile.FromPrevious is TilePointConnector fromPrevious && ( !playfield.TryGetResultFor( CurrentTile, out var j ) || j.TimeAbsolute >= time ) ) {
 				CurrentTile = fromPrevious.From;
 			}
-			while ( CurrentTile.ToNext is TilePointConnector toNext && playfield.TryGetResultFor( toNext.To, out var value ) && value.TimeAbsolute <= Time.Current ) {
+			while ( CurrentTile.ToNext is TilePointConnector toNext && playfield.TryGetResultFor( toNext.To, out var value ) && value.TimeAbsolute <= time ) {
 				updateState( toNext.GetEndState() );
 				CurrentTile = toNext.To;
 			}
 
 			if ( CurrentTile.ToNext is TilePointConnector c ) {
-				updateState( c.Duration == 0 ? c.GetEndState() : c.GetStateAt( ( Time.Current - c.StartTime ) / c.Duration ) );
+				updateState( c.Duration == 0 ? c.GetEndState() : c.GetStateAt( ( time - c.StartTime ) / c.Duration ) );
 			}
 			else if ( CurrentTile.FromPrevious is TilePointConnector p ) {
-				updateState( CurrentTile.ModifyOrbitalState( p.Duration == 0 ? p.GetEndState() : p.GetStateAt( ( Time.Current - p.StartTime ) / p.Duration ) ) );
+				updateState( CurrentTile.ModifyOrbitalState( p.Duration == 0 ? p.GetEndState() : p.GetStateAt( ( time - p.StartTime ) / p.Duration ) ) );
 			}
 		}
 

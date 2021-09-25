@@ -87,6 +87,10 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			OutAnimationProgress.BindValueChanged( _ => updateToConnector() );
 			FromPosition.BindValueChanged( _ => updateFromConnector() );
 			ToPosition.BindValueChanged( _ => updateToConnector() );
+			PositionScale.BindValueChanged( _ => {
+				updateFromConnector();
+				updateToConnector();
+			} );
 			AroundPosition.BindValueChanged( _ => {
 				updateFromConnector();
 				updateToConnector();

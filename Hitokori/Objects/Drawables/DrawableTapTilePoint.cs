@@ -1,17 +1,12 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
-using osu.Game.Rulesets.Hitokori.Settings;
-using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawableTapTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint>, IKeyBindingHandler<HitokoriAction> {
@@ -24,15 +19,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal( piece = new TapPointVisualPiece() );
 		}
 
-		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );
-		[BackgroundDependencyLoader( permitNulls: true )]
-		private void load ( HitokoriConfigManager config ) {
-			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
-		}
-
 		protected override void OnApply () {
 			base.OnApply();
-			Position = (Vector2)HitObject.Position * positionScale.Value;
 
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
@@ -45,12 +33,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 					piece.Colour = Colour4.HotPink;
 				}
 			}
-		}
-
-		protected override void Update () {
-			base.Update();
-
-			Position = (Vector2)HitObject.Position * positionScale.Value;
 		}
 
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {

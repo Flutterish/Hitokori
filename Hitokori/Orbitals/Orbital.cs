@@ -52,6 +52,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		protected override void Update () {
 			base.Update();
 
+			updateTrail();
+		}
+
+		private void updateTrail () {
 			if ( group is null ) {
 				accumulatedTime += Time.Elapsed;
 				trail.Offset = Position + Parent.Position;
@@ -87,6 +91,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			}
 			else {
 				currentTile = group.CurrentTile;
+				positionScale.BindValueChanged( v => {
+					updateTrail();
+					trail.FlushVertices();
+				} );
 			}
 
 			simulatedTime = Time.Current;

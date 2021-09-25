@@ -15,6 +15,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void OnApply () {
+			base.OnApply();
+
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
 					piece.Colour = Colour4.Tomato;
