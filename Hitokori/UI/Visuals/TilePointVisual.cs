@@ -30,58 +30,57 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 22
+				Height = 32
 			} );
 			AddInternal( lineOutShadow = new Box {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 22
+				Height = 32
 			} );
 			AddInternal( bodyShadow = new Circle {
 				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Size = new Vector2( 30 ),
-				Position = new Vector2( 3 )
+				Size = new Vector2( 32 )
 			} );
 
 			AddInternal( lineInOutline = new Box {
 				Colour = Colour4.White,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16
+				Height = 26
 			} );
 			AddInternal( lineOutOutline = new Box {
 				Colour = Colour4.White,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 16
+				Height = 26
 			} );
 			AddInternal( bodyOutline = new Circle {
 				Colour = Colour4.White,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Size = new Vector2( 30 )
+				Size = new Vector2( 26.6f )
 			} );
 
 			AddInternal( lineIn = new Box {
 				Colour = Colour4.HotPink,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 12
+				Height = 22
 			} );
 			AddInternal( lineOut = new Box {
 				Colour = Colour4.HotPink,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Height = 12
+				Height = 22
 			} );
 			AddInternal( body = new Circle {
 				Colour = Colour4.HotPink,
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Size = new Vector2( 26 )
+				Size = new Vector2( 22 )
 			} );
 		}
 

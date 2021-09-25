@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriPlayfield : Playfield {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
 		public readonly Container Everything;
-		public const float DefaultPositionScale = 90;
+		public const float DefaultPositionScale = 90 * 0.6f;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
 
