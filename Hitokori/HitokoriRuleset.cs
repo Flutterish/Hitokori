@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Hitokori {
 			return type switch {
 				ModType.DifficultyReduction => Array.Empty<Mod>(),
 				ModType.DifficultyIncrease => Array.Empty<Mod>(),
-				ModType.Conversion => Array.Empty<Mod>(),
+				ModType.Conversion => new Mod[] { new HitokoriModAngles() },
 				ModType.Automation => new Mod[] { new HitokoriModAutoplay() },
 				ModType.Fun => Array.Empty<Mod>(),
 				ModType.System => Array.Empty<Mod>(),
