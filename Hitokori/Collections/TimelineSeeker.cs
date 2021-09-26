@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>
-	/// A timeline where events have duration. It keeps a current time and rises events from the timeline when time is seeked.
+	/// A timeline where entries have duration. It keeps track of current time and rises events as entries are passed.
 	/// </summary>
 	public class TimelineSeeker<T> : Timeline<T, TimelineSeeker<T>.Entry> {
 		private double currentTime;
