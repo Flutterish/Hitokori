@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public HitokoriSettingsSubsection ( Ruleset ruleset ) : base( ruleset ) { }
 
 		protected override void LoadComplete () {
-			var config = Config as HitokoriConfigManager;
+			if ( Config is not HitokoriConfigManager config ) return;
 
 			Add( new SettingsSlider<float, ScaleSlider> {
 				Current = config.GetBindable<float>( HitokoriSetting.PositionScale ),

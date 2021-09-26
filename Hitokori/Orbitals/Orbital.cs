@@ -13,8 +13,6 @@ using osuTK;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	public class Orbital : CompositeDrawable {
 		private Circle circle;

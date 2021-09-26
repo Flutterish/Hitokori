@@ -1,8 +1,6 @@
 ﻿using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
 	/// A rotation, linear movement or whatever happens between 2 <see cref="TilePoint"/>s.

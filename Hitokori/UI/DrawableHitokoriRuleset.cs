@@ -14,11 +14,11 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class DrawableHitokoriRuleset : DrawableRuleset<HitokoriHitObject> {
-		public DrawableHitokoriRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null ) : base( ruleset, beatmap, mods ) {
+		public DrawableHitokoriRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null ) : base( ruleset, beatmap, mods ) {
 			
 		}
 
-		public override DrawableHitObject<HitokoriHitObject> CreateDrawableRepresentation ( HitokoriHitObject h )
+		public override DrawableHitObject<HitokoriHitObject>? CreateDrawableRepresentation ( HitokoriHitObject h )
 			=> null;
 
 		protected override PassThroughInputManager CreateInputManager ()

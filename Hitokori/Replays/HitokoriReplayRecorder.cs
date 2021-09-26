@@ -6,8 +6,6 @@ using osuTK;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayRecorder : ReplayRecorder<HitokoriAction> {
 		public HitokoriReplayRecorder ( Score target ) : base( target ) { }

@@ -4,8 +4,6 @@ using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Replays;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayInputHandler : FramedReplayInputHandler<HitokoriReplayFrame> {
 		public HitokoriReplayInputHandler ( Replay replay ) : base( replay ) { }

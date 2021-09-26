@@ -6,8 +6,6 @@ using osuTK;
 using osuTK.Graphics;
 using System;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 	public class TilePointVisualPiece : CompositeDrawable {
 		protected Drawable Body;

@@ -1,9 +1,6 @@
 ﻿using osu.Framework.Audio.Track;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Containers;
-
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class BeatProvider : BeatSyncedContainer {
 		protected override void OnNewBeat ( int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes ) {

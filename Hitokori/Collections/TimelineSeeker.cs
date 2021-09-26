@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>
 	/// A timeline where events have duration. It keeps a current time and rises events from the timeline when time is seeked.

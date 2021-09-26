@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using osu.Framework.Lists;
+﻿using osu.Framework.Lists;
 using System;
 using System.Collections;
 using System.Collections.Generic;

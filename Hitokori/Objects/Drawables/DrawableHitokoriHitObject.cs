@@ -8,7 +8,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject> {
-		public DrawableHitokoriHitObject ( HitokoriHitObject hitObject = null ) : base( hitObject ) {
+		public DrawableHitokoriHitObject ( HitokoriHitObject? hitObject = null ) : base( hitObject! ) {
 			AutoSizeAxes = Axes.Both;
 		}
 	}

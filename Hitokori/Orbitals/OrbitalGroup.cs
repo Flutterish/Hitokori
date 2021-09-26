@@ -12,8 +12,6 @@ using osuTK.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	[Cached]
 	public class OrbitalGroup : CompositeDrawable {

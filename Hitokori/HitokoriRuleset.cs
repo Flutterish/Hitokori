@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Hitokori {
 			};
 		}
 
-		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod> mods = null )
+		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
 			=> new DrawableHitokoriRuleset( this, beatmap, mods );
 
 		public override IBeatmapConverter CreateBeatmapConverter ( IBeatmap beatmap )

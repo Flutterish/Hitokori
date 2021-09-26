@@ -4,8 +4,6 @@ using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 	public class TapPointVisualPiece : CompositeDrawable {
 		protected Drawable Body;

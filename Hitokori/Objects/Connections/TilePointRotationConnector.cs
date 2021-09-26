@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using osu.Game.Rulesets.Hitokori.Objects.Connections;
+﻿using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
 

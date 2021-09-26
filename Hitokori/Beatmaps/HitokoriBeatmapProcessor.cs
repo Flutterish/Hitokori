@@ -22,15 +22,15 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 		private void processChain ( IEnumerable<TilePoint> tiles ) {
 			var distancePerBeat = (ForcedAnglePerBeat ?? 180) * 2 / 180 * Math.PI;
-			TilePoint prevTile = tiles.FirstOrDefault();
+			TilePoint? prevTile = tiles.FirstOrDefault();
 
 			int direction = prevTile is PassThroughTilePoint ? -1 : 1;
 
 			foreach ( var tile in tiles.Skip( 1 ) ) {
 				var connector = new TilePointRotationConnector {
-					From = prevTile,
+					From = prevTile!,
 					To = tile,
-					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile.StartTime ).BPM,
+					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
 					DistancePerBeat = distancePerBeat,
 					TargetOrbitalIndex = direction
 				};

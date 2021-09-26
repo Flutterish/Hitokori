@@ -4,8 +4,6 @@ using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
 	/// A point where an orbital may rest.

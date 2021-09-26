@@ -6,8 +6,6 @@ using osu.Game.Rulesets.Replays.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
-
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayFrame : ReplayFrame, IConvertibleReplayFrame {
 		public List<HitokoriAction> Actions = new();

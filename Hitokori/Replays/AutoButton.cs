@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace osu.Game.Rulesets.Hitokori.Replays {
+﻿namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class AutoButton<T> where T : struct {
 		public readonly T Action;
 		public double PressTime { get; set; }
