@@ -7,36 +7,55 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 	public class TimelineSeeker<T> : Timeline<T, TimelineSeeker<T>.Entry> {
 		private double currentTime;
 		private Timeline<TimelineSeeker<T>.Entry> ends;
+		private Dictionary<Entry, TimelineEntry<Entry>> endEntries = new();
 
 		public double CurrentTime {
 			get => currentTime;
 			set => SeekTo( value );
 		}
 
+		public TimelineModifiedBehaviour ModifiedBehaviour = TimelineModifiedBehaviour.None;
+
 		public TimelineSeeker ( IComparer<T>? comparer = null ) : base( comparer ) {
 			ends = new Timeline<Entry>( Comparer<Entry>.Create( (a,b) => Comparer.Compare( a.Value, b.Value ) ) );
-
-			EntryAdded += onEntryAdded;
-			EntryRemoved += onEntryRemoved;
 		}
 
 		public int Add ( double startTime, double duration, T value )
 			=> Add( new Entry( startTime, duration, value ) );
 
-		private void onEntryRemoved ( int index, Entry entry ) {
-			ends.RemoveAt( index );
-		}
+		public override int Add ( Entry entry ) {
+			if ( ModifiedBehaviour is TimelineModifiedBehaviour.Replay && entry.StartTime <= currentTime ) {
+				var time = currentTime;
+				seekBackwardToBefore( entry.StartTime );
+				endEntries.Add( entry, ends[ ends.Add( entry.EndTime, entry ) ] );
+				var index = base.Add( entry );
+				seekForwardToAfter( time );
 
-		private void onEntryAdded ( int index, Entry entry ) {
-			if ( isEntryActive( entry ) ) {
-				EventStarted?.Invoke( entry );
+				return index;
 			}
-
-			ends.Add( entry.EndTime, entry );
+			else {
+				endEntries.Add( entry, ends[ ends.Add( entry.EndTime, entry ) ] );
+				return base.Add( entry );
+			}
 		}
 
-		private bool isEntryActive ( Entry entry )
-			=> currentTime >= entry.StartTime && currentTime <= entry.EndTime;
+		public override int Remove ( Entry entry ) {
+			if ( ModifiedBehaviour is TimelineModifiedBehaviour.Replay && entry.StartTime <= currentTime ) {
+				var time = currentTime;
+				seekBackwardToBefore( entry.StartTime );
+				if ( endEntries.Remove( entry, out var v ) )
+					ends.Remove( v );
+				var index = base.Remove( entry );
+				seekForwardToAfter( time );
+
+				return index;
+			}
+			else {
+				if ( endEntries.Remove( entry, out var v ) )
+					ends.Remove( v );
+				return base.Remove( entry );
+			}
+		}
 
 		public void SeekTo ( double time ) {
 			if ( time > currentTime ) {
@@ -154,6 +173,119 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 			currentTime = time;
 		}
 
+		/// <summary>
+		/// Seeks backward to right before the given time. This assumes that the last operation seeked to the last event at that time instant.
+		/// </summary>
+		private void seekBackwardToBefore ( double time ) {
+			int previousStartIndex = FirstBeforeOrAt( currentTime );
+			int previousEndIndex = ends.FirstBefore( currentTime );
+
+			while ( true ) {
+				if ( previousStartIndex == -1 ) {
+					if ( previousEndIndex == -1 ) {
+						break;
+					}
+					else {
+						var previousEnd = ends[ previousEndIndex ].Value;
+
+						if ( previousEnd.EndTime >= time ) {
+							EventReverted?.Invoke( previousEnd );
+							previousEndIndex--;
+						}
+						else break;
+					}
+				}
+				else if ( previousEndIndex == -1 ) {
+					var previousStart = this[ previousStartIndex ];
+
+					if ( previousStart.StartTime >= time ) {
+						EventRewound?.Invoke( previousStart );
+						previousStartIndex--;
+					}
+					else break;
+				}
+				else {
+					var previousStart = this[ previousStartIndex ];
+					var previousEnd = ends[ previousEndIndex ].Value;
+
+					if ( previousEnd.EndTime >= previousStart.StartTime ) {
+						if ( previousEnd.EndTime >= time ) {
+							EventReverted?.Invoke( previousEnd );
+							previousEndIndex--;
+						}
+						else break;
+					}
+					else {
+						if ( previousStart.StartTime >= time ) {
+							EventRewound?.Invoke( previousStart );
+							previousStartIndex--;
+						}
+						else break;
+					}
+				}
+			}
+
+			currentTime = time;
+		}
+
+		/// <summary>
+		/// Seeks forward to right after the given time. This assumes that the last operation seeked to the last event before that time instant.
+		/// </summary>
+		private void seekForwardToAfter ( double time ) {
+			int nextStartIndex = FirstAfterOrAt( currentTime );
+			int nextEndIndex = ends.FirstAfterOrAt( currentTime );
+
+			while ( true ) {
+				if ( nextEndIndex >= ends.Count ) nextEndIndex = -1;
+				if ( nextStartIndex >= Count ) nextStartIndex = -1;
+
+				if ( nextStartIndex == -1 ) {
+					if ( nextEndIndex == -1 ) {
+						break;
+					}
+					else {
+						var nextEnd = ends[ nextEndIndex ].Value;
+
+						if ( nextEnd.EndTime < time ) {
+							EventEnded?.Invoke( nextEnd );
+							nextEndIndex++;
+						}
+						else break;
+					}
+				}
+				else if ( nextEndIndex == -1 ) {
+					var nextStart = this[ nextStartIndex ];
+
+					if ( nextStart.StartTime <= time ) {
+						EventStarted?.Invoke( nextStart );
+						nextStartIndex++;
+					}
+					else break;
+				}
+				else {
+					var nextStart = this[ nextStartIndex ];
+					var nextEnd = ends[ nextEndIndex ].Value;
+
+					if ( nextStart.StartTime <= nextEnd.EndTime ) {
+						if ( nextStart.StartTime <= time ) {
+							EventStarted?.Invoke( nextStart );
+							nextStartIndex++;
+						}
+						else break;
+					}
+					else {
+						if ( nextEnd.EndTime < time ) {
+							EventEnded?.Invoke( nextEnd );
+							nextEndIndex++;
+						}
+						else break;
+					}
+				}
+			}
+
+			currentTime = time;
+		}
+
 		public delegate void EventEncounteredHandler ( Entry entry );
 		/// <summary>
 		/// While seeking in positive direction, an event was rised.
@@ -180,5 +312,17 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 				Duration = duration;
 			}
 		}
+	}
+
+	public enum TimelineModifiedBehaviour {
+		/// <summary>
+		/// Does nothing, only rises the <see cref="Timeline{T, E}.EntryAdded"/> or <see cref="Timeline{T, E}.EntryRemoved"/> events.
+		/// </summary>
+		None,
+		/// <summary>
+		/// If the entry starts before or at <see cref="TimelineSeeker{T}.CurrentTime"/>, reverts to the instant before the entry's start time,
+		/// before ading/removing it and then seeks back to <see cref="TimelineSeeker{T}.CurrentTime"/>.
+		/// </summary>
+		Replay
 	}
 }

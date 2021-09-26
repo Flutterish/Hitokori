@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 			sequence = new SortedList<E>( (a, b) => Math.Sign( a.StartTime - b.StartTime ) * 2 + Math.Sign( Comparer.Compare( a.Value, b.Value ) ) );
 		}
 
-		public int Add ( E entry ) {
+		public virtual int Add ( E entry ) {
 			var index = sequence.Add( entry );
 
 			EntryAdded?.Invoke( index, entry );
@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 
 		public int Count => sequence.Count;
 
-		public int Remove ( E entry ) {
+		public virtual int Remove ( E entry ) {
 			var index = sequence.BinarySearch( entry );
 			sequence.RemoveAt( index );
 
