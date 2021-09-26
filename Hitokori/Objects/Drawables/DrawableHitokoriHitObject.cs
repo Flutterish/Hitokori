@@ -1,6 +1,10 @@
-﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hitokori.UI.Visuals;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Game.Rulesets.Hitokori.Settings;
+using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects.Drawables;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject> {
@@ -11,41 +15,41 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 	public abstract class DrawableHitokoriHitObject<T> : DrawableHitokoriHitObject where T : HitokoriHitObject {
 		new public T HitObject => (T)base.HitObject;
-	}
 
-	public abstract class DrawableHitokoriHitObject<T,TvisualParam,Tvisual> : DrawableHitokoriHitObject 
-		where T : TvisualParam
-		where TvisualParam : HitokoriHitObject
-		where Tvisual : AppliableVisual<TvisualParam>, new() {
-		new public T HitObject => (T)base.HitObject;
-		protected readonly Tvisual Visual;
+		/// <summary>
+		/// Whether to set <see cref="Drawable.Position"/> automatically based on the assigned tile.
+		/// </summary>
+		protected virtual bool ShouldAutoManagePosition => true;
 
-		public DrawableHitokoriHitObject () {
-			AddInternal( Visual = new() );
+		private BindableFloat positionScale = new( HitokoriPlayfield.DefaultPositionScale );
+		[BackgroundDependencyLoader( permitNulls: true )]
+		private void load ( HitokoriConfigManager config ) {
+			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
+
+			positionScale.BindValueChanged( _ => updatePosition() );
+		}
+
+		private void updatePosition () {
+			if ( ShouldAutoManagePosition && HitObject is TilePoint tile )
+				Position = (Vector2)tile.Position * positionScale.Value;
 		}
 
 		protected override void OnApply () {
-			Visual.AppliedHitObject = HitObject;
+			if ( HitObject is TilePoint tile ) {
+				tile.BindablePosition.BindValueChanged( onTilePositionChanged, true );
+			}
+			base.OnApply();
 		}
 
 		protected override void OnFree () {
-			Visual.AppliedHitObject = null;
+			if ( HitObject is TilePoint tile ) {
+				tile.BindablePosition.ValueChanged -= onTilePositionChanged;
+			}
+			base.OnFree();
 		}
 
-		protected override void UpdateInitialTransforms () {
-			Visual.UpdateInitialTransforms();
+		private void onTilePositionChanged ( ValueChangedEvent<Vector2d> _ ) {
+			updatePosition();
 		}
-
-		protected override void UpdateHitStateTransforms ( ArmedState state ) {
-			Visual.UpdateHitStateTransforms( state );
-			if ( state is ArmedState.Hit or ArmedState.Miss )
-				LifetimeEnd = Visual.LatestTransformEndTime;
-		}
-	}
-
-	public abstract class DrawableHitokoriHitObject<T, Tvisual> : DrawableHitokoriHitObject<T, T, Tvisual>
-		where T : HitokoriHitObject
-		where Tvisual : AppliableVisual<T>, new() {
-	
 	}
 }

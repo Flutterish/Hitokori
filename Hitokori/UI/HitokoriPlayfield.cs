@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriPlayfield : Playfield {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
 		public readonly Container Everything;
-		public const float DefaultPositionScale = 90;
+		public const float DefaultPositionScale = 90 * 0.6f;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
 
@@ -60,6 +60,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			foreach ( var tile in beatmap.HitObjects.OfType<TilePoint>().Where( x => x.Previous is null ) ) {
 				addPath( tile );
 			}
+
+			positionScale.BindValueChanged( _ => updateCameraViewport() );
 		}
 
 		private BindableFloat positionScale = new( DefaultPositionScale );
@@ -87,7 +89,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			base.LoadComplete();
 
 			RegisterPool<SwapTilePoint, DrawableSwapTilePoint>( 30 );
-			RegisterPool<PassThroughTilePoint, DrawablePassThroughTilePoint>( 30 );
+			RegisterPool<PassThroughTilePoint, DrawableTapTilePoint>( 30 );
 			RegisterPool<NoJudgementTilePoint, DrawableNoJudgementTilePoint>( 2 );
 
 			NewResult += (dho, result) => {
@@ -124,12 +126,16 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
 			=> new HitokoriLifetimeEntry( hitObject );
 
+		private void updateCameraViewport () {
+			updateCamera();
+			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / positionScale.Value );
+			Everything.Position = -cameraMiddle.Value * positionScale.Value;
+		}
+
 		protected override void UpdateAfterChildren () {
 			base.UpdateAfterChildren();
 
-			updateCamera();
-			Scale = new Vector2( (float)( cameraScale.Value * (doKiaiBeat.Value ? kiaiScale.Value : 1) ) / positionScale.Value );
-			Everything.Position = -cameraMiddle.Value * positionScale.Value;
+			updateCameraViewport();
 		}
 
 		private Bindable<Vector2> cameraMiddle = new();

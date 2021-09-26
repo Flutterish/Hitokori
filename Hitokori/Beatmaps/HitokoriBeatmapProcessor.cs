@@ -18,7 +18,10 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			}
 		}
 
+		public double? ForcedAnglePerBeat = null;
+
 		private void processChain ( IEnumerable<TilePoint> tiles ) {
+			var distancePerBeat = (ForcedAnglePerBeat ?? 180) * 2 / 180 * Math.PI;
 			TilePoint prevTile = tiles.FirstOrDefault();
 
 			int direction = prevTile is PassThroughTilePoint ? -1 : 1;
@@ -28,7 +31,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 					From = prevTile,
 					To = tile,
 					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile.StartTime ).BPM,
-					DistancePerBeat = 240d / 180 * Math.PI,
+					DistancePerBeat = distancePerBeat,
 					TargetOrbitalIndex = direction
 				};
 

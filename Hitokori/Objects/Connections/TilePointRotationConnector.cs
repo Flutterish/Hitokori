@@ -97,9 +97,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 			else {
 				var distance = distancePerBeat * Beats;
-				radius = From.OrbitalState.OffsetOfNth( TargetOrbitalIndex ).Length;
+				radius = From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
 				if ( radius != 0 ) {
 					// TODO This could be calculated with a spiral for a better approximation
+					angle = distance / radius;
+
+					if ( angle > maxAngle ) {
+						angle = maxAngle;
+						radius = Math.Min( distance / maxAngle, radius * 2 );
+					}
+
 					angle = Math.Clamp( distance / radius, minAngle, maxAngle );
 				}
 				else {
