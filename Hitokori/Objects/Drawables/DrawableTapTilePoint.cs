@@ -7,6 +7,7 @@ using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawableTapTilePoint : DrawableHitokoriHitObject<PassThroughTilePoint>, IKeyBindingHandler<HitokoriAction> {
@@ -32,6 +33,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				else {
 					piece.Colour = Colour4.HotPink;
 				}
+			}
+
+			if ( HitObject.FromPrevious is TilePointRotationConnector && HitObject.ToNext is TilePointRotationConnector && Math.Sign( HitObject.FromPrevious.TargetOrbitalIndex ) != Math.Sign( HitObject.ToNext.TargetOrbitalIndex ) ) {
+				piece.BorderColour = Colour4.Yellow;
+			}
+			else {
+				piece.BorderColour = Colour4.White;
 			}
 		}
 

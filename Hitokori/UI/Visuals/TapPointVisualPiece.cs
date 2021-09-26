@@ -33,5 +33,12 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 				Body.Colour = value;
 			}
 		}
+
+		new public Color4 BorderColour {
+			get => Body.Colour;
+			set {
+				BodyOutline.Colour = value;
+			}
+		}
 	}
 }

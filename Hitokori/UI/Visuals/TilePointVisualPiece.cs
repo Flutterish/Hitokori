@@ -105,6 +105,13 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			}
 		}
 
+		new public Color4 BorderColour {
+			get => Body.Colour;
+			set {
+				BodyOutline.Colour = LineInOutline.Colour = LineOutOutline.Colour = value;
+			}
+		}
+
 		public void LightUp () {
 			var lightUpDuration = 180;
 			var lightUpEasing = Easing.None;

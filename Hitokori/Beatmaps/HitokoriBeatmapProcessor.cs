@@ -35,8 +35,13 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 					TargetOrbitalIndex = direction
 				};
 
-				if ( tile is PassThroughTilePoint )
+				if ( tile is PassThroughTilePoint ) {
 					direction *= -1;
+				}
+				else if ( tile is SwapTilePoint && Math.Abs( connector.Angle ) <= 80d / 180 * Math.PI ) {
+					connector.TargetOrbitalIndex *= -1;
+					direction *= -1;
+				}
 
 				prevTile = tile;
 			}
