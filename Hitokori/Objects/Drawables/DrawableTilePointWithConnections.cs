@@ -78,6 +78,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void Update () {
+			base.Update();
+
 			piece.FromPosition.Value = HitObject.Previous?.Position;
 			piece.ToPosition.Value = HitObject.Next?.Position;
 			piece.AroundPosition.Value = HitObject.Position;
