@@ -19,9 +19,18 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		public double? ForcedAnglePerBeat = null;
+		public int? ForcedOrbitalCount = null;
 
 		private void processChain ( IEnumerable<TilePoint> tiles ) {
-			var distancePerBeat = (ForcedAnglePerBeat ?? 180) * 2 / 180 * Math.PI;
+			var anglePerBeat = ForcedAnglePerBeat ?? 180;
+			var orbitalCount = ForcedOrbitalCount ?? 2;
+			var interiorAngle = ( ( orbitalCount - 2 ) * 180d ) / orbitalCount;
+
+			if ( ForcedOrbitalCount is not null ) {
+				anglePerBeat = anglePerBeat - interiorAngle;
+			}
+
+			var distancePerBeat = anglePerBeat * 2 / 180 * Math.PI;
 			TilePoint? prevTile = tiles.FirstOrDefault();
 
 			int direction = prevTile is PassThroughTilePoint ? -1 : 1;
@@ -38,7 +47,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 				if ( tile is PassThroughTilePoint ) {
 					direction *= -1;
 				}
-				else if ( tile is SwapTilePoint && Math.Abs( connector.Angle ) <= 80d / 180 * Math.PI ) {
+				else if ( tile is SwapTilePoint && Math.Abs( connector.Angle ) <= ( 80d - interiorAngle / 2 ) / 180 * Math.PI ) {
 					connector.TargetOrbitalIndex *= -1;
 					direction *= -1;
 				}

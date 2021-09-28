@@ -31,12 +31,34 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
 			return type switch {
-				ModType.DifficultyReduction => Array.Empty<Mod>(),
-				ModType.DifficultyIncrease => Array.Empty<Mod>(),
-				ModType.Conversion => new Mod[] { new HitokoriModAngles() },
-				ModType.Automation => new Mod[] { new HitokoriModAutoplay() },
+				ModType.DifficultyReduction => new Mod[] {
+					new HitokoriModEasy(),
+					new HitokoriModNoFail(),
+					new MultiMod( 
+						new HitokoriModHalfTime(), 
+						new HitokoriModDaycore() 
+					) 
+				},
+				ModType.DifficultyIncrease => new Mod[] {
+					new MultiMod( 
+						new HitokoriModSuddenDeath(), 
+						new HitokoriModPerfect() 
+					),
+					new MultiMod( 
+						new HitokoriModDoubleTime(),
+						new HitokoriModNightcore()
+					) 
+				},
+				ModType.Conversion => new Mod[] { 
+					new HitokoriModAngles(),
+					new HitokoriModOrbitals()
+				},
+				ModType.Automation => new Mod[] { 
+					new HitokoriModAutoplay() 
+				},
 				ModType.Fun => Array.Empty<Mod>(),
 				ModType.System => Array.Empty<Mod>(),
+
 				_ => Array.Empty<Mod>()
 			};
 		}

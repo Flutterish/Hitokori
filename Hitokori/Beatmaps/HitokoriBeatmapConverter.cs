@@ -44,6 +44,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			}
 		}
 
+		public int? ForcedOrbitalCount = null;
+
 		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original, CancellationToken cancellationToken ) {
 			var beatmap = CreateBeatmap();
 
@@ -51,12 +53,19 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			beatmap.ControlPointInfo = original.ControlPointInfo;
 			beatmap.Breaks = original.Breaks;
 
+			int orbitalCount = ForcedOrbitalCount ?? 2;
+			var orbitals = new Vector2d[ orbitalCount ];
+
+			// adjusting so the distance between each orbital is 1
+			var diameter = 1 / ( 0d.AngleToVector( 0.5 ) - ( Math.Tau / orbitalCount ).AngleToVector( 0.5 ) ).Length;
+
+			for ( int i = 0; i < orbitalCount; i++ ) {
+				orbitals[ i ] = ( Math.Tau / orbitalCount * i ).AngleToVector( diameter / 2 );
+			}
+
 			beatmap.HitObjects.Add( new NoJudgementTilePoint {
 				Position = Vector2d.Zero,
-				OrbitalState = new Orbitals.OrbitalState( new Vector2d[] {
-					(0.0).AngleToVector(0.5),
-					(Math.PI).AngleToVector(0.5)
-				} ),
+				OrbitalState = new Orbitals.OrbitalState( orbitals ),
 				StartTime = 0
 			} );
 
