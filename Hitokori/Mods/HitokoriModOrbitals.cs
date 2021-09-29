@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		[SettingSource( "Orbital count" )]
 		public Bindable<int> OrbitalCount { get; } = new BindableInt( 3 ) {
-			MinValue = 2,
+			MinValue = 3,
 			MaxValue = 6,
 			Precision = 1
 		};
