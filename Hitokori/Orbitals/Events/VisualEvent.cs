@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 
 		public double InterruptedTime = double.PositiveInfinity;
 		public VisualEvent? Obscurer;
+		public long Order;
 
 		protected VisualEvent ( double startTime, double duration = 0, Easing easing = Easing.None ) {
 			StartTime = startTime;

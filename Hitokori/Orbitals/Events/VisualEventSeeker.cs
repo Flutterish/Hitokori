@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 	public class VisualEventSeeker : TimelineSeeker<VisualEvent> {
-		public VisualEventSeeker () : base( Comparer<VisualEvent>.Create( ( a, b ) => 0 ) ) {
+		private long nextOrder;
+
+		public VisualEventSeeker () : base( Comparer<VisualEvent>.Create( ( a, b ) => Math.Sign( a.Order - b.Order ) ) ) {
 			ModifiedBehaviour = TimelineModifiedBehaviour.Replay;
 
 			EventStarted += e => {
@@ -31,6 +33,11 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 
 		public int Add ( VisualEvent e ) {
 			return Add( e.StartTime, e.Duration, e );
+		}
+
+		public override int Add ( Entry entry ) {
+			entry.Value.Order = nextOrder++;
+			return base.Add( entry );
 		}
 
 		public event Action<double>? TimeSeeked;
