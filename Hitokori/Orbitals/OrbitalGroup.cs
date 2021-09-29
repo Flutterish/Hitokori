@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 				foreach ( var i in activeOrbitals ) {
 					i.VisualEvents.Add( new ChangeRadiusVisualEvent( i, 0, tile.StartTime, 500, Easing.In ) );
+					i.VisualEvents.Add( new FadeVisualEvent( i, 0, tile.StartTime + 500, 150 ) );
 				}
 			}
 		}
@@ -99,7 +100,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 				AddInternal( orbital );
 
 				var duration = ( CurrentTile.ToNext?.Duration * 2 ) ?? 500;
-				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 1, CurrentTile.StartTime - duration, duration, Easing.Out ) );
+				orbital.VisualEvents.Add( new FadeVisualEvent( orbital, 1, CurrentTile.StartTime - duration, 150 ) );
+				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 1, CurrentTile.StartTime - duration + 150, duration, Easing.Out ) );
 			}
 			while ( activeOrbitals.Count > state.OrbitalCount ) {
 				var last = activeOrbitals[ activeOrbitals.Count - 1 ];

@@ -44,6 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 
 		public const string CategoryRadius = "Radius";
 		public const string CategoryPosition = "Position";
+		public const string CategoryAlpha = "Alpha";
 	}
 
 	/// <summary>

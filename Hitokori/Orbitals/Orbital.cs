@@ -35,11 +35,12 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			} );
 
 			currentState = new VisualOrbitalState {
-				Alpha = 1,
+				Alpha = 0,
 				Index = index
 			};
 
 			AlwaysPresent = true;
+			Alpha = 0;
 		}
 
 		private double verticeInterval = 8;
