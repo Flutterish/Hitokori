@@ -5,6 +5,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Judgements;
@@ -100,6 +101,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			if ( playfield is not null ) {
 				playfield.NewResult += onNewResult;
 			}
+
+			VisualEvents.TimeSeeked += t => {
+				simulateTo( t );
+			};
 		}
 
 		private void onNewResult ( DrawableHitObject dho, JudgementResult j ) {
@@ -118,9 +123,17 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public TilePoint currentTile;
 		private double simulatedTime;
 
-		public double Radius = 1; // TODO manage this through events rather than the current botched bindable
+		public double Radius = 0;
+		public readonly VisualEventSeeker VisualEvents = new();
 
 		public VisualOrbitalState StateAt ( double time ) {
+			VisualEvents.CurrentTime = time;
+			VisualEvents.Apply();
+
+			return simulateTo( time );
+		}
+
+		private VisualOrbitalState simulateTo ( double time ) {
 			if ( time < simulatedTime ) {
 				return simulateBackwardTo( time );
 			}

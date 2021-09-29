@@ -3,6 +3,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Judgements;
@@ -15,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	[Cached]
 	public class OrbitalGroup : CompositeDrawable {
-		BindableFloat animationProgress = new( 0 );
 		public TilePoint CurrentTile { get; private set; }
 
 		public override bool RemoveCompletedTransforms => false;
@@ -25,7 +25,6 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			Anchor = Anchor.Centre;
 			CurrentTile = currentTile;
 			AutoSizeAxes = Axes.Both;
-			Alpha = 0;
 		}
 
 		[Resolved, MaybeNull, NotNull]
@@ -35,32 +34,19 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		[BackgroundDependencyLoader( permitNulls: true )]
 		private void load ( HitokoriConfigManager config ) {
 			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
-			animationProgress.BindValueChanged( v => {
-				foreach ( var i in activeOrbitals ) {
-					i.Radius = v.NewValue;
-				}
-			} );
 
 			positionScale.ValueChanged += _ => SeekTo( Time.Current );
 		}
 
 		protected override void LoadComplete () {
 			playfield.NewResult += onNewResult;
-
-			var duration = ( CurrentTile.ToNext?.Duration * 2 ) ?? 500;
-			using ( BeginAbsoluteSequence( CurrentTile.StartTime - duration ) ) {
-				this.FadeIn( 150 )
-					.Then().TransformBindableTo( animationProgress, 1, duration, Easing.Out );
-			}
 		}
 
 		private void onNewResult ( DrawableHitObject dho, JudgementResult j ) {
 			if ( dho.HitObject is TilePoint tile && tile.Next is null ) {
 
-				using ( BeginAbsoluteSequence( tile.StartTime ) ) {
-					this.TransformBindableTo( animationProgress, 0, 500, Easing.In )
-						.Then().FadeOut( 150 )
-						.Then().Expire();
+				foreach ( var i in activeOrbitals ) {
+					i.VisualEvents.Add( new ChangeRadiusVisualEvent( i, 0, tile.StartTime, 500, Easing.In ) );
 				}
 			}
 		}
@@ -77,10 +63,11 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public void SeekTo ( double time ) {
 			while ( CurrentTile.FromPrevious is TilePointConnector fromPrevious && ( !playfield.TryGetResultFor( CurrentTile, out var j ) || j.TimeAbsolute >= time ) ) {
 				CurrentTile = fromPrevious.From;
+				updateState( CurrentTile.OrbitalState );
 			}
 			while ( CurrentTile.ToNext is TilePointConnector toNext && playfield.TryGetResultFor( toNext.To, out var value ) && value.TimeAbsolute <= time ) {
-				updateState( toNext.GetEndState() );
 				CurrentTile = toNext.To;
+				updateState( CurrentTile.OrbitalState );
 			}
 
 			if ( CurrentTile.ToNext is TilePointConnector c ) {
@@ -104,14 +91,15 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		};
 
 		void updateState ( OrbitalState state ) {
-			Alpha = animationProgress.Value;
-
 			while ( activeOrbitals.Count < state.OrbitalCount ) {
 				var orbital = new Orbital( activeOrbitals.Count ) {
 					Colour = orbitalColors[ activeOrbitals.Count % orbitalColors.Length ]
 				};
 				activeOrbitals.Add( orbital );
 				AddInternal( orbital );
+
+				var duration = ( CurrentTile.ToNext?.Duration * 2 ) ?? 500;
+				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 1, CurrentTile.StartTime - duration, duration, Easing.Out ) );
 			}
 			while ( activeOrbitals.Count > state.OrbitalCount ) {
 				var last = activeOrbitals[ activeOrbitals.Count - 1 ];
