@@ -8,8 +8,6 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
-using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -99,24 +97,9 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 			simulatedTime = Time.Current;
 
-			if ( playfield is not null ) {
-				playfield.NewResult += onNewResult;
-			}
-
 			VisualEvents.TimeSeeked += t => {
 				simulateTo( t );
 			};
-		}
-
-		private void onNewResult ( DrawableHitObject dho, JudgementResult j ) {
-			var tile = dho.HitObject as TilePoint;
-			if ( tile is null ) return;
-
-			if ( tile.StartTime <= simulatedTime ) {
-				simulateBackwardTo( tile.StartTime );
-			}
-
-			// TODO add hit events
 		}
 
 		private VisualOrbitalState currentState;
@@ -124,7 +107,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public TilePoint currentTile;
 		private double simulatedTime;
 
-		public double Radius = 0;
+		public double Radius = 0; // TODO organize these better, with proper access modifiers
 		public readonly VisualEventSeeker VisualEvents = new();
 
 		public VisualOrbitalState StateAt ( double time ) {
@@ -145,16 +128,23 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			return currentState;
 		}
 
-		private VisualOrbitalState simulateForwardTo ( double time ) {
+		private bool wasHitAt ( TilePoint tile, double time ) {
 			if ( playfield is null ) {
-				while ( currentTile.ToNext is TilePointConnector toNext && toNext.EndTime <= time ) {
-					currentTile = toNext.To;
-				}
+				return time >= tile.StartTime;
 			}
 			else {
-				while ( currentTile.ToNext is TilePointConnector toNext && playfield.TryGetResultFor( toNext.To, out var j ) && j.TimeAbsolute <= time ) {
-					currentTile = toNext.To;
+				if ( playfield.TryGetResultFor( tile, out var j ) ) {
+					return j.TimeAbsolute <= time;
 				}
+				else {
+					return false;
+				}
+			}
+		}
+
+		private VisualOrbitalState simulateForwardTo ( double time ) {
+			while ( currentTile.ToNext is TilePointConnector toNext && wasHitAt( toNext.To, time ) ) {
+				currentTile = toNext.To;
 			}
 
 			simulatedTime = time;
@@ -170,15 +160,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		private VisualOrbitalState simulateBackwardTo ( double time ) {
-			if ( playfield is null ) {
-				while ( currentTile.FromPrevious is TilePointConnector fromPrevious && currentTile.StartTime >= time ) {
-					currentTile = fromPrevious.From;
-				}
-			}
-			else {
-				while ( currentTile.FromPrevious is TilePointConnector fromPrevious && ( !playfield.TryGetResultFor( currentTile, out var j ) || j.TimeAbsolute >= time ) ) {
-					currentTile = fromPrevious.From;
-				}
+			while ( currentTile.FromPrevious is TilePointConnector fromPrevious && !wasHitAt( currentTile, time ) ) {
+				currentTile = fromPrevious.From;
 			}
 
 			simulatedTime = time;
