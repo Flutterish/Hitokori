@@ -56,7 +56,9 @@ namespace osu.Game.Rulesets.Hitokori {
 				ModType.Automation => new Mod[] { 
 					new HitokoriModAutoplay() 
 				},
-				ModType.Fun => Array.Empty<Mod>(),
+				ModType.Fun => new Mod[] {
+					new HitokoriModTapTapDash()
+				},
 				ModType.System => Array.Empty<Mod>(),
 
 				_ => Array.Empty<Mod>()
