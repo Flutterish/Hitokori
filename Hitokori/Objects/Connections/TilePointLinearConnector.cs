@@ -3,6 +3,15 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 	public class TilePointLinearConnector : TilePointConnector, IHasVelocity {
+		public readonly ConstrainableProperty<double> Distance;
+		public readonly ConstrainableProperty<double> Velocity;
+		double IHasVelocity.Velocity => Velocity;
+
+		public TilePointLinearConnector () {
+			Distance = new ConstrainableProperty<double>( recalculate, onConstraintChanged );
+			Velocity = new ConstrainableProperty<double>( recalculate, onConstraintChanged );
+		}
+
 		private double angle;
 		public double Angle {
 			get => angle;
@@ -21,11 +30,27 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 			}
 		}
 
+		private void onConstraintChanged ( bool isConstrained )
+			=> Invalidate();
+
+		private void recalculate () {
+			if ( Distance.IsConstrained && Velocity.IsConstrained )
+				throw new InvalidOperationException( $"Cannot constrian both velocity and distance in a {nameof(TilePointLinearConnector)}" );
+			else if ( Distance.IsConstrained ) {
+				Velocity.Value = Distance / Duration;
+			}
+			else if ( Velocity.IsConstrained ) {
+				Distance.Value = Velocity * Duration;
+			}
+			else {
+				Distance.Value = distancePerBeat * Beats;
+				Velocity.Value = Distance / Duration;
+			}
+		}
+
 		public override OrbitalState GetStateAt ( double progress ) => From.OrbitalState.PivotNth(
 			0,
-			From.OrbitalState.PivotPosition + Angle.AngleToVector( DistancePerBeat * Beats ) * progress
+			From.OrbitalState.PivotPosition + Angle.AngleToVector( Distance ) * Math.Clamp( progress, 0, 1 )
 		);
-
-		public double Velocity => DistancePerBeat * Beats / Duration;
 	}
 }
