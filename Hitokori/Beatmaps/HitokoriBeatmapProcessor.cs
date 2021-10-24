@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 					processRegularChain( tiles );
 					break;
 
-				case GameVariant.TapTapDash:
+				case GameVariant.Solo:
 					processTapTapDashChain( tiles );
 					break;
 			}

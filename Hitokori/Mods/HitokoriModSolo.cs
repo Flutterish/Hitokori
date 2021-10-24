@@ -18,14 +18,14 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public void ApplyToBeatmapProcessor ( IBeatmapProcessor beatmapProcessor ) {
 			if ( beatmapProcessor is not HitokoriBeatmapProcessor bp ) return;
 
-			bp.Variant = GameVariant.TapTapDash;
+			bp.Variant = GameVariant.Solo;
 		}
 
 		public void ApplyToBeatmapConverter ( IBeatmapConverter beatmapConverter ) {
 			if ( beatmapConverter is not HitokoriBeatmapConverter bc ) return;
 
 			bc.ForcedOrbitalCount = 1;
-			bc.Variant = GameVariant.TapTapDash;
+			bc.Variant = GameVariant.Solo;
 		}
 	}
 }
