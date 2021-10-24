@@ -3,6 +3,7 @@ using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Hitokori.Objects;
@@ -24,7 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]
 	public class HitokoriPlayfield : Playfield {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
-		public readonly Container Everything;
+		public readonly Container<Drawable> Everything;
 		public const float DefaultPositionScale = 90 * 0.6f;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
@@ -45,10 +46,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 
-			AddInternal( Everything = new Container {
-				AutoSizeAxes = Axes.Both,
+			AddInternal( Everything = new TransformContainer {
 				Anchor = Anchor.Centre,
-				Origin = Anchor.Centre,
 				Children = new Drawable[] {
 					HitObjectContainer
 				}
@@ -100,7 +99,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		protected override HitObjectContainer CreateHitObjectContainer () {
 			var container = new MyHitObjectContainer() {
-				Origin = Anchor.Centre,
 				Anchor = Anchor.Centre
 			};
 
@@ -109,7 +107,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private class MyHitObjectContainer : HitObjectContainer {
 			public MyHitObjectContainer () {
 				RelativeSizeAxes = Axes.None;
-				AutoSizeAxes = Axes.Both;
+				AutoSizeAxes = Axes.None;
+				Size = Vector2.Zero;
 			}
 
 			protected override void AddDrawable ( HitObjectLifetimeEntry entry, DrawableHitObject drawable ) {
@@ -117,6 +116,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 				DrawableHitObjectAdded?.Invoke( drawable );
 			}
+
+			protected override void Update () {
+				base.Update();
+			}
+
+			protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
+				=> false;
 
 			public event Action<DrawableHitObject>? DrawableHitObjectAdded;
 		}

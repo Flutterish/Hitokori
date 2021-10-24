@@ -11,6 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	public class Trail : CompositeDrawable {
 		public Path Line;
 		public Vector2 Offset;
+		new public Vector2 Position;
 		CircularBuffer<Vector2> vertices = new CircularBuffer<Vector2>( 100 );
 		public int VerticeCount => vertices.Capacity;
 
@@ -23,7 +24,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			};
 
 			Anchor = Anchor.Centre;
-			Origin = Anchor.Centre;
+			Origin = Anchor.TopLeft;
 			AutoSizeAxes = Axes.None;
 
 			Line.Anchor = Anchor.TopLeft;
@@ -61,14 +62,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				Line.AddVertex( i - Offset );
 			}
 
-			var requiredSize = getRequiredSize();
+			var requiredSize = Size = getRequiredSize();
 
 			if ( requiredSize.X > Line.Size.X || requiredSize.Y > Line.Size.Y ) {
 				Line.Size = new Vector2( MathF.Max( requiredSize.X, Line.Size.X ), MathF.Max( requiredSize.Y, Line.Size.Y ) );
-				//Size = requiredSize;
 			}
 
-			Line.Position = -Line.PositionInBoundingBox( Vector2.Zero );
+			base.Position = Position - Line.PositionInBoundingBox( Vector2.Zero );
 		}
 
 		private Vector2 getRequiredSize () {

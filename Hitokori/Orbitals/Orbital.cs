@@ -24,6 +24,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;
+			AutoSizeAxes = Axes.Both;
 
 			AddInternal( trail = new Trail() );
 			AddInternal( head = new Circle {
