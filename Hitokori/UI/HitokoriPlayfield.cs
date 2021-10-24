@@ -146,9 +146,19 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
 		void updateCamera () { // TODO this could be precomputed
-			var points = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>().Select( x => x.Position );
+			var tiles = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>();
+			var points = tiles.Select( x => x.Position );
 
 			if ( !points.Any() ) return;
+
+			// we add interpolated points so the positioning is smooth rather than jumpy when a new hitobject spawns
+			var p = tiles.Last();
+			if ( p.ToNext is TilePointConnector next ) 
+				points = points.Append( p.Position + ( next.To.Position - p.Position ) * Math.Clamp( (Time.Current + 2000 - next.StartTime) / next.Duration, 0, 1 ) );
+
+			p = tiles.First();
+			if ( p.FromPrevious is TilePointConnector prev )
+				points = points.Append( prev.From.Position + ( p.Position - prev.From.Position ) * Math.Clamp( ( Time.Current + 2000 - prev.StartTime ) / prev.Duration, 0, 1 ) );
 
 			var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
 
@@ -163,6 +173,15 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				( boundingBox.Left + boundingBox.Right ) / 2,
 				( boundingBox.Top + boundingBox.Bottom ) / 2
 			), 1000 );
+
+			// this makes it so scaling doesnt go for "just enough", but rather keeps the current view and everything else in view
+			// we do this after the positioning, so it doesnt affect it and creating a "dragging" effect
+			boundingBox = new Box2d(
+				Math.Min( boundingBox.Left, cameraMiddle.Value.X ),
+				Math.Min( boundingBox.Top, cameraMiddle.Value.Y ),
+				Math.Max( boundingBox.Right, cameraMiddle.Value.X ),
+				Math.Max( boundingBox.Bottom, cameraMiddle.Value.Y )
+			);
 
 			double scale;
 			if ( boundingBox.Width / boundingBox.Height > DrawSize.X / DrawSize.Y ) {
