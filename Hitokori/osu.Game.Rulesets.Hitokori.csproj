@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>preview</LangVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ppy.osu.Game" Version="2021.927.0" />

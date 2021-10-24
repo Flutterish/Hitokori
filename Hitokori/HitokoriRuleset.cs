@@ -1,4 +1,10 @@
-﻿using osu.Framework.Input.Bindings;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
@@ -15,6 +21,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
+using osuTK;
 using System;
 using System.Collections.Generic;
 
@@ -110,6 +117,35 @@ namespace osu.Game.Rulesets.Hitokori {
 				HitResult.Meh,
 				HitResult.Miss
 			};
+		}
+
+		public override Drawable CreateIcon ()
+			=> new HitokoriIcon( this );
+
+		private class HitokoriIcon : CompositeDrawable {
+			private static LargeTextureStore? textureStore;
+			private HitokoriRuleset ruleset;
+
+			public HitokoriIcon ( HitokoriRuleset ruleset ) {
+				Anchor = Origin = Anchor.Centre;
+				this.ruleset = ruleset;
+				FillAspectRatio = 1;
+				FillMode = FillMode.Fit;
+				Size = new Vector2( 100, 100 );
+			}
+
+			[BackgroundDependencyLoader]
+			private void load ( GameHost host ) {
+				textureStore ??= new LargeTextureStore( host.CreateTextureLoaderStore( ruleset.CreateResourceStore() ) );
+
+				AddInternal( new Sprite {
+					Anchor = Anchor.Centre,
+					Origin = Anchor.Centre,
+					RelativeSizeAxes = Axes.Both,
+					Texture = textureStore.Get( "Textures/HitokoriIcon" ),
+					EdgeSmoothness = new Vector2( 2 )
+				} );
+			}
 		}
 	}
 }
