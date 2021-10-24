@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Input;
@@ -22,6 +23,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 		protected override void OnApply () {
 			base.OnApply();
+			piece.RestoreDefaults();
 
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
@@ -40,6 +42,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			}
 			else {
 				piece.BorderColour = Colour4.White;
+			}
+
+			if ( HitObject.Next is TilePoint next ) {
+				piece.Icon.Colour = piece.BorderColour;
+				piece.Icon.Alpha = 1;
+				piece.Icon.Icon = FontAwesome.Solid.ChevronRight;
+				piece.Icon.Position = new osuTK.Vector2( 1, 0 );
+				piece.Rotation = (float)(HitObject.Position.AngleTo( next.Position ) / Math.PI * 180);
 			}
 		}
 
