@@ -25,6 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			if ( beatmapConverter is not HitokoriBeatmapConverter bc ) return;
 
 			bc.ForcedOrbitalCount = 1;
+			bc.Variant = GameVariant.TapTapDash;
 		}
 	}
 }

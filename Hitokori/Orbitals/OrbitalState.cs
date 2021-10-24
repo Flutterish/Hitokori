@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			ActiveIndex = 0;
 			TotalRotation = 0;
 			Scale = 1;
+			Z = 0;
 			Offset = Vector2d.Zero;
 
 			var centre = InitialPositions.Aggregate( Vector2d.Zero, ( a, b ) => a + b ) / InitialPositions.Count;
@@ -26,6 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		public double Scale { get; private set; }
+		public double Z { get; private set; }
 		public IReadOnlyList<Vector2d> InitialPositions { get; private set; }
 		private Vector2d internalPivotPosition => InitialPositions[ ActiveIndex.Mod( InitialPositions.Count ) ];
 		public Vector2d PivotPosition { get; private set; }
@@ -127,6 +129,13 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// </summary>
 		public OrbitalState WithOffset ( Vector2d offset ) => this with {
 			Offset = offset
+		};
+
+		/// <summary>
+		/// Creates a new instance at a different elevation. This moves and scales the orbitals up.
+		/// </summary>
+		public OrbitalState WithZ ( double z ) => this with {
+			Z = z
 		};
 	}
 }

@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			cancellationToken.ThrowIfCancellationRequested();
 
 			if ( original is IHasDuration dur ) {
-				if ( dur.Duration < beatmap.BeatLengthAt( original.StartTime ) ) {
+				if ( dur.Duration * ( Variant is GameVariant.TapTapDash ? 1.41 : 1 ) < beatmap.BeatLengthAt( original.StartTime ) ) {
 					yield return new SwapTilePoint {
 						Samples = original.Samples,
 						StartTime = original.StartTime
@@ -45,6 +45,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		public int? ForcedOrbitalCount = null;
+		public GameVariant Variant = GameVariant.Default;
 
 		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original, CancellationToken cancellationToken ) {
 			var beatmap = CreateBeatmap();

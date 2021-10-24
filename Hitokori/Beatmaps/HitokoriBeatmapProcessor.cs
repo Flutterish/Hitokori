@@ -43,14 +43,23 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			var angleDelta = (180 - (ForcedAnglePerBeat ?? 90)) / 180 * Math.PI;
 
 			foreach ( var tile in tiles.Skip( 1 ) ) {
-				var connector = new TilePointLinearConnector {
-					From = prevTile!,
-					To = tile,
-					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
-					TargetOrbitalIndex = 0,
+				var connector = ( prevTile is PassThroughTilePoint || tile is PassThroughTilePoint )
+					? new JumpingTilePointLinearConnector {
+						From = prevTile!,
+						To = tile,
+						BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
+						TargetOrbitalIndex = 0,
 
-					Angle = angle
-				};
+						Angle = angle
+					}
+					: new TilePointLinearConnector {
+						From = prevTile!,
+						To = tile,
+						BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
+						TargetOrbitalIndex = 0,
+
+						Angle = angle
+					};
 
 				if ( random.NextDouble() < 0.5 ) {
 					angle += angleDelta;
