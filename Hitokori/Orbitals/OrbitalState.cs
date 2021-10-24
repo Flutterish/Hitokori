@@ -47,15 +47,27 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public int OrbitalCount => InitialPositions.Count;
 
 		/// <summary>
+		/// Whether the original orbital at the given index is the pivot.
+		/// </summary>
+		public bool IsNthOriginalPivot ( int index )
+			=> ( index - ActiveIndex ).Mod( OrbitalCount ) == 0;
+
+		/// <summary>
+		/// Whether the orbital at a given offset from current pivot is the pivot.
+		/// </summary>
+		public bool IsNthPivot ( int index )
+			=> index.Mod( OrbitalCount ) == 0;
+
+		/// <summary>
 		/// Offset from the current pivot of Nth orbital from the pivot.
 		/// </summary>
 		public Vector2d OffsetOfNth ( int index ) => (InitialPositions[ (index + ActiveIndex).Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale
-			+ ( index.Mod( OrbitalCount ) == 0 ? Vector2d.Zero : Offset );
+			+ ( IsNthPivot( index ) ? Vector2d.Zero : Offset );
 		/// <summary>
 		///  Offset from the current pivot of Nth orbital.
 		/// </summary>
 		public Vector2d OffsetOfNthOriginal ( int index ) => (InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition).Rotate( (float)TotalRotation ) * Scale
-			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset );
+			+ ( IsNthOriginalPivot( index ) ? Vector2d.Zero : Offset );
 
 		/// <summary>
 		/// Position of the Nth orbital from current pivot.
@@ -70,12 +82,12 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// Offset from the current pivot of Nth orbital from the pivot without applying scaling.
 		/// </summary>
 		public Vector2d UnscaledOffsetOfNth ( int index ) => ( InitialPositions[ ( index + ActiveIndex ).Mod( InitialPositions.Count ) ] - internalPivotPosition ).Rotate( (float)TotalRotation )
-			+ ( index.Mod( OrbitalCount ) == 0 ? Vector2d.Zero : Offset );
+			+ ( IsNthPivot( index ) ? Vector2d.Zero : Offset );
 		/// <summary>
 		///  Offset from the current pivot of Nth orbital without applying scaling.
 		/// </summary>
 		public Vector2d UnscaledOffsetOfNthOriginal ( int index ) => ( InitialPositions[ index.Mod( InitialPositions.Count ) ] - internalPivotPosition ).Rotate( (float)TotalRotation )
-			+ ( index.Mod( OrbitalCount ) == ActiveIndex.Mod( OrbitalCount ) ? Vector2d.Zero : Offset );
+			+ ( IsNthOriginalPivot( index ) ? Vector2d.Zero : Offset );
 
 		/// <summary>
 		/// Position of the Nth orbital from current pivot without applying scaling.

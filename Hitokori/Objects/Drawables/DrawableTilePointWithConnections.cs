@@ -39,21 +39,28 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		protected override void UpdateInitialTransforms () {
-			if ( HitObject.Next is not null ) {
+			if ( HitObject.ToNext is not null ) {
 				this.TransformBindableTo( piece.OutAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( HitObject.Next.StartTime - 2000 ) ) {
+				using ( BeginAbsoluteSequence( joinTime( HitObject.ToNext ) ) ) {
 					this.TransformBindableTo( piece.OutAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
 
-			if ( HitObject.Previous is not null ) {
+			if ( HitObject.FromPrevious is not null ) {
 				this.TransformBindableTo( piece.InAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( HitObject.StartTime - 2000 ) ) {
+				using ( BeginAbsoluteSequence( joinTime( HitObject.FromPrevious ) ) ) {
 					this.TransformBindableTo( piece.InAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
 
 			piece.ScaleTo( 0 ).Then().ScaleTo( 1, 300, Easing.Out );
+		}
+
+		private double joinTime ( TilePointConnector c, double offset = -2000 ) {
+			return Math.Min( 
+				c.To.StartTime + offset,
+				c.From.StartTime
+			);
 		}
 
 		protected override void UpdateHitStateTransforms ( ArmedState state ) {
@@ -63,7 +70,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			if ( state is ArmedState.Hit or ArmedState.Miss ) {
 				piece.LightUp();
 
-				var nextSwapTile = HitObject.AllNext.FirstOrDefault( x => x.OrbitalState.ActiveIndex != HitObject.OrbitalState.ActiveIndex );
+				var nextSwapTile = 
+					HitObject.ToNextIs( x => HitObject.OrbitalState.IsNthPivot( x.TargetOrbitalIndex ) ) // if we are moving the same orbital as lies on this tile, wait till its done
+					? HitObject.Next
+					: HitObject.AllNext.FirstOrDefault( x => x.OrbitalState.ActiveIndex != HitObject.OrbitalState.ActiveIndex );
+
 				using ( BeginAbsoluteSequence( nextSwapTile?.StartTime ?? LatestTransformEndTime ) ) {
 					piece.ScaleTo( 0, fadeOutDuration, fadeOutEasing );
 				}

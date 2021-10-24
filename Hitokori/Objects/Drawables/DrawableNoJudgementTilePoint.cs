@@ -12,7 +12,5 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		protected override void CheckForResult ( bool userTriggered, double timeOffset ) {
 			if ( timeOffset >= 0 ) ApplyResult( j => j.Type = HitResult.IgnoreHit );
 		}
-
-		protected override double InitialLifetimeOffset => 2000;
 	}
 }

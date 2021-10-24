@@ -36,7 +36,5 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public void OnReleased ( KeyBindingReleaseEvent<HitokoriAction> action ) { }
-
-		protected override double InitialLifetimeOffset => 2000;
 	}
 }

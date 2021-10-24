@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
+using System;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
@@ -170,6 +171,26 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// Setting this value will only have impact during the <see cref="Beatmaps.HitokoriBeatmapProcessor"/> linking phase.
 		/// </summary>
 		public int ChainID;
+
+		public bool ToNextIs ( Predicate<TilePointConnector> predicate )
+			=> ToNext is null
+			? false
+			: predicate( ToNext );
+
+		public bool NextIs ( Predicate<TilePoint> predicate )
+			=> Next is null
+			? false
+			: predicate( Next );
+
+		public bool FromPreviousIs ( Predicate<TilePointConnector> predicate )
+			=> FromPrevious is null
+			? false
+			: predicate( FromPrevious );
+
+		public bool PreviousIs ( Predicate<TilePoint> predicate )
+			=> Previous is null
+			? false
+			: predicate( Previous );
 
 		/// <summary>
 		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.

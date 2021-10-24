@@ -5,12 +5,15 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject> {
 		public DrawableHitokoriHitObject ( HitokoriHitObject? hitObject = null ) : base( hitObject! ) {
 			AutoSizeAxes = Axes.Both;
 		}
+
+		protected override double InitialLifetimeOffset => Math.Max( 2000, HitObject is TilePoint tp ? ( tp.FromPrevious is null ? 0 : tp.FromPrevious.Duration ) : 0 );
 	}
 
 	public abstract class DrawableHitokoriHitObject<T> : DrawableHitokoriHitObject where T : HitokoriHitObject {
