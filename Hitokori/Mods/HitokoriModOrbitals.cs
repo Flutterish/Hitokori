@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override IconUsage? Icon => new IconUsage( '∴' );
 		public override bool HasImplementation => true;
-		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModTapTapDash ) };
+		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModSolo ) };
 
 		public override bool RequiresConfiguration => true;
 

@@ -5,13 +5,13 @@ using osu.Game.Rulesets.Mods;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
-	public class HitokoriModTapTapDash : Mod, IApplicableToBeatmapProcessor, IApplicableToBeatmapConverter {
-		public override string Name => "Tap Tap Dash";
-		public override string Acronym => "TTD";
-		public override string Description => "Play Tap Tap Dash instead";
+	public class HitokoriModSolo : Mod, IApplicableToBeatmapProcessor, IApplicableToBeatmapConverter {
+		public override string Name => "Solo";
+		public override string Acronym => "SL";
+		public override string Description => "Play with just 1 orbital";
 		public override double ScoreMultiplier => 1;
 
-		public override IconUsage? Icon => FontAwesome.Solid.Crow;
+		public override IconUsage? Icon => FontAwesome.Solid.Adjust;
 		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModOrbitals ) };
 		public override ModType Type => ModType.Fun;
 
