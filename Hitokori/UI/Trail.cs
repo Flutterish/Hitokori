@@ -5,7 +5,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Hitokori.Collections;
 using osuTK;
 using System;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class Trail : CompositeDrawable {
@@ -73,11 +72,24 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		private Vector2 getRequiredSize () {
 			var points = Line.Vertices;
-			if ( !points.Any() ) return Vector2.One;
+			if ( points.Count == 0 ) return Vector2.One;
+			float maxX = float.NegativeInfinity;
+			float maxY = float.NegativeInfinity;
+			float minX = float.PositiveInfinity;
+			float minY = float.PositiveInfinity;
+
+			for ( int i = 0; i < points.Count; i++ ) {
+				var p = points[ i ];
+				if ( maxX < p.X ) maxX = p.X;
+				if ( minX > p.X ) minX = p.X;
+				if ( maxY < p.Y ) maxY = p.Y;
+				if ( minY > p.Y ) minY = p.Y;
+			}
+
 			return new Vector2(
-				points.Max( v => v.X ) - points.Min( v => v.X ),
-				points.Max( v => v.Y ) - points.Min( v => v.Y )
-			) + new Vector2( Line.PathRadius * 2 );
+				maxX - minX + Line.PathRadius * 2,
+				maxY - minY + Line.PathRadius * 2
+			);
 		}
 	}
 }
