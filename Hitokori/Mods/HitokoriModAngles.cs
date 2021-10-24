@@ -49,7 +49,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override bool RequiresConfiguration => true;
 
 		[SettingSource( "Angle per beat" )]
-		public Bindable<double> AnglePerBeat { get; } = new BindableDouble( 120 ) {
+		public Bindable<double> AnglePerBeat { get; } = new BindableDouble( 180 ) {
 			MinValue = 60,
 			MaxValue = 270,
 			Precision = 1
