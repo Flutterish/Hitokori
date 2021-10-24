@@ -3,6 +3,7 @@ using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
 using osu.Game.Replays;
+using osu.Game.Rulesets.Hitokori.Camera;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Replays;
@@ -29,6 +30,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayRecorder( score );
 
 		protected override Playfield CreatePlayfield ()
-			=> new HitokoriPlayfield( Beatmap );
+			=> new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator( Beatmap ).GeneratePath() );
 	}
 }

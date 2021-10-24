@@ -1,6 +1,9 @@
-﻿using osu.Game.Beatmaps;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using osu.Game.Beatmaps;
 using osuTK;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public static class Extensions {
@@ -67,5 +70,50 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public static double BeatLengthAt ( this IBeatmap beatmap, double time )
 			=> beatmap.ControlPointInfo.TimingPointAt( time ).BeatLength;
+
+		public static Box2 CalculateBoundingBox ( this IEnumerable<Vector2> points, float inflate = 0 ) {
+			if ( !points.Any() ) return new Box2();
+
+			var minX = float.PositiveInfinity;
+			var maxX = float.NegativeInfinity;
+			var minY = float.PositiveInfinity;
+			var maxY = float.NegativeInfinity;
+
+			foreach ( var p in points ) {
+				if ( maxX < p.X ) maxX = p.X;
+				if ( minX > p.X ) minX = p.X;
+				if ( maxY < p.Y ) maxY = p.Y;
+				if ( minY > p.Y ) minY = p.Y;
+			}
+
+			return new Box2(
+				minX - inflate,
+				minY - inflate,
+				maxX + inflate,
+				maxY + inflate
+			);
+		}
+		public static Box2d CalculateBoundingBox ( this IEnumerable<Vector2d> points, double inflate = 0 ) {
+			if ( !points.Any() ) return new Box2d();
+
+			var minX = double.PositiveInfinity;
+			var maxX = double.NegativeInfinity;
+			var minY = double.PositiveInfinity;
+			var maxY = double.NegativeInfinity;
+
+			foreach ( var p in points ) {
+				if ( maxX < p.X ) maxX = p.X;
+				if ( minX > p.X ) minX = p.X;
+				if ( maxY < p.Y ) maxY = p.Y;
+				if ( minY > p.Y ) minY = p.Y;
+			}
+
+			return new Box2d(
+				minX - inflate,
+				minY - inflate,
+				maxX + inflate,
+				maxY + inflate
+			);
+		}
 	}
 }

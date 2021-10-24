@@ -192,6 +192,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			? false
 			: predicate( Previous );
 
+		public double LifetimeOffset 
+			=> Math.Max( 2000, FromPrevious is null ? 0 : FromPrevious.Duration );
+
 		/// <summary>
 		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.
 		/// </summary>

@@ -50,6 +50,11 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 
 			return entry;
 		}
+		public void Clear () {
+			while ( sequence.Count > 0 ) {
+				RemoveAt( sequence.Count - 1 );
+			}
+		}
 
 		public int BinarySearch ( E entry )
 			=> sequence.BinarySearch( entry );
@@ -157,6 +162,6 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 		}
 
 		public override string ToString ()
-			=> $"{StartTime}@{Value}";
+			=> $"{{{Value}}}@{StartTime}";
 	}
 }

@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 
 		public bool HasStarted { get; private set; }
 		public void Revert () {
+			Apply( 0 );
 			HasStarted = false;
 		}
 
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 				OnBegin();
 			}
 
-			Apply( Interpolation.ApplyEasing( Easing, Math.Clamp( (time - StartTime) / Duration, 0, 1 ) ) );
+			Apply( Interpolation.ApplyEasing( Easing, Duration == 0 ? 1 : Math.Clamp( (time - StartTime) / Duration, 0, 1 ) ) );
 		}
 
 		protected abstract void Apply ( double progress );
@@ -57,5 +58,42 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		protected VisualEvent ( Ttarget target, double startTime, double duration = 0, Easing easing = Easing.None ) : base( startTime, duration, easing ) {
 			Target = target;
 		}
+	}
+
+	public class GenericVisualEvent<Ttarget,T> : VisualEvent where Ttarget : class where T : struct {
+		private Func<Ttarget, T> get;
+		private Action<Ttarget, T> set;
+		private T startValue;
+		private T endValue;
+		private Ttarget target;
+		private string[] categories;
+
+		public GenericVisualEvent ( double startTime, Ttarget target, T endValue, Func<Ttarget, T> get, Action<Ttarget, T> set, string[] categories, double duration = 0, Easing easing = Easing.None ) : base( startTime, duration, easing ) {
+			this.endValue = endValue;
+			this.target = target;
+			this.get = get;
+			this.set = set;
+			this.categories = categories;
+		}
+
+		protected override void Apply ( double progress ) {
+			var value = valueAt( progress );
+			set( target, value );
+		}
+		private T valueAt ( double progress )
+			=> Interpolation.ValueAt( progress, startValue, endValue, 0, 1 );
+
+		protected override void OnBegin () {
+			startValue = get( target );
+		}
+
+		public override IEnumerable<string> Categories => categories;
+
+		public override string ToString ()
+			=> $"{( HasStarted ? startValue.ToString() : "???" )} -> {endValue} @ ({StartTime} -> {EndTime})" 
+			+ ( double.IsFinite( InterruptedTime ) 
+				? $" (interrupted at {InterruptedTime} => {valueAt( Interpolation.ApplyEasing( Easing, Duration == 0 ? 1 : Math.Clamp( ( InterruptedTime - StartTime ) / Duration, 0, 1 ) ) )})" 
+				: ""
+			);
 	}
 }

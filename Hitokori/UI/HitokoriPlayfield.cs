@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Hitokori.Camera;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
@@ -42,9 +43,12 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			group.Expire();
 		}
 
-		public HitokoriPlayfield ( Beatmap<HitokoriHitObject> beatmap ) {
+		CameraPath? path;
+		public HitokoriPlayfield ( Beatmap<HitokoriHitObject> beatmap, CameraPath? path = null ) {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
+
+			this.path = path;
 
 			AddInternal( Everything = new TransformContainer {
 				Anchor = Anchor.Centre,
@@ -145,60 +149,85 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private Bindable<Vector2> cameraMiddle = new();
 		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
-		void updateCamera () { // TODO this could be precomputed
-			var tiles = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>();
-			var points = tiles.Select( x => x.Position );
+		private BindableDouble inflateScale = new( 1 );
+		void updateCamera () {
+			if ( path is not null ) {
+				cameraMiddle.Value = path.Position.ValueAt( Time.Current );
 
-			if ( !points.Any() ) return;
+				var maxInflate = paths.Keys.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
+				this.TransformBindableTo( inflateScale, maxInflate, 3000 ); // this still needs to be eased because it can change quickly
+				maxInflate = inflateScale.Value;
+				var size = path.Size.ValueAt( Time.Current ) + new Vector2( (float)maxInflate * 2 );
 
-			// we add interpolated points so the positioning is smooth rather than jumpy when a new hitobject spawns
-			var p = tiles.Last();
-			if ( p.ToNext is TilePointConnector next ) 
-				points = points.Append( p.Position + ( next.To.Position - p.Position ) * Math.Clamp( (Time.Current + 2000 - next.StartTime) / next.Duration, 0, 1 ) );
+				double scale;
+				if ( size.X / size.Y > DrawSize.X / DrawSize.Y ) {
+					scale = DrawSize.X / size.X;
+				}
+				else {
+					scale = DrawSize.Y / size.Y;
+				}
 
-			p = tiles.First();
-			if ( p.FromPrevious is TilePointConnector prev )
-				points = points.Append( prev.From.Position + ( p.Position - prev.From.Position ) * Math.Clamp( ( Time.Current + 2000 - prev.StartTime ) / prev.Duration, 0, 1 ) );
+				if ( double.IsFinite( scale ) ) {
+					cameraScale.Value = scale / 2;
+				}
 
-			var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
-
-			var boundingBox = new Box2d(
-				points.Min( x => x.X ) - maxInflate,
-				points.Min( x => x.Y ) - maxInflate,
-				points.Max( x => x.X ) + maxInflate,
-				points.Max( x => x.Y ) + maxInflate
-			);
-
-			this.TransformBindableTo( cameraMiddle, (Vector2)new Vector2d(
-				( boundingBox.Left + boundingBox.Right ) / 2,
-				( boundingBox.Top + boundingBox.Bottom ) / 2
-			), 1000 );
-
-			// this makes it so scaling doesnt go for "just enough", but rather keeps the current view and everything else in view
-			// we do this after the positioning, so it doesnt affect it and creating a "dragging" effect
-			boundingBox = new Box2d(
-				Math.Min( boundingBox.Left, cameraMiddle.Value.X ),
-				Math.Min( boundingBox.Top, cameraMiddle.Value.Y ),
-				Math.Max( boundingBox.Right, cameraMiddle.Value.X ),
-				Math.Max( boundingBox.Bottom, cameraMiddle.Value.Y )
-			);
-
-			double scale;
-			if ( boundingBox.Width / boundingBox.Height > DrawSize.X / DrawSize.Y ) {
-				scale = DrawSize.X / boundingBox.Width;
+				return;
 			}
 			else {
-				scale = DrawSize.Y / boundingBox.Height;
+				var tiles = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>();
+				var points = tiles.Select( x => x.Position );
+
+				if ( !points.Any() ) return;
+
+				// we add interpolated points so the positioning is smooth rather than jumpy when a new hitobject spawns
+				var p = tiles.Last();
+				if ( p.ToNext is TilePointConnector next )
+					points = points.Append( p.Position + ( next.To.Position - p.Position ) * Math.Clamp( ( Time.Current + 2000 - next.StartTime ) / next.Duration, 0, 1 ) );
+
+				p = tiles.First();
+				if ( p.FromPrevious is TilePointConnector prev )
+					points = points.Append( prev.From.Position + ( p.Position - prev.From.Position ) * Math.Clamp( ( Time.Current + 2000 - prev.StartTime ) / prev.Duration, 0, 1 ) );
+
+				var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
+
+				var boundingBox = new Box2d(
+					points.Min( x => x.X ) - maxInflate,
+					points.Min( x => x.Y ) - maxInflate,
+					points.Max( x => x.X ) + maxInflate,
+					points.Max( x => x.Y ) + maxInflate
+				);
+
+				this.TransformBindableTo( cameraMiddle, (Vector2)new Vector2d(
+					( boundingBox.Left + boundingBox.Right ) / 2,
+					( boundingBox.Top + boundingBox.Bottom ) / 2
+				), 1000 );
+
+				// this makes it so scaling doesnt go for "just enough", but rather keeps the current view and everything else in view
+				// we do this after the positioning, so it doesnt affect it and creating a "dragging" effect
+				boundingBox = new Box2d(
+					Math.Min( boundingBox.Left, cameraMiddle.Value.X ),
+					Math.Min( boundingBox.Top, cameraMiddle.Value.Y ),
+					Math.Max( boundingBox.Right, cameraMiddle.Value.X ),
+					Math.Max( boundingBox.Bottom, cameraMiddle.Value.Y )
+				);
+
+				double scale;
+				if ( boundingBox.Width / boundingBox.Height > DrawSize.X / DrawSize.Y ) {
+					scale = DrawSize.X / boundingBox.Width;
+				}
+				else {
+					scale = DrawSize.Y / boundingBox.Height;
+				}
+
+				if ( !double.IsFinite( scale ) ) return;
+
+				double speedup =
+					cameraScale.Value > scale
+					? cameraScale.Value / scale
+					: 1;
+
+				this.TransformBindableTo( cameraScale, scale / 2, 3000 / speedup );
 			}
-
-			if ( !double.IsFinite( scale ) ) return;
-
-			double speedup =
-				cameraScale.Value > scale
-				? cameraScale.Value / scale
-				: 1;
-
-			this.TransformBindableTo( cameraScale, scale / 2, 3000 / speedup );
 		}
 	}
 }

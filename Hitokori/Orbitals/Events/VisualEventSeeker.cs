@@ -82,6 +82,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			}
 			else {
 				foreach ( var category in e.Categories ) {
+					if ( visualEventCategoriesTrackers.Remove( category, out var @event ) ) {
+						activeVisualEvents.Remove( @event );
+					}
+
 					visualEventCategoriesTrackers.Add( category, e );
 				}
 
