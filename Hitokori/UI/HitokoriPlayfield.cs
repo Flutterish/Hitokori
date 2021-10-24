@@ -3,6 +3,7 @@ using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Hitokori.Objects;
@@ -24,7 +25,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]
 	public class HitokoriPlayfield : Playfield {
 		private Dictionary<OrbitalGroup, TilePoint> paths = new();
-		public readonly Container Everything;
+		public readonly Container<Drawable> Everything;
 		public const float DefaultPositionScale = 90 * 0.6f;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
@@ -45,10 +46,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 
-			AddInternal( Everything = new Container {
-				AutoSizeAxes = Axes.Both,
+			AddInternal( Everything = new TransformContainer {
 				Anchor = Anchor.Centre,
-				Origin = Anchor.Centre,
 				Children = new Drawable[] {
 					HitObjectContainer
 				}
@@ -100,7 +99,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		protected override HitObjectContainer CreateHitObjectContainer () {
 			var container = new MyHitObjectContainer() {
-				Origin = Anchor.Centre,
 				Anchor = Anchor.Centre
 			};
 
@@ -109,7 +107,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private class MyHitObjectContainer : HitObjectContainer {
 			public MyHitObjectContainer () {
 				RelativeSizeAxes = Axes.None;
-				AutoSizeAxes = Axes.Both;
+				AutoSizeAxes = Axes.None;
+				Size = Vector2.Zero;
 			}
 
 			protected override void AddDrawable ( HitObjectLifetimeEntry entry, DrawableHitObject drawable ) {
@@ -117,6 +116,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 				DrawableHitObjectAdded?.Invoke( drawable );
 			}
+
+			protected override void Update () {
+				base.Update();
+			}
+
+			protected override bool ComputeIsMaskedAway ( RectangleF maskingBounds )
+				=> false;
 
 			public event Action<DrawableHitObject>? DrawableHitObjectAdded;
 		}
@@ -140,9 +146,19 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
 		void updateCamera () { // TODO this could be precomputed
-			var points = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>().Select( x => x.Position );
+			var tiles = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>();
+			var points = tiles.Select( x => x.Position );
 
 			if ( !points.Any() ) return;
+
+			// we add interpolated points so the positioning is smooth rather than jumpy when a new hitobject spawns
+			var p = tiles.Last();
+			if ( p.ToNext is TilePointConnector next ) 
+				points = points.Append( p.Position + ( next.To.Position - p.Position ) * Math.Clamp( (Time.Current + 2000 - next.StartTime) / next.Duration, 0, 1 ) );
+
+			p = tiles.First();
+			if ( p.FromPrevious is TilePointConnector prev )
+				points = points.Append( prev.From.Position + ( p.Position - prev.From.Position ) * Math.Clamp( ( Time.Current + 2000 - prev.StartTime ) / prev.Duration, 0, 1 ) );
 
 			var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
 
@@ -157,6 +173,15 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				( boundingBox.Left + boundingBox.Right ) / 2,
 				( boundingBox.Top + boundingBox.Bottom ) / 2
 			), 1000 );
+
+			// this makes it so scaling doesnt go for "just enough", but rather keeps the current view and everything else in view
+			// we do this after the positioning, so it doesnt affect it and creating a "dragging" effect
+			boundingBox = new Box2d(
+				Math.Min( boundingBox.Left, cameraMiddle.Value.X ),
+				Math.Min( boundingBox.Top, cameraMiddle.Value.Y ),
+				Math.Max( boundingBox.Right, cameraMiddle.Value.X ),
+				Math.Max( boundingBox.Bottom, cameraMiddle.Value.Y )
+			);
 
 			double scale;
 			if ( boundingBox.Width / boundingBox.Height > DrawSize.X / DrawSize.Y ) {

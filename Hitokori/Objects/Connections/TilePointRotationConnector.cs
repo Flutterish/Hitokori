@@ -7,59 +7,28 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// A connection between 2 <see cref="TilePoint"/>s where the orbital rotates around the <see cref="OrbitalState.PivotPosition"/> tile until it reaches the <see cref="TilePointConnector.To"/> tile.
 	/// </summary>
 	public class TilePointRotationConnector : TilePointConnector, IHasVelocity {
-		public bool IsRadiusConstrained { get; private set; } = false;
-		private bool isRadiusComputed = false;
-		private double radius = 1;
 		/// <summary>
-		/// The normalized distance from the pivot. Setting this property will contrain it to that value.
+		/// The normalized distance from the pivot
 		/// </summary>
-		public double Radius {
-			get {
-				if ( !IsRadiusConstrained && !isRadiusComputed ) recalculate();
-				return radius;
-			}
-			set {
-				IsRadiusConstrained = true;
-				radius = value;
-				Invalidate();
-			}
+		public readonly ConstrainableProperty<double> Radius;
+		/// <summary>
+		/// The signed angle change in radians
+		/// </summary>
+		public readonly ConstrainableProperty<double> Angle;
+		/// <summary>
+		/// Signed speed in arclength per ms. This is essentially angle in radians per ms at <see cref="Radius"/> = 1
+		/// </summary>
+		public readonly ConstrainableProperty<double> Velocity;
+		double IHasVelocity.Velocity => Velocity;
+
+		public TilePointRotationConnector () {
+			Radius = new( 1, recalculate, onConstraintChanged );
+			Angle = new( recalculate, onConstraintChanged );
+			Velocity = new( recalculate, onConstraintChanged );
 		}
 
-		public bool IsAngleConstrained { get; private set; } = false;
-		private bool isAngleComputed = false;
-		private double angle;
-		/// <summary>
-		/// The signed angle change in radians. Setting this property will contrain it to that value.
-		/// </summary>
-		public double Angle {
-			get {
-				if ( !IsAngleConstrained && !isAngleComputed ) recalculate();
-				return angle;
-			}
-			set {
-				IsAngleConstrained = true;
-				angle = value;
-				Invalidate();
-			}
-		}
-
-		public bool IsVelocityConstrained { get; private set; } = false;
-		private bool isVelocityComputed = false;
-		private double velocity;
-		/// <summary>
-		/// Signed speed in arclength per ms. This is essentially angle in radians per ms at <see cref="Radius"/> = 1. Setting this property will contrain it to that value.
-		/// </summary>
-		public double Velocity {
-			get {
-				if ( !IsVelocityConstrained && !isVelocityComputed ) recalculate();
-				return velocity;
-			}
-			set {
-				IsVelocityConstrained = true;
-				velocity = value;
-				Invalidate();
-			}
-		}
+		private void onConstraintChanged ( bool isConstrained )
+			=> Invalidate();
 
 		/// <summary>
 		/// Unsigned speed in arclength per ms. This is essentially angle in radians per ms at <see cref="Radius"/> = 1. To set this value you need to set <see cref="Velocity"/>.
@@ -84,46 +53,42 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		protected override void InvalidateProperties () {
 			base.InvalidateProperties();
 
-			isRadiusComputed = false;
-			isAngleComputed = false;
-			isVelocityComputed = false;
+			Radius.Invalidate();
+			Angle.Invalidate();
+			Velocity.Invalidate();
 		}
 
 		void recalculate () {
-			if (IsRadiusConstrained || IsAngleConstrained || IsVelocityConstrained) {
+			if ( Radius.IsConstrained || Angle.IsConstrained || Velocity.IsConstrained ) {
 				throw new NotImplementedException( "Respecting constraints is not implemented yet" ); // TODO constriants
 			}
 			else {
 				var distance = distancePerBeat * Beats;
-				radius = From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
-				if ( radius != 0 ) {
+				Radius.Value = From.OrbitalState.UnscaledOffsetOfNth( TargetOrbitalIndex ).Length;
+				if ( Radius != 0 ) {
 					// TODO This could be calculated with a spiral for a better approximation
-					angle = distance / radius;
+					Angle.Value = distance / Radius;
 
-					if ( angle > maxAngle ) {
-						angle = maxAngle;
-						radius = Math.Min( distance / maxAngle, radius * 2 );
+					if ( Angle > maxAngle ) {
+						Angle.Value = maxAngle;
+						Radius.Value = Math.Min( distance / maxAngle, Radius * 2 );
 					}
 
-					angle = Math.Clamp( distance / radius, minAngle, maxAngle );
+					Angle.Value = Math.Clamp( distance / Radius, minAngle, maxAngle );
 				}
 				else {
-					angle = 0;
+					Angle.Value = 0;
 				}
 
-				angle *= TargetOrbitalIndex > 0 ? 1 : -1;
+				Angle.Value *= TargetOrbitalIndex > 0 ? 1 : -1;
 
 				if ( Duration != 0 ) {
-					velocity = ( angle * radius ) / Duration;
+					Velocity.Value = ( Angle * Radius ) / Duration;
 				}
 				else {
-					velocity = TargetOrbitalIndex > 0 ? double.PositiveInfinity : double.NegativeInfinity;
+					Velocity.Value = TargetOrbitalIndex > 0 ? double.PositiveInfinity : double.NegativeInfinity;
 				}
 			}
-
-			isRadiusComputed = true;
-			isAngleComputed = true;
-			isVelocityComputed = true;
 		}
 
 		double targetScale {

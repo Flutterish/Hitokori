@@ -4,6 +4,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Mods;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModOrbitals : Mod, IApplicableToBeatmapProcessor, IApplicableToBeatmapConverter {
@@ -16,6 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		public override IconUsage? Icon => new IconUsage( '∴' );
 		public override bool HasImplementation => true;
+		public override Type[] IncompatibleMods => new Type[] { typeof( HitokoriModSolo ) };
 
 		public override bool RequiresConfiguration => true;
 

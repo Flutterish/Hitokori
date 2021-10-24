@@ -14,7 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	public class Orbital : CompositeDrawable {
-		private Circle circle;
+		private Circle head;
 		private Trail trail;
 
 		public int Index;
@@ -24,9 +24,10 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 			Anchor = Anchor.Centre;
 			Origin = Anchor.Centre;
+			AutoSizeAxes = Axes.Both;
 
 			AddInternal( trail = new Trail() );
-			AddInternal( circle = new Circle {
+			AddInternal( head = new Circle {
 				Size = new Vector2( 20 ),
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre
@@ -177,8 +178,9 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		private void updateState ( OrbitalState state ) {
-			currentState.Position = state.PivotPosition + state.OffsetOfNthOriginal( Index ) * Radius;
+			currentState.Position = state.PivotPosition + state.OffsetOfNthOriginal( Index ) * Radius - Vector2d.UnitY * state.Z;
 			currentState.Alpha = Alpha;
+			head.Scale = new Vector2( (float)Math.Sqrt( 1 + state.Z ) );
 		}
 	}
 }
