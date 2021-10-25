@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
-	public class VisualEventSeeker : TimelineSeeker<VisualEvent> {
+	public class VisualEventSeeker : VisualEventSeeker<VisualEvent> { }
+
+	public class VisualEventSeeker<T> : TimelineSeeker<T> where T : VisualEvent {
 		private long nextOrder;
 
-		public VisualEventSeeker () : base( Comparer<VisualEvent>.Create( ( a, b ) => Math.Sign( a.Order - b.Order ) ) ) {
+		public VisualEventSeeker () : base( Comparer<T>.Create( ( a, b ) => Math.Sign( a.Order - b.Order ) ) ) {
 			ModifiedBehaviour = TimelineModifiedBehaviour.Replay;
 
 			EventStarted += e => {
@@ -31,7 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			};
 		}
 
-		public int Add ( VisualEvent e ) {
+		public int Add ( T e ) {
 			return Add( e.StartTime, e.Duration, e );
 		}
 
@@ -42,11 +44,11 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 
 		public event Action<double>? TimeSeeked;
 
-		Dictionary<string, VisualEvent> visualEventCategoriesTrackers = new();
-		List<(VisualEvent obscurer, VisualEvent obscuree)> obscuredVisualEvents = new();
-		List<VisualEvent> activeVisualEvents = new();
+		Dictionary<string, T> visualEventCategoriesTrackers = new();
+		List<(T obscurer, T obscuree)> obscuredVisualEvents = new();
+		List<T> activeVisualEvents = new();
 
-		private void startVisualEvent ( VisualEvent e ) {
+		private void startVisualEvent ( T e ) {
 			foreach ( var category in e.Categories ) {
 				if ( visualEventCategoriesTrackers.Remove( category, out var @event ) ) {
 					if ( activeVisualEvents.Remove( @event ) ) {
@@ -62,7 +64,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			activeVisualEvents.Add( e );
 		}
 
-		private void endVisualEvent ( VisualEvent e ) {
+		private void endVisualEvent ( T e ) {
 			if ( activeVisualEvents.Remove( e ) ) {
 				foreach ( var category in e.Categories ) {
 					visualEventCategoriesTrackers.Remove( category );
@@ -76,9 +78,9 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			}
 		}
 
-		private void revertVisualEvent ( VisualEvent e ) {
+		private void revertVisualEvent ( T e ) {
 			if ( e.InterruptedTime < e.EndTime ) {
-				obscuredVisualEvents.Add( (e.Obscurer!, e) );
+				obscuredVisualEvents.Add( ((e.Obscurer as T)!, e) );
 			}
 			else {
 				foreach ( var category in e.Categories ) {
@@ -93,7 +95,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			}
 		}
 
-		private void rewindVisualEvent ( VisualEvent e ) {
+		private void rewindVisualEvent ( T e ) {
 			e.Revert();
 
 			if ( activeVisualEvents.Remove( e ) ) {

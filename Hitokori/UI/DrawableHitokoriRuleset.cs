@@ -30,6 +30,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayRecorder( score );
 
 		protected override Playfield CreatePlayfield ()
-			=> new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator( Beatmap ).GeneratePath() );
+			=> new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator( Beatmap ).GenerateEasedPath() );
 	}
 }

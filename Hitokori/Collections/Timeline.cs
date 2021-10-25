@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>
 	/// Represents a seekable sequence of events spread across time
 	/// </summary>
-	public class Timeline<T,E> : IEnumerable<E> where E : TimelineEntry<T> {
+	public class Timeline<T,E> : IEnumerable<E>, IReadOnlyList<E> where E : TimelineEntry<T> {
 		private SortedList<E> sequence;
 		public readonly IComparer<T> Comparer;
 

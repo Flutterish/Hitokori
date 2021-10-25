@@ -36,8 +36,11 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 				OnBegin();
 			}
 
-			Apply( Interpolation.ApplyEasing( Easing, Duration == 0 ? 1 : Math.Clamp( (time - StartTime) / Duration, 0, 1 ) ) );
+			Apply( ProgressAt( time ) );
 		}
+
+		protected double ProgressAt ( double time )
+			=> Interpolation.ApplyEasing( Easing, Duration == 0 ? 1 : Math.Clamp( ( time - StartTime ) / Duration, 0, 1 ) );
 
 		protected abstract void Apply ( double progress );
 		protected virtual void OnBegin () { }
@@ -77,10 +80,12 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		}
 
 		protected override void Apply ( double progress ) {
-			var value = valueAt( progress );
+			var value = ValueAtProgress( progress );
 			set( target, value );
 		}
-		private T valueAt ( double progress )
+		public T ValueAt ( double time )
+			=> ValueAtProgress( ProgressAt( time ) );
+		public T ValueAtProgress ( double progress )
 			=> Interpolation.ValueAt( progress, startValue, endValue, 0, 1 );
 
 		protected override void OnBegin () {
@@ -92,7 +97,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		public override string ToString ()
 			=> $"{( HasStarted ? startValue.ToString() : "???" )} -> {endValue} @ ({StartTime} -> {EndTime})" 
 			+ ( double.IsFinite( InterruptedTime ) 
-				? $" (interrupted at {InterruptedTime} => {valueAt( Interpolation.ApplyEasing( Easing, Duration == 0 ? 1 : Math.Clamp( ( InterruptedTime - StartTime ) / Duration, 0, 1 ) ) )})" 
+				? $" (interrupted at {InterruptedTime} => {ValueAtProgress( ProgressAt( InterruptedTime ) )})" 
 				: ""
 			);
 	}
