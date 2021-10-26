@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>
@@ -24,6 +25,10 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 			=> Add( new Entry( startTime, duration, value ) );
 
 		public override int Add ( Entry entry ) {
+			if ( entry.Duration < 0 ) {
+				throw new InvalidOperationException( $"Can not add an event with negative duration to a {nameof(TimelineSeeker<T>)} ( attempted to add an event with duration {entry.Duration} )" );
+			}
+
 			if ( ModifiedBehaviour is TimelineModifiedBehaviour.Replay && entry.StartTime <= currentTime ) {
 				var time = currentTime;
 				seekBackwardToBefore( entry.StartTime );
@@ -67,7 +72,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 		}
 
 		private void seekForwardTo ( double time ) {
-			int nextStartIndex = FirstAfter( currentTime ); // TODO these indices can be kept track of to eliminate the lon_2(n) overhead
+			int nextStartIndex = FirstAfter( currentTime ); // TODO these indices can be kept track of to eliminate the log_2(n) overhead
 			int nextEndIndex = ends.FirstAfterOrAt( currentTime );
 
 			while ( true ) {
@@ -101,17 +106,22 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var nextStart = this[ nextStartIndex ];
 					var nextEnd = ends[ nextEndIndex ].Value;
 
-					if ( nextStart.StartTime <= nextEnd.EndTime ) {
-						if ( nextStart.StartTime <= time ) {
+					// first end, then start
+					if ( nextEnd.EndTime <= nextStart.StartTime ) {
+						if ( nextEnd.EndTime < time ) {
+							EventEnded?.Invoke( nextEnd );
+							nextEndIndex++;
+						}
+						else if ( nextStart.StartTime <= time ) {
 							EventStarted?.Invoke( nextStart );
 							nextStartIndex++;
 						}
 						else break;
 					}
 					else {
-						if ( nextEnd.EndTime < time ) {
-							EventEnded?.Invoke( nextEnd );
-							nextEndIndex++;
+						if ( nextStart.StartTime <= time ) {
+							EventStarted?.Invoke( nextStart );
+							nextStartIndex++;
 						}
 						else break;
 					}
@@ -122,7 +132,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 		}
 
 		private void seekBackwardTo ( double time ) {
-			int previousStartIndex = FirstBeforeOrAt( currentTime );
+			int previousStartIndex = LastAtOrFirstBefore( currentTime );
 			int previousEndIndex = ends.FirstBefore( currentTime );
 
 			while ( true ) {
@@ -153,17 +163,22 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var previousStart = this[ previousStartIndex ];
 					var previousEnd = ends[ previousEndIndex ].Value;
 
-					if ( previousEnd.EndTime >= previousStart.StartTime ) {
-						if ( previousEnd.EndTime >= time ) {
+					// first un-start then un-end
+					if ( previousStart.StartTime >= previousEnd.EndTime ) {
+						if ( previousStart.StartTime > time ) {
+							EventRewound?.Invoke( previousStart );
+							previousStartIndex--;
+						}
+						else if ( previousEnd.EndTime >= time ) {
 							EventReverted?.Invoke( previousEnd );
 							previousEndIndex--;
 						}
 						else break;
 					}
 					else {
-						if ( previousStart.StartTime > time ) {
-							EventRewound?.Invoke( previousStart );
-							previousStartIndex--;
+						if ( previousEnd.EndTime >= time ) {
+							EventReverted?.Invoke( previousEnd );
+							previousEndIndex--;
 						}
 						else break;
 					}
@@ -188,7 +203,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					else {
 						var previousEnd = ends[ previousEndIndex ].Value;
 
-						if ( previousEnd.EndTime >= time ) {
+						if ( previousEnd.EndTime > time ) {
 							EventReverted?.Invoke( previousEnd );
 							previousEndIndex--;
 						}
@@ -208,17 +223,18 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var previousStart = this[ previousStartIndex ];
 					var previousEnd = ends[ previousEndIndex ].Value;
 
-					if ( previousEnd.EndTime >= previousStart.StartTime ) {
-						if ( previousEnd.EndTime >= time ) {
-							EventReverted?.Invoke( previousEnd );
-							previousEndIndex--;
+					// first un-start then un-end
+					if ( previousStart.StartTime >= previousEnd.EndTime ) {
+						if ( previousStart.StartTime >= time ) {
+							EventRewound?.Invoke( previousStart );
+							previousStartIndex--;
 						}
 						else break;
 					}
 					else {
-						if ( previousStart.StartTime >= time ) {
-							EventRewound?.Invoke( previousStart );
-							previousStartIndex--;
+						if ( previousEnd.EndTime > time ) {
+							EventReverted?.Invoke( previousEnd );
+							previousEndIndex--;
 						}
 						else break;
 					}
@@ -266,17 +282,22 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var nextStart = this[ nextStartIndex ];
 					var nextEnd = ends[ nextEndIndex ].Value;
 
-					if ( nextStart.StartTime <= nextEnd.EndTime ) {
-						if ( nextStart.StartTime <= time ) {
+					// first end, then start
+					if ( nextEnd.EndTime <= nextStart.StartTime ) {
+						if ( nextEnd.EndTime < time ) {
+							EventEnded?.Invoke( nextEnd );
+							nextEndIndex++;
+						}
+						else if ( nextStart.StartTime <= time ) {
 							EventStarted?.Invoke( nextStart );
 							nextStartIndex++;
 						}
 						else break;
 					}
 					else {
-						if ( nextEnd.EndTime < time ) {
-							EventEnded?.Invoke( nextEnd );
-							nextEndIndex++;
+						if ( nextStart.StartTime <= time ) {
+							EventStarted?.Invoke( nextStart );
+							nextStartIndex++;
 						}
 						else break;
 					}
@@ -285,6 +306,50 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 
 			currentTime = time;
 		}
+
+		/// <summary>
+		/// All entries active at a given time peroid, not ordered. This operation is expensive O(n).
+		/// </summary>
+		public IEnumerable<TimelineSeeker<T>.Entry> EntriesBetween ( double start, double end ) {
+			var nextStartIndex = FirstAfterOrAt( start );
+			var nextEndIndex = ends.FirstAfterOrAt( start );
+
+			// all that end within the peroid
+			if ( nextEndIndex != -1 ) {
+				while ( nextEndIndex < ends.Count ) {
+					var entry = ends[ nextEndIndex++ ].Value;
+					if ( entry.EndTime <= end ) {
+						// excpet the ones that start within it
+						if ( entry.StartTime < start ) {
+							yield return entry;
+						}
+					}
+					else
+						break;
+				}
+			}
+
+			// all that start withing the peroid
+			if ( nextStartIndex != -1 ) {
+				while ( nextStartIndex < Count ) {
+					var entry = this[ nextStartIndex++ ];
+					if ( entry.StartTime <= end )
+						yield return entry;
+					else
+						break;
+				}
+			}
+
+			nextEndIndex = ends.FirstAfter( end );
+			// all that span over the peroid
+			if ( nextEndIndex != -1 ) {
+				while ( nextEndIndex < ends.Count ) {
+					var entry = ends[ nextEndIndex++ ].Value;
+					if ( entry.StartTime < start )
+						yield return entry;
+				}
+			}
+		} 
 
 		public delegate void EventEncounteredHandler ( Entry entry );
 		/// <summary>

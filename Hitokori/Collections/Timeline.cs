@@ -59,6 +59,20 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 		public int BinarySearch ( E entry )
 			=> sequence.BinarySearch( entry );
 
+		public int LastAtOrFirstBefore ( double time ) {
+			var i = FirstAfter( time );
+
+			if ( i == -1 ) {
+				if ( sequence.Count == 0 || sequence[^1].StartTime > time )
+					return -1;
+				else
+					return sequence.Count - 1;
+			}
+			else {
+				return i - 1;
+			}
+		}
+
 		public int FirstBeforeOrAt ( double time ) {
 			var i = FirstAfterOrAt( time );
 
@@ -98,23 +112,16 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 
 				var entry = sequence[ index ];
 
-				while ( index > minIndex && entry.StartTime == sequence[ index - 1 ].StartTime ) {
-					index--;
-					entry = sequence[ index ];
-				}
-
 				if ( entry.StartTime >= time ) {
-					if ( maxIndex == index )
-						maxIndex = minIndex;
-					else
-						maxIndex = index;
+					maxIndex = index;
 				}
 				else {
-					if ( minIndex == index )
-						minIndex = maxIndex;
-					else
-						minIndex = index;
+					minIndex = index + 1;
 				}
+			}
+
+			while ( minIndex > 0 && time == sequence[ minIndex - 1 ].StartTime ) {
+				minIndex--;
 			}
 
 			return minIndex;
@@ -127,11 +134,30 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 				return -1;
 			}
 			else {
-				while ( i < sequence.Count && sequence[ i ].StartTime <= time ) {
+				while ( i < sequence.Count && sequence[ i ].StartTime == time ) {
 					i++;
 				}
 
+				if ( i >= sequence.Count ) return -1;
+
 				return i;
+			}
+		}
+
+		/// <summary>
+		/// All entries at a given time instant
+		/// </summary>
+		public IEnumerable<E> EntriesAt ( double time ) {
+			var nextIndex = FirstAfterOrAt( time );
+			if ( nextIndex != -1 ) {
+				while ( nextIndex < Count ) {
+					var entry = this[ nextIndex++ ];
+
+					if ( entry.StartTime == time )
+						yield return entry;
+					else
+						break;
+				}
 			}
 		}
 

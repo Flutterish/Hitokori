@@ -95,10 +95,14 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		public override IEnumerable<string> Categories => categories;
 
 		public override string ToString ()
-			=> $"{( HasStarted ? startValue.ToString() : "???" )} -> {endValue} @ ({StartTime} -> {EndTime})" 
-			+ ( double.IsFinite( InterruptedTime ) 
-				? $" (interrupted at {InterruptedTime} => {ValueAtProgress( ProgressAt( InterruptedTime ) )})" 
-				: ""
-			);
+			=> $"{( HasStarted ? startValue.ToString() : "???" )} " +
+			( double.IsFinite( InterruptedTime )
+				? $" -> {ValueAtProgress(ProgressAt(InterruptedTime))} -/> {endValue}"
+				: $" -> {endValue}"
+			) + $" @ ( {StartTime}" +
+			( double.IsFinite( InterruptedTime )
+				? $" -> {InterruptedTime} -/> {EndTime}"
+				: $" -> {EndTime}"
+			) + ")";
 	}
 }

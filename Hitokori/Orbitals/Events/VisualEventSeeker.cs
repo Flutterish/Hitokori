@@ -45,9 +45,12 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		public event Action<double>? TimeSeeked;
 
 		Dictionary<string, T> visualEventCategoriesTrackers = new();
-		List<(T obscurer, T obscuree)> obscuredVisualEvents = new();
+		List<(VisualEvent obscurer, T obscuree)> obscuredVisualEvents = new();
 		List<T> activeVisualEvents = new();
 
+		/// <summary>
+		/// Went past the start of an event forward in time
+		/// </summary>
 		private void startVisualEvent ( T e ) {
 			foreach ( var category in e.Categories ) {
 				if ( visualEventCategoriesTrackers.Remove( category, out var @event ) ) {
@@ -64,37 +67,9 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 			activeVisualEvents.Add( e );
 		}
 
-		private void endVisualEvent ( T e ) {
-			if ( activeVisualEvents.Remove( e ) ) {
-				foreach ( var category in e.Categories ) {
-					visualEventCategoriesTrackers.Remove( category );
-				}
-			}
-
-			for ( int i = 0; i < obscuredVisualEvents.Count; i++ ) {
-				if ( obscuredVisualEvents[ i ].obscuree == e ) {
-					obscuredVisualEvents.RemoveAt( i-- );
-				}
-			}
-		}
-
-		private void revertVisualEvent ( T e ) {
-			if ( e.InterruptedTime < e.EndTime ) {
-				obscuredVisualEvents.Add( ((e.Obscurer as T)!, e) );
-			}
-			else {
-				foreach ( var category in e.Categories ) {
-					if ( visualEventCategoriesTrackers.Remove( category, out var @event ) ) {
-						activeVisualEvents.Remove( @event );
-					}
-
-					visualEventCategoriesTrackers.Add( category, e );
-				}
-
-				activeVisualEvents.Add( e );
-			}
-		}
-
+		/// <summary>
+		/// Went past the start of an event backward in time
+		/// </summary>
 		private void rewindVisualEvent ( T e ) {
 			e.Revert();
 
@@ -119,6 +94,40 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 						activeVisualEvents.Add( obscuree );
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// Went past the end of an event forward in time
+		/// </summary>
+		private void endVisualEvent ( T e ) {
+			if ( activeVisualEvents.Remove( e ) ) {
+				foreach ( var category in e.Categories ) {
+					visualEventCategoriesTrackers.Remove( category );
+				}
+			}
+
+			for ( int i = 0; i < obscuredVisualEvents.Count; i++ ) {
+				if ( obscuredVisualEvents[ i ].obscuree == e ) {
+					obscuredVisualEvents.RemoveAt( i-- );
+					break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Went past the end of an event backward in time
+		/// </summary>
+		private void revertVisualEvent ( T e ) {
+			if ( double.IsFinite( e.InterruptedTime ) ) {
+				obscuredVisualEvents.Add( (e.Obscurer!, e) );
+			}
+			else {
+				foreach ( var category in e.Categories ) {
+					visualEventCategoriesTrackers.Add( category, e );
+				}
+
+				activeVisualEvents.Add( e );
 			}
 		}
 
