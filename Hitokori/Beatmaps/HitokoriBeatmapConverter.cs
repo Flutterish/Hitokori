@@ -64,11 +64,13 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 				orbitals[ i ] = ( Math.Tau / orbitalCount * i ).AngleToVector( diameter / 2 );
 			}
 
-			beatmap.HitObjects.Add( new NoJudgementTilePoint {
+			var firstTile = new NoJudgementTilePoint {
 				Position = Vector2d.Zero,
 				OrbitalState = new Orbitals.OrbitalState( orbitals ),
 				StartTime = 0
-			} );
+			};
+			beatmap.HitObjects.Add( firstTile );
+			beatmap.Chains.Add( 0, firstTile );
 
 			foreach ( var i in original.HitObjects ) {
 				beatmap.HitObjects.AddRange( ConvertHitObject( i, original, cancellationToken ) );
@@ -79,7 +81,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			return beatmap;
 		}
 
-		protected override Beatmap<HitokoriHitObject> CreateBeatmap ()
+		protected override HitokoriBeatmap CreateBeatmap ()
 			=> new HitokoriBeatmap();
 	}
 }
