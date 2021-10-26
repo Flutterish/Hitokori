@@ -4,48 +4,55 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 	public class ConstrainableProperty<T> where T : struct {
 		public bool IsConstrained { get; private set; }
 
-		private bool isComputed;
+		public bool IsComputed { get; private set; }
 		private T value;
 		public T Value {
 			get {
-				if ( !isComputed ) {
+				if ( !IsComputed ) {
 					computeAction();
-					if ( !isComputed ) 
+					if ( !IsComputed ) 
 						throw new InvalidOperationException( "Compute function of a constrainable property did not set its value" );
 				}
 
 				return value;
 			}
 			set {
-				isComputed = true;
+				if ( IsConstrained ) 
+					throw new InvalidOperationException( "Cannot set a value of a constrained property" );
+
+				IsComputed = true;
 				this.value = value;
+				onValueChanged?.Invoke();
 			}
 		}
 
 		public void Constrain ( T value ) {
-			IsConstrained = true;
 			Value = value;
+			IsConstrained = true;
 			onConstraintChanged( true );
 		}
 		public void ReleaseConstraint () {
 			IsConstrained = false;
-			isComputed = false;
+			IsComputed = false;
 			onConstraintChanged( false );
 		}
 
 		public void Invalidate () {
-			isComputed = false;
+			IsComputed = IsConstrained;
 		}
 
 		private Action computeAction;
+		private Action? onValueChanged;
 		private Action<bool> onConstraintChanged;
 
-		public ConstrainableProperty ( Action computeFunction, Action<bool> onConstraintChanged ) {
-			isComputed = false;
+		public ConstrainableProperty ( Action computeFunction, Action<bool> onConstraintChanged, Action? onValueChanged = null ) {
+			IsComputed = false;
 			IsConstrained = false;
 			value = default;
 			computeAction = computeFunction;
 			this.onConstraintChanged = onConstraintChanged;
+
+			this.onValueChanged = onValueChanged;
 		}
 		public ConstrainableProperty ( T initialValue, Action computeFunction, Action<bool> onConstraintChanged ) : this( computeFunction, onConstraintChanged ) {
 			value = initialValue;

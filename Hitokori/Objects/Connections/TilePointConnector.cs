@@ -1,34 +1,54 @@
 ﻿using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
+using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
 	/// A rotation, linear movement or whatever happens between 2 <see cref="TilePoint"/>s.
 	/// </summary>
 	public abstract class TilePointConnector {
-		private TilePoint from = TilePoint.Unit;
-		private TilePoint to = TilePoint.Unit;
+		private TilePoint? from;
+		private TilePoint? to;
 
+		[AllowNull]
 		public TilePoint From {
-			get => from;
+			get => from!;
 			set {
 				if ( from == value ) return;
 				var old = from;
 				from = value;
-				
-				if ( old.ToNext == this ) old.ToNext = null;
-				from.ToNext = this;
+
+				if ( from is not null ) {
+					from.ToNext = this;
+				}
+				else {
+					old!.ToNext = null;
+				}
 			}
 		}
+
+		[AllowNull]
 		public TilePoint To {
-			get => to;
+			get => to!;
 			set {
 				if ( to == value ) return;
 				var old = to;
 				to = value;
 
-				if ( old.FromPrevious == this ) old.FromPrevious = null;
-				to.FromPrevious = this;
+				if ( to is not null ) {
+					if ( old is not null ) {
+						var oldfrom = From;
+						old.FromPrevious = null;
+						From = oldfrom;
+						To = value;
+					}
+					else {
+						to.FromPrevious = this;
+					}
+				}
+				else {
+					old!.FromPrevious = null;
+				}
 			}
 		}
 
@@ -82,7 +102,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// <summary>
 		/// Force this <see cref="TilePointConnector"/> and any subsequent <see cref="TilePoint"/>s to recalcuate their properties such as <see cref="TilePoint.Position"/>.
 		/// </summary>
-		protected void Invalidate () {
+		public void Invalidate () {
 			InvalidateProperties();
 			To.Invalidate();
 		}

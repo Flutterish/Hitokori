@@ -1,5 +1,5 @@
 ﻿using osu.Framework.Bindables;
-using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
+using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Objects.Types;
 using osuTK;
@@ -11,6 +11,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// A point where an orbital may rest.
 	/// </summary>
 	public abstract class TilePoint : HitokoriHitObject, IHasPosition {
+		public TilePoint () {
+			ConstrainablePosition = new ConstrainableProperty<Vector2d>( 
+				() => ConstrainablePosition!.Value = fromPrevious!.GetEndPosition(),
+				onConstraintChanged,
+				() => BindablePosition.Value = Position!
+			);
+
+			BindablePosition.ValueChanged += v => ConstrainablePosition.Value = v.NewValue;
+		}
+
+		private void onConstraintChanged ( bool isConstrained ) {
+			Invalidate();
+		}
+
 		/// <summary>
 		/// Force this and any subsequent <see cref="TilePoint"/>s to recalcuate their properties such as <see cref="Position"/>.
 		/// </summary>
@@ -18,45 +32,26 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			if ( !IsInvalidationPossible ) return;
 
 			InvalidateProperties();
-			ToNext?.To.Invalidate();
+			ToNext?.Invalidate();
 		}
 
 		/// <summary>
 		/// Invalidates all properties of this <see cref="TilePoint"/>.
 		/// </summary>
 		protected virtual void InvalidateProperties () {
-			isPositionComputed = false;
+			ConstrainablePosition.Invalidate();
 			isOrbitalStateComputed = false;
 		}
 
 		/// <summary>
 		/// Whether any properties are already computed.
 		/// </summary>
-		protected virtual bool IsInvalidationPossible => (!IsPositionConstrained && isPositionComputed) || (!IsOrbitalStateConstrained && isOrbitalStateComputed);
+		protected virtual bool IsInvalidationPossible => (!ConstrainablePosition.IsConstrained && ConstrainablePosition.IsComputed) || (!IsOrbitalStateConstrained && isOrbitalStateComputed);
 
-		/// <summary>
-		/// Is this <see cref="TilePoint"/>'s <see cref="Position"/> fixed (does not depend on <see cref="TilePointConnector.GetEndPosition"/>).
-		/// </summary>
-		public bool IsPositionConstrained { get; private set; } = false;
-		private bool isPositionComputed = false;
 		public readonly Bindable<Vector2d> BindablePosition = new Bindable<Vector2d>();
-
-		/// <summary>
-		/// A normalized position. Setting this property will constrain it.
-		/// </summary>
-		public Vector2d Position {
-			get {
-				if ( !IsPositionConstrained && !isPositionComputed ) {
-					BindablePosition.Value = fromPrevious!.GetEndPosition();
-					isPositionComputed = true;
-				}
-				return BindablePosition.Value;
-			}
-			set {
-				IsPositionConstrained = true;
-				BindablePosition.Value = value;
-			}
-		}
+		public readonly ConstrainableProperty<Vector2d> ConstrainablePosition;
+		public Vector2d Position => ConstrainablePosition;
+		public Vector2d ConstrainPosition { set => ConstrainablePosition.Constrain( value ); }
 
 		private OrbitalState orbitalState;
 		/// <summary>
@@ -97,8 +92,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 				var old = fromPrevious;
 				fromPrevious = value;
 
-				if ( old is not null && old.To == this ) old.To = Unit;
-				if ( fromPrevious is not null ) fromPrevious.To = this;
+				if ( fromPrevious is not null ) {
+					fromPrevious.To = this;
+				}
+				else {
+					old.To = null;
+					old.From = null;
+				}
 
 				Invalidate();
 			}
@@ -115,8 +115,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 				var old = toNext;
 				toNext = value;
 
-				if ( old is not null && old.From == this ) old.From = Unit;
-				if ( toNext is not null ) toNext.From = this;
+				if ( toNext is not null ) {
+					toNext.From = this;
+				}
+				else {
+					old!.From = null;
+					old.To = null;
+				}
 
 				Invalidate();
 			}
@@ -196,10 +201,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public double LifetimeOffset 
 			=> Math.Max( 2000, FromPrevious is null ? 0 : FromPrevious.Duration );
 
-		/// <summary>
-		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.
-		/// </summary>
-		public static TilePoint Unit { get; } = new PassThroughTilePoint { Position = Vector2d.Zero };
 		Vector2 IHasPosition.Position => (Vector2)Position;
 		float IHasXPosition.X => (float)Position.X;
 		float IHasYPosition.Y => (float)Position.Y;
