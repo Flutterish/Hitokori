@@ -6,8 +6,6 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
-using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
 using osuTK.Graphics;
 using System.Collections.Generic;
@@ -16,6 +14,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	[Cached]
 	public class OrbitalGroup : CompositeDrawable {
+		public TilePoint FirstTile { get; private set; }
+		public TilePoint LastTile { get; private set; }
 		public TilePoint CurrentTile { get; private set; }
 
 		public override bool RemoveCompletedTransforms => false;
@@ -24,6 +24,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 			CurrentTile = currentTile;
+			FirstTile = currentTile.First;
+			LastTile = currentTile.Last;
 			AutoSizeAxes = Axes.Both;
 		}
 
@@ -36,20 +38,6 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
 
 			positionScale.ValueChanged += _ => SeekTo( Time.Current );
-		}
-
-		protected override void LoadComplete () {
-			playfield.NewResult += onNewResult;
-		}
-
-		private void onNewResult ( DrawableHitObject dho, JudgementResult j ) {
-			if ( dho.HitObject is TilePoint tile && tile.Next is null ) {
-
-				foreach ( var i in activeOrbitals ) {
-					i.VisualEvents.Add( new ChangeRadiusVisualEvent( i, 0, tile.StartTime, 500, Easing.In ) );
-					i.VisualEvents.Add( new FadeVisualEvent( i, 0, tile.StartTime + 500, 150 ) );
-				}
-			}
 		}
 
 		public override bool IsPresent => true;
@@ -99,9 +87,12 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 				activeOrbitals.Add( orbital );
 				AddInternal( orbital );
 
-				var duration = ( CurrentTile.ToNext?.Duration * 2 ) ?? 500;
-				orbital.VisualEvents.Add( new FadeVisualEvent( orbital, 1, CurrentTile.StartTime - duration, 150 ) );
-				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 1, CurrentTile.StartTime - duration + 150, duration, Easing.Out ) );
+				var duration = ( FirstTile.ToNext?.Duration * 2 ) ?? 500;
+				orbital.VisualEvents.Add( new FadeVisualEvent( orbital, 1, FirstTile.StartTime - duration, 150 ) );
+				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 1, FirstTile.StartTime - duration + 150, duration, Easing.Out ) );
+
+				orbital.VisualEvents.Add( new ChangeRadiusVisualEvent( orbital, 0, LastTile.StartTime, 500, Easing.In ) );
+				orbital.VisualEvents.Add( new FadeVisualEvent( orbital, 0, LastTile.StartTime + 450, 150 ) );
 			}
 			while ( activeOrbitals.Count > state.OrbitalCount ) {
 				var last = activeOrbitals[ activeOrbitals.Count - 1 ];

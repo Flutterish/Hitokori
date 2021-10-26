@@ -23,23 +23,31 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]
 	public class HitokoriPlayfield : Playfield {
-		private Dictionary<OrbitalGroup, TilePoint> paths = new();
+		private Dictionary<OrbitalGroup, TilePoint> chains = new();
+		private Dictionary<int, OrbitalGroup> chainsByID = new();
+
 		public readonly Container<Drawable> Everything;
 		public const float DefaultPositionScale = 90 * 0.6f;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
 
-		OrbitalGroup addPath ( TilePoint firstTile ) {
+		public IEnumerable<OrbitalGroup> Chains => chains.Keys;
+		public OrbitalGroup ChainWithID ( int id ) => chainsByID[ id ];
+
+		public OrbitalGroup AddChain ( TilePoint firstTile ) {
 			var orbitals = new OrbitalGroup( firstTile );
-			paths.Add( orbitals, firstTile );
+			chains.Add( orbitals, firstTile );
+			chainsByID.Add( firstTile.ChainID, orbitals );
 			Everything.Add( orbitals );
 			return orbitals;
 		}
 
-		void removePath ( OrbitalGroup group ) {
-			paths.Remove( group );
+		public void RemoveChain ( OrbitalGroup group ) {
+			chains.Remove( group );
+			chainsByID.Remove( group.CurrentTile.ChainID );
 			group.Expire();
 		}
+		public void RemoveChain ( int id ) => RemoveChain( chainsByID[ id ] );
 
 		CameraPath? path;
 		public HitokoriPlayfield ( Beatmap<HitokoriHitObject> beatmap, CameraPath? path = null ) {
@@ -57,7 +65,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			AddInternal( BeatProvider );
 			foreach ( var tile in beatmap.HitObjects.OfType<TilePoint>().Where( x => x.Previous is null ) ) {
-				addPath( tile );
+				AddChain( tile );
 			}
 
 			positionScale.BindValueChanged( _ => updateCameraViewport() );
@@ -146,7 +154,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				delta = -Time.Elapsed;
 			}
 
-			var maxInflate = paths.Keys.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
+			var maxInflate = Chains.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
 			inflateScale.Value = inflateScale.Value + ( maxInflate - inflateScale.Value ) * (float)Math.Clamp( delta / 3000, 0, 1 ); // this still needs to be eased because it can change quickly
 			maxInflate = inflateScale.Value;
 
