@@ -12,14 +12,12 @@ using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Hitokori.Settings;
-using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
@@ -82,9 +80,13 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			}
 		}
 
-		private Dictionary<HitObject, JudgementResult> results = new();
-		public bool TryGetResultFor ( HitObject hitObject, [NotNullWhen(true)] out JudgementResult? result )
-			=> results.TryGetValue( hitObject, out result ) && result.HasResult;
+
+		public struct TileJudgement {
+			public double TimeAbsolute;
+		}
+		private Dictionary<HitObject, TileJudgement> results = new();
+		public virtual bool TryGetResultFor ( HitObject hitObject, out TileJudgement result )
+			=> results.TryGetValue( hitObject, out result );
 
 		protected override void LoadComplete () {
 			base.LoadComplete();
@@ -93,10 +95,12 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			RegisterPool<PassThroughTilePoint, DrawableTapTilePoint>( 30 );
 			RegisterPool<NoJudgementTilePoint, DrawableNoJudgementTilePoint>( 2 );
 
-			NewResult += (dho, result) => {
-				results.Add( dho.HitObject, result );
+			NewResult += ( dho, result ) => {
+				results.Add( dho.HitObject, new TileJudgement {
+					TimeAbsolute = result.TimeAbsolute
+				} );
 			};
-			RevertResult += (dho, result) => {
+			RevertResult += ( dho, result ) => {
 				results.Remove( dho.HitObject );
 			};
 		}
@@ -135,9 +139,33 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriLifetimeEntry( hitObject );
 
 		private void updateCameraViewport () {
-			updateCamera();
+			UpdateCamera();
+
+			var delta = Time.Elapsed;
+			if ( Time.Elapsed < 0 ) {
+				delta = -Time.Elapsed;
+			}
+
+			var maxInflate = paths.Keys.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
+			inflateScale.Value = inflateScale.Value + ( maxInflate - inflateScale.Value ) * (float)Math.Clamp( delta / 3000, 0, 1 ); // this still needs to be eased because it can change quickly
+			maxInflate = inflateScale.Value;
+
+			var size = CameraSize.Value + new Vector2( (float)maxInflate * 2 );
+
+			double scale;
+			if ( size.X / size.Y > DrawSize.X / DrawSize.Y ) {
+				scale = DrawSize.X / size.X;
+			}
+			else {
+				scale = DrawSize.Y / size.Y;
+			}
+
+			if ( double.IsFinite( scale ) ) {
+				cameraScale.Value = scale / 2;
+			}
+
 			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / positionScale.Value );
-			Everything.Position = -cameraMiddle.Value * positionScale.Value;
+			Everything.Position = -CameraMiddle.Value * positionScale.Value;
 		}
 
 		protected override void UpdateAfterChildren () {
@@ -146,87 +174,39 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			updateCameraViewport();
 		}
 
-		private Bindable<Vector2> cameraMiddle = new();
+		protected readonly Bindable<Vector2> CameraMiddle = new();
+		protected readonly Bindable<Vector2> CameraSize = new();
+
 		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
 		private BindableDouble inflateScale = new( 1 );
-		void updateCamera () {
+		protected virtual void UpdateCamera () {
+			var state = GetCameraState();
+			
 			if ( path is not null ) {
-				cameraMiddle.Value = path.Position.ValueAt( Time.Current );
-
-				var maxInflate = paths.Keys.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
-				this.TransformBindableTo( inflateScale, maxInflate, 3000 ); // this still needs to be eased because it can change quickly
-				maxInflate = inflateScale.Value;
-				var size = path.Size.ValueAt( Time.Current ) + new Vector2( (float)maxInflate * 2 );
-
-				double scale;
-				if ( size.X / size.Y > DrawSize.X / DrawSize.Y ) {
-					scale = DrawSize.X / size.X;
-				}
-				else {
-					scale = DrawSize.Y / size.Y;
-				}
-
-				if ( double.IsFinite( scale ) ) {
-					cameraScale.Value = scale / 2;
-				}
-
-				return;
+				CameraMiddle.Value = state.Center;
+				CameraSize.Value = state.Size;
 			}
 			else {
-				var tiles = HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>();
-				var points = tiles.Select( x => x.Position );
-
-				if ( !points.Any() ) return;
-
-				// we add interpolated points so the positioning is smooth rather than jumpy when a new hitobject spawns
-				var p = tiles.Last();
-				if ( p.ToNext is TilePointConnector next )
-					points = points.Append( p.Position + ( next.To.Position - p.Position ) * Math.Clamp( ( Time.Current + 2000 - next.StartTime ) / next.Duration, 0, 1 ) );
-
-				p = tiles.First();
-				if ( p.FromPrevious is TilePointConnector prev )
-					points = points.Append( prev.From.Position + ( p.Position - prev.From.Position ) * Math.Clamp( ( Time.Current + 2000 - prev.StartTime ) / prev.Duration, 0, 1 ) );
-
-				var maxInflate = paths.Keys.Select( x => (double)x.NormalizedEnclosingCircleRadius * 1.2f ).Append( 0.5 ).Max();
-
-				var boundingBox = new Box2d(
-					points.Min( x => x.X ) - maxInflate,
-					points.Min( x => x.Y ) - maxInflate,
-					points.Max( x => x.X ) + maxInflate,
-					points.Max( x => x.Y ) + maxInflate
-				);
-
-				this.TransformBindableTo( cameraMiddle, (Vector2)new Vector2d(
-					( boundingBox.Left + boundingBox.Right ) / 2,
-					( boundingBox.Top + boundingBox.Bottom ) / 2
-				), 1000 );
-
-				// this makes it so scaling doesnt go for "just enough", but rather keeps the current view and everything else in view
-				// we do this after the positioning, so it doesnt affect it and creating a "dragging" effect
-				boundingBox = new Box2d(
-					Math.Min( boundingBox.Left, cameraMiddle.Value.X ),
-					Math.Min( boundingBox.Top, cameraMiddle.Value.Y ),
-					Math.Max( boundingBox.Right, cameraMiddle.Value.X ),
-					Math.Max( boundingBox.Bottom, cameraMiddle.Value.Y )
-				);
-
-				double scale;
-				if ( boundingBox.Width / boundingBox.Height > DrawSize.X / DrawSize.Y ) {
-					scale = DrawSize.X / boundingBox.Width;
-				}
-				else {
-					scale = DrawSize.Y / boundingBox.Height;
+				var delta = Time.Elapsed;
+				if ( Time.Elapsed < 0 ) {
+					delta = -Time.Elapsed;
 				}
 
-				if ( !double.IsFinite( scale ) ) return;
+				CameraMiddle.Value = CameraMiddle.Value + ( state.Center - CameraMiddle.Value ) * (float)Math.Clamp( delta / 1000, 0, 1 );
+				CameraSize.Value = CameraSize.Value + ( state.Size - CameraSize.Value ) * (float)Math.Clamp( delta / 2500, 0, 1 );
+			}
+		}
 
-				double speedup =
-					cameraScale.Value > scale
-					? cameraScale.Value / scale
-					: 1;
-
-				this.TransformBindableTo( cameraScale, scale / 2, 3000 / speedup );
+		protected virtual CameraState GetCameraState () {
+			if ( path is not null )
+				return path.StateAt( Time.Current );
+			else {
+				return RegularCameraPathGenerator.GenerateCameraState( Time.Current, HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>() ) ?? new CameraState {
+					Center = CameraMiddle.Value,
+					Size = new Vector2( (float)DrawWidth / (float)cameraScale.Value, (float)DrawHeight / (float)cameraScale.Value ) / 2,
+					Rotation = 0
+				};
 			}
 		}
 	}

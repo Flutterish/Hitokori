@@ -4,6 +4,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Hitokori.Camera;
+using osu.Game.Rulesets.Hitokori.Edit;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Replays;
@@ -11,6 +12,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
+using osu.Game.Screens.Edit;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
@@ -30,6 +32,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayRecorder( score );
 
 		protected override Playfield CreatePlayfield ()
-			=> new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator( Beatmap ).GenerateEasedPath() );
+			=> Clock is EditorClock
+			? new HitokoriEditorPlayfield( Beatmap ) // I dont even know if this is legal
+			: new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator ( Beatmap ).GenerateEasedPath () );
 	}
 }

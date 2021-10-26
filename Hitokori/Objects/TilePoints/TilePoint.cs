@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Bindables;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
+using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
 	/// A point where an orbital may rest.
 	/// </summary>
-	public abstract class TilePoint : HitokoriHitObject {
+	public abstract class TilePoint : HitokoriHitObject, IHasPosition {
 		/// <summary>
 		/// Force this and any subsequent <see cref="TilePoint"/>s to recalcuate their properties such as <see cref="Position"/>.
 		/// </summary>
@@ -199,5 +200,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// A placeholder for when a non-nullable <see cref="TilePoint"/> needs to go into an intermediate state without a valid value.
 		/// </summary>
 		public static TilePoint Unit { get; } = new PassThroughTilePoint { Position = Vector2d.Zero };
+		Vector2 IHasPosition.Position => (Vector2)Position;
+		float IHasXPosition.X => (float)Position.X;
+		float IHasYPosition.Y => (float)Position.Y;
 	}
 }

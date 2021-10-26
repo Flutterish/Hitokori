@@ -15,5 +15,11 @@ namespace osu.Game.Rulesets.Hitokori.Camera {
 		/// Camera rotation. Since it is the camera that is rotated, the playfield is rotated the other direction
 		/// </summary>
 		public readonly AnimatedValue<float> Rotation = new();
+
+		public CameraState StateAt ( double time ) => new CameraState {
+			Center = Position.ValueAt( time ),
+			Size = Size.ValueAt( time ),
+			Rotation = Rotation.ValueAt( time )
+		};
 	}
 }

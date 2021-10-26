@@ -39,20 +39,28 @@ namespace osu.Game.Rulesets.Hitokori.Camera {
 			return path;
 		}
 
-		private double startTime ( TilePoint tp ) {
+		private static double startTime ( TilePoint tp ) {
 			double lifetimeOffset = tp.LifetimeOffset;
 
 			return tp.StartTime - lifetimeOffset;
 		}
 
-		private double endTime ( TilePoint tp ) {
+		private static double endTime ( TilePoint tp ) {
 			double duration = tp.ToNext is null ? 100 : tp.ToNext.Duration;
 
 			return tp.StartTime + duration + 200;
 		}
 
 		private void generateEntry ( CameraPath path, double time, IEnumerable<TilePoint> tiles ) {
-			if ( !tiles.Any() ) return;
+			var state = GenerateCameraState( time, tiles );
+			if ( !state.HasValue ) return;
+
+			path.Position.Animate( time, state.Value.Center, 1000 );
+			path.Size.Animate( time, state.Value.Size, 2000 );
+		}
+
+		public static CameraState? GenerateCameraState ( double time, IEnumerable<TilePoint> tiles ) {
+			if ( !tiles.Any() ) return null;
 
 			var points = tiles.Select( x => x.Position );
 
@@ -78,7 +86,7 @@ namespace osu.Game.Rulesets.Hitokori.Camera {
 					points = points.Prepend( fromPrevious.From.Position );
 				}
 				else {
-					points = points.Prepend( fromPrevious.From.Position + ( firstTile.Position - fromPrevious.From.Position ) * Math.Clamp( ( (time - seekback) - fromPrevious.StartTime ) / fromPrevious.Duration, 0, 1 ) );
+					points = points.Prepend( fromPrevious.From.Position + ( firstTile.Position - fromPrevious.From.Position ) * Math.Clamp( ( ( time - seekback ) - fromPrevious.StartTime ) / fromPrevious.Duration, 0, 1 ) );
 				}
 
 				firstTile = fromPrevious.From;
@@ -86,12 +94,13 @@ namespace osu.Game.Rulesets.Hitokori.Camera {
 
 			var boundingBox = points.CalculateBoundingBox();
 
-			path.Position.Animate( time, (Vector2)new Vector2d(
-				( boundingBox.Left + boundingBox.Right ) / 2,
-				( boundingBox.Top + boundingBox.Bottom ) / 2
-			), 1000 );
-
-			path.Size.Animate( time, new Vector2( (float)boundingBox.Width, (float)boundingBox.Height ), 2000 );
+			return new CameraState {
+				Center = (Vector2)new Vector2d(
+					( boundingBox.Left + boundingBox.Right ) / 2,
+					( boundingBox.Top + boundingBox.Bottom ) / 2
+				),
+				Size = new Vector2( (float)boundingBox.Width, (float)boundingBox.Height )
+			};
 		}
 	}
 }
