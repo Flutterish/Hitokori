@@ -204,7 +204,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			else {
 				return RegularCameraPathGenerator.GenerateCameraState( Time.Current, HitObjectContainer.AliveObjects.Select( x => x.HitObject ).OfType<TilePoint>() ) ?? new CameraState {
 					Center = CameraMiddle.Value,
-					Size = new Vector2( (float)DrawWidth / (float)cameraScale.Value, (float)DrawHeight / (float)cameraScale.Value ) / 2,
+					Size = CameraSize.Value,
 					Rotation = 0
 				};
 			}

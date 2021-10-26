@@ -8,14 +8,19 @@ using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmapProcessor : BeatmapProcessor {
+		new public HitokoriBeatmap Beatmap => (HitokoriBeatmap)base.Beatmap;
+
 		public HitokoriBeatmapProcessor ( IBeatmap beatmap ) : base( beatmap ) {
 		}
 
 		public override void PreProcess () {
 			base.PreProcess();
 
-			foreach ( var chain in Beatmap.HitObjects.OfType<TilePoint>().GroupBy( x => x.ChainID ) ) {
-				processChain( chain );
+			if ( !Beatmap.IsLinked ) {
+				foreach ( var chain in Beatmap.HitObjects.OfType<TilePoint>().GroupBy( x => x.ChainID ) ) {
+					processChain( chain );
+				}
+				Beatmap.IsLinked = true;
 			}
 		}
 

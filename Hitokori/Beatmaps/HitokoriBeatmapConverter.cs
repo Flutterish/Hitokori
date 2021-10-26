@@ -78,5 +78,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 			return beatmap;
 		}
+
+		protected override Beatmap<HitokoriHitObject> CreateBeatmap ()
+			=> new HitokoriBeatmap();
 	}
 }
