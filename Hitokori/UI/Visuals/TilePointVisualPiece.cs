@@ -120,6 +120,18 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			}
 		}
 
+		private bool showShadows = true;
+		public bool ShowShadows {
+			get => showShadows;
+			set {
+				showShadows = value;
+				if ( showShadows )
+					Shadows.Show();
+				else
+					Shadows.Hide();
+			}
+		}
+
 		public void LightUp () {
 			var lightUpDuration = 180;
 			var lightUpEasing = Easing.None;

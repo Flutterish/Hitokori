@@ -1,16 +1,27 @@
-﻿using osu.Game.Rulesets.Edit;
+﻿using osu.Framework.Allocation;
+using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
+using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
+using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Screens.Edit.Compose.Components;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
 	public class HitokoriHitObjectComposer : HitObjectComposer<HitokoriHitObject> {
 		public HitokoriBeatmap Beatmap => (HitokoriBeatmap)EditorBeatmap.PlayableBeatmap;
 		new public HitokoriEditorPlayfield Playfield => (HitokoriEditorPlayfield)base.Playfield;
+
+		[NotNull, MaybeNull]
+		private DependencyContainer dependencyContainer;
+		protected override IReadOnlyDependencyContainer CreateChildDependencies ( IReadOnlyDependencyContainer parent ) {
+			return dependencyContainer = new DependencyContainer( base.CreateChildDependencies( parent ) );
+		}
 
 		public HitokoriHitObjectComposer ( Ruleset ruleset ) : base( ruleset ) { }
 
@@ -18,10 +29,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			base.LoadComplete();
 			EditorBeatmap.HitObjectRemoved += onHitObjectRemoved;
 			EditorBeatmap.HitObjectUpdated += onHitObjectUpdated;
-		}
 
-		protected override void Update () {
-			base.Update();
+			dependencyContainer.CacheAs<HitokoriPlayfield>( Playfield );
+			dependencyContainer.CacheAs<HitokoriBeatmap>( Beatmap );
 		}
 
 		private void onHitObjectUpdated ( HitObject obj ) {
@@ -95,5 +105,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		}
 
 		protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => Array.Empty<HitObjectCompositionTool>();
+
+		protected override ComposeBlueprintContainer CreateBlueprintContainer ()
+			=> new HitokoriComposeBlueprintContainer( this );
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using osu.Framework.Bindables;
+using osu.Game.Rulesets.Edit;
+using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Objects.Types;
@@ -204,5 +206,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		Vector2 IHasPosition.Position => (Vector2)Position;
 		float IHasXPosition.X => (float)Position.X;
 		float IHasYPosition.Y => (float)Position.Y;
+
+		public override HitObjectSelectionBlueprint? CreateSelectionBlueprint ()
+			=> new TilePointSelectionBlueprint( this );
 	}
 }

@@ -1,7 +1,8 @@
-﻿using osu.Game.Rulesets.Objects;
+﻿using osu.Game.Rulesets.Edit;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
-	public class HitokoriHitObject : HitObject {
-
+	public abstract class HitokoriHitObject : HitObject {
+		public virtual HitObjectSelectionBlueprint? CreateSelectionBlueprint () => null;
 	}
 }

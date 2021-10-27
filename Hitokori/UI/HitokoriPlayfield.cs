@@ -68,15 +68,15 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				AddChain( tile );
 			}
 
-			positionScale.BindValueChanged( _ => updateCameraViewport() );
+			PositionScale.BindValueChanged( _ => updateCameraViewport() );
 		}
 
-		private BindableFloat positionScale = new( DefaultPositionScale );
+		public readonly BindableFloat PositionScale = new( DefaultPositionScale );
 		private BindableBool doKiaiBeat = new( true );
 
 		[BackgroundDependencyLoader( permitNulls: true )]
 		private void load ( HitokoriConfigManager config ) {
-			config?.BindWith( HitokoriSetting.PositionScale, positionScale );
+			config?.BindWith( HitokoriSetting.PositionScale, PositionScale );
 			config?.BindWith( HitokoriSetting.DoKiaiBeat, doKiaiBeat );
 
 			BeatProvider.OnBeat += OnBeat;
@@ -172,8 +172,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				cameraScale.Value = scale / 2;
 			}
 
-			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / positionScale.Value );
-			Everything.Position = -CameraMiddle.Value * positionScale.Value;
+			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / PositionScale.Value );
+			Everything.Position = -CameraMiddle.Value * PositionScale.Value;
 		}
 
 		protected override void UpdateAfterChildren () {
@@ -216,6 +216,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					Rotation = 0
 				};
 			}
+		}
+
+		public Vector2 ScreenSpacePositionOf ( Vector2 normalizedPosition ) {
+			return HitObjectContainer.ToScreenSpace( normalizedPosition * PositionScale.Value );
 		}
 	}
 }
