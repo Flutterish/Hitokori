@@ -17,6 +17,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 		protected Drawable BodyShadow;
 		protected Drawable LineInShadow;
 		protected Drawable LineOutShadow;
+		protected Container Shadows;
 
 		public TilePointVisualPiece () {
 			Anchor = Anchor.Centre;
@@ -24,23 +25,30 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 			AutoSizeAxes = Axes.Both;
 
-			AddInternal( LineInShadow = new Box {
-				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
-				Anchor = Anchor.Centre,
-				Origin = Anchor.CentreLeft,
-				Height = 32
-			} );
-			AddInternal( LineOutShadow = new Box {
-				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
-				Anchor = Anchor.Centre,
-				Origin = Anchor.CentreLeft,
-				Height = 32
-			} );
-			AddInternal( BodyShadow = new Circle {
-				Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
+			AddInternal( Shadows = new Container {
 				Anchor = Anchor.Centre,
 				Origin = Anchor.Centre,
-				Size = new Vector2( 32 )
+				Size = Vector2.Zero,
+				Children = new Drawable[] {
+					LineInShadow = new Box {
+						Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
+						Anchor = Anchor.Centre,
+						Origin = Anchor.CentreLeft,
+						Height = 32
+					},
+					LineOutShadow = new Box {
+						Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
+						Anchor = Anchor.Centre,
+						Origin = Anchor.CentreLeft,
+						Height = 32
+					},
+					BodyShadow = new Circle {
+						Colour = Colour4.Black.MultiplyAlpha( 0.3f ),
+						Anchor = Anchor.Centre,
+						Origin = Anchor.Centre,
+						Size = new Vector2( 32 )
+					}
+				}
 			} );
 
 			AddInternal( LineInOutline = new Box {
@@ -116,9 +124,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 			var lightUpDuration = 180;
 			var lightUpEasing = Easing.None;
 
-			LineInShadow.FadeOut( lightUpDuration, lightUpEasing );
-			LineOutShadow.FadeOut( lightUpDuration, lightUpEasing );
-			BodyShadow.FadeOut( lightUpDuration, lightUpEasing );
+			Shadows.FadeOut( lightUpDuration, lightUpEasing );
 
 			Body.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
 			LineIn.FadeColour( Colour4.White, lightUpDuration, lightUpEasing );
