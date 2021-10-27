@@ -21,8 +21,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal( piece = new TapPointVisualPiece() );
 		}
 
-		protected override void OnApply () {
-			base.OnApply();
+		public override void UpdateInitialVisuals () {
+			base.UpdateInitialVisuals();
+
 			piece.RestoreDefaults();
 
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
@@ -49,7 +50,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				piece.Icon.Alpha = 1;
 				piece.Icon.Icon = FontAwesome.Solid.ChevronRight;
 				piece.Icon.Position = new osuTK.Vector2( 1, 0 );
-				piece.Rotation = (float)(HitObject.Position.AngleTo( next.Position ) / Math.PI * 180);
+				piece.Rotation = (float)( HitObject.Position.AngleTo( next.Position ) / Math.PI * 180 );
 			}
 		}
 

@@ -12,6 +12,17 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AutoSizeAxes = Axes.Both;
 		}
 
+		/// <summary>
+		/// Refereshes any kind of visuals that depend on the underlying <see cref="HitokoriHitObject"/>. 
+		/// This is called at <see cref="OnApply"/> as well as when any change is made in the editor.
+		/// </summary>
+		public virtual void UpdateInitialVisuals () { }
+
+		protected override void OnApply () {
+			base.OnApply();
+			UpdateInitialVisuals();
+		}
+
 		protected override double InitialLifetimeOffset => HitObject is TilePoint tp ? tp.LifetimeOffset : 2000;
 	}
 

@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Objects;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		private void onHitObjectUpdated ( HitObject obj ) {
 			if ( obj is not TilePoint tp ) return;
 
+			tp.Previous?.Invalidate();
 			tp.Invalidate();
+
+			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
+				i.UpdateInitialVisuals();
+			}
 		}
 
 		private void onHitObjectRemoved ( HitObject obj ) {

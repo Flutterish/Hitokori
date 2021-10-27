@@ -15,8 +15,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			AddInternal( piece = new TilePointVisualPiece() );
 		}
 
-		protected override void OnApply () {
-			base.OnApply();
+		public override void UpdateInitialVisuals () {
+			base.UpdateInitialVisuals();
 
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
