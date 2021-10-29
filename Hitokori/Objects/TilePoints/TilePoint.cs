@@ -7,6 +7,7 @@ using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
@@ -180,21 +181,25 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// </summary>
 		public int ChainID;
 
+		[MemberNotNullWhen( true, nameof( Next ), nameof( ToNext ) )]
 		public bool ToNextIs ( Predicate<TilePointConnector> predicate )
 			=> ToNext is null
 			? false
 			: predicate( ToNext );
 
+		[MemberNotNullWhen( true, nameof( Next ), nameof( ToNext ) )]
 		public bool NextIs ( Predicate<TilePoint> predicate )
 			=> Next is null
 			? false
 			: predicate( Next );
 
+		[MemberNotNullWhen( true, nameof( Previous ), nameof( FromPrevious ) )]
 		public bool FromPreviousIs ( Predicate<TilePointConnector> predicate )
 			=> FromPrevious is null
 			? false
 			: predicate( FromPrevious );
 
+		[MemberNotNullWhen( true, nameof( Previous ), nameof( FromPrevious ) )]
 		public bool PreviousIs ( Predicate<TilePoint> predicate )
 			=> Previous is null
 			? false

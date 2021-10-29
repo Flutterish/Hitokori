@@ -22,7 +22,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 				var initialScale = composer.Playfield.CameraScale.Value;
 				var zoom = Math.Log2( initialScale );
 				zoom += e.ScrollDelta.Y / 5;
+				zoom = Math.Clamp( zoom, 2, 12 );
 				var endScale = Math.Pow( 2, zoom );
+
 
 				var center = composer.Playfield.CameraMiddle.Value;
 				var target = composer.Playfield.NormalizedPositionAtScreenSpace( e.ScreenSpaceMousePosition );

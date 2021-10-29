@@ -119,6 +119,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		private void onHitObjectUpdated ( HitObject obj ) {
 			if ( obj is not TilePoint tp ) return;
 
+			if ( tp.NextIs( x => x.StartTime < tp.StartTime ) )
+				tp.StartTime = tp.Next.StartTime;
+
+			if ( tp.PreviousIs( x => x.StartTime > tp.StartTime ) )
+				tp.StartTime = tp.Previous.StartTime;
+
 			tp.Previous?.Invalidate();
 			tp.Invalidate();
 
