@@ -34,6 +34,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			dependencyContainer.CacheAs<HitokoriBeatmap>( Beatmap );
 		}
 
+		protected override void Update () {
+			base.Update();
+
+			Playfield.UpdateCameraViewport( Time.Elapsed );
+		}
+
 		private void onHitObjectUpdated ( HitObject obj ) {
 			if ( obj is not TilePoint tp ) return;
 

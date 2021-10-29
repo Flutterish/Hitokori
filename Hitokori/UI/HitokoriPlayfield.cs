@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				AddChain( tile );
 			}
 
-			PositionScale.BindValueChanged( _ => updateCameraViewport() );
+			PositionScale.BindValueChanged( _ => UpdateCameraViewport( 0 ) );
 		}
 
 		public readonly BindableFloat PositionScale = new( DefaultPositionScale );
@@ -146,12 +146,11 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
 			=> new HitokoriLifetimeEntry( hitObject );
 
-		private void updateCameraViewport () {
-			UpdateCamera();
+		public void UpdateCameraViewport ( double delta ) {
+			UpdateCamera( delta );
 
-			var delta = Time.Elapsed;
-			if ( Time.Elapsed < 0 ) {
-				delta = -Time.Elapsed;
+			if ( delta < 0 ) {
+				delta = -delta;
 			}
 
 			var maxInflate = Chains.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
@@ -179,7 +178,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override void UpdateAfterChildren () {
 			base.UpdateAfterChildren();
 
-			updateCameraViewport();
+			UpdateCameraViewport( Time.Elapsed );
 		}
 
 		protected readonly Bindable<Vector2> CameraMiddle = new();
@@ -188,7 +187,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
 		private BindableDouble inflateScale = new( 1 );
-		protected virtual void UpdateCamera () {
+		protected virtual void UpdateCamera ( double delta ) {
 			var state = GetCameraState();
 			
 			if ( path is not null ) {
@@ -196,9 +195,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				CameraSize.Value = state.Size;
 			}
 			else {
-				var delta = Time.Elapsed;
-				if ( Time.Elapsed < 0 ) {
-					delta = -Time.Elapsed;
+				if ( delta < 0 ) {
+					delta = -delta;
 				}
 
 				CameraMiddle.Value = CameraMiddle.Value + ( state.Center - CameraMiddle.Value ) * (float)Math.Clamp( delta / 1000, 0, 1 );
