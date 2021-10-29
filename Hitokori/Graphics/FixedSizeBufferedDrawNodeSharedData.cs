@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Hitokori.Graphics {
         /// <summary>
         /// Creates a new <see cref="BufferedDrawNodeSharedData"/> with no effect buffers.
         /// </summary>
-        public FixedSizeBufferedDrawNodeSharedData ( RenderbufferInternalFormat[] formats = null, bool pixelSnapping = false )
+        public FixedSizeBufferedDrawNodeSharedData ( RenderbufferInternalFormat[]? formats = null, bool pixelSnapping = false )
             : this( 0, formats, pixelSnapping ) {
         }
 
@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Hitokori.Graphics {
         /// <param name="pixelSnapping">Whether the frame buffer position should be snapped to the nearest pixel when blitting.
         /// This amounts to setting the texture filtering mode to "nearest".</param>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="effectBufferCount"/> is less than 0.</exception>
-        public FixedSizeBufferedDrawNodeSharedData ( int effectBufferCount, RenderbufferInternalFormat[] formats = null, bool pixelSnapping = false ) {
+        public FixedSizeBufferedDrawNodeSharedData ( int effectBufferCount, RenderbufferInternalFormat[]? formats = null, bool pixelSnapping = false ) {
             if ( effectBufferCount < 0 )
                 throw new ArgumentOutOfRangeException( nameof( effectBufferCount ), "Must be positive." );
 

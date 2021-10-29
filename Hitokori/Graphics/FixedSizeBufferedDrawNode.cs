@@ -71,16 +71,9 @@ namespace osu.Game.Rulesets.Hitokori.Graphics {
 				Math.Min( targetFrameBufferSize.Y, maxFrameBufferSize.Y )
 			) : maxFrameBufferSize;
 
-			DrawRectangle = new RectangleF( 
-				screenSpaceDrawRectangle.X, 
-				screenSpaceDrawRectangle.Y,
-				targetFrameBufferSize.X, 
-				targetFrameBufferSize.Y
-			);
-
-			//DrawRectangle = SharedData.PixelSnapping
-			//	? new RectangleF( screenSpaceDrawRectangle.X, screenSpaceDrawRectangle.Y, frameBufferSize.X, frameBufferSize.Y )
-			//	: screenSpaceDrawRectangle;
+			DrawRectangle = SharedData.PixelSnapping
+				? new RectangleF( screenSpaceDrawRectangle.X, screenSpaceDrawRectangle.Y, targetFrameBufferSize.X, targetFrameBufferSize.Y )
+				: screenSpaceDrawRectangle;
 
 			Child.ApplyState();
 		}

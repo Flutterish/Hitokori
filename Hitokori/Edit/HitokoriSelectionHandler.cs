@@ -1,7 +1,48 @@
-﻿using osu.Game.Screens.Edit.Compose.Components;
+﻿using osu.Framework.Allocation;
+using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
+using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Screens.Edit.Compose.Components;
+using osuTK;
+using osuTK.Graphics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
 	public class HitokoriSelectionHandler : EditorSelectionHandler {
+		[Resolved, MaybeNull, NotNull]
+		public HitokoriHitObjectComposer Composer { get; private set; }
 
+		[MaybeNull, NotNull]
+		PathVisualizer visualizer;
+		TilePoint? selectedTilePoint;
+
+		protected override void LoadComplete () {
+			base.LoadComplete();
+
+			AddInternal( visualizer = new PathVisualizer { Colour = Color4.Yellow } );
+			visualizer.Hide();
+		}
+
+		protected override void OnSelectionChanged () {
+			base.OnSelectionChanged();
+
+			if ( SelectedItems.Count == 1 ) {
+				selectedTilePoint = SelectedItems[ 0 ] as TilePoint;
+			}
+			else {
+				selectedTilePoint = null;
+			}
+
+			visualizer.VisualizedConnector.Value = selectedTilePoint?.ToNext;
+		}
+
+		protected override void Update () {
+			base.Update();
+
+			if ( selectedTilePoint is not null ) {
+				visualizer.Scale = new Vector2( (float)Composer.Playfield.CameraScale.Value );
+				visualizer.Position = ToLocalSpace( Composer.Playfield.ScreenSpacePositionOf( (Vector2)selectedTilePoint.Position ) );
+				visualizer.TilePosition = (Vector2)selectedTilePoint.Position;
+			}
+		}
 	}
 }
