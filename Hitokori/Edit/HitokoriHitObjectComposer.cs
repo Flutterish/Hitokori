@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -6,7 +7,9 @@ using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.UI;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Compose.Components;
 using System;
 using System.Collections.Generic;
@@ -24,6 +27,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		}
 
 		public HitokoriHitObjectComposer ( Ruleset ruleset ) : base( ruleset ) { }
+
+		protected override DrawableRuleset<HitokoriHitObject> CreateDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
+			=> new DrawableHitokoriRuleset( ruleset, beatmap, mods ) { IsEditor = true };
 
 		protected override void LoadComplete () {
 			base.LoadComplete();

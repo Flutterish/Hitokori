@@ -12,14 +12,13 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
-using osu.Game.Screens.Edit;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class DrawableHitokoriRuleset : DrawableRuleset<HitokoriHitObject> {
-		public DrawableHitokoriRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null ) : base( ruleset, beatmap, mods ) {
-			
-		}
+		public DrawableHitokoriRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null ) : base( ruleset, beatmap, mods ) { }
+
+		public bool IsEditor = false;
 
 		public override DrawableHitObject<HitokoriHitObject>? CreateDrawableRepresentation ( HitokoriHitObject h )
 			=> null;
@@ -32,8 +31,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			=> new HitokoriReplayRecorder( score );
 
 		protected override Playfield CreatePlayfield ()
-			=> Clock is EditorClock
-			? new HitokoriEditorPlayfield( Beatmap ) // I dont even know if this is legal
+			=> IsEditor
+			? new HitokoriEditorPlayfield( Beatmap )
 			: new HitokoriPlayfield( Beatmap, new RegularCameraPathGenerator ( Beatmap ).GenerateEasedPath () );
 	}
 }
