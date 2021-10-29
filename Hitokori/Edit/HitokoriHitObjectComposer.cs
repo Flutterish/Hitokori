@@ -1,5 +1,8 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -10,6 +13,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.UI;
+using osu.Game.Screens.Edit.Components.TernaryButtons;
 using osu.Game.Screens.Edit.Compose.Components;
 using System;
 using System.Collections.Generic;
@@ -31,6 +35,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		protected override DrawableRuleset<HitokoriHitObject> CreateDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
 			=> new DrawableHitokoriRuleset( ruleset, beatmap, mods ) { IsEditor = true };
 
+		public readonly Bindable<TernaryState> ManualCameraToggle = new Bindable<TernaryState>();
+		protected override IEnumerable<TernaryButton> CreateTernaryButtons () {
+			yield return new TernaryButton( ManualCameraToggle, "Manual Camera", () => new SpriteIcon { Icon = FontAwesome.Solid.Video } );
+		}
+
 		protected override void LoadComplete () {
 			base.LoadComplete();
 			EditorBeatmap.HitObjectRemoved += onHitObjectRemoved;
@@ -38,12 +47,22 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 			dependencyContainer.CacheAs<HitokoriPlayfield>( Playfield );
 			dependencyContainer.CacheAs<HitokoriBeatmap>( Beatmap );
+
+			ManualCameraToggle.BindValueChanged( v => {
+				if ( v.NewValue == TernaryState.True ) 
+					Playfield.ShouldUpdateCamera = false;
+				else if ( v.NewValue == TernaryState.False ) 
+					Playfield.ShouldUpdateCamera = true;
+			}, true );
+
+			AddInternal( new CameraController( this ) { Depth = -1 } );
 		}
 
 		protected override void Update () {
 			base.Update();
 
-			Playfield.UpdateCameraViewport( Time.Elapsed );
+			if ( ManualCameraToggle.Value != TernaryState.True ) 
+				Playfield.UpdateCameraViewport( Time.Elapsed );
 		}
 
 		private void onHitObjectUpdated ( HitObject obj ) {

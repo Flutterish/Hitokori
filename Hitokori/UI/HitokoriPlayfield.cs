@@ -146,33 +146,45 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
 			=> new HitokoriLifetimeEntry( hitObject );
 
+		/// <summary>
+		/// Should the camera be updated automatically or externaly?
+		/// </summary>
+		public bool ShouldUpdateCamera = true;
 		public void UpdateCameraViewport ( double delta ) {
-			UpdateCamera( delta );
+			if ( ShouldUpdateCamera ) {
+				UpdateCamera( delta );
 
-			if ( delta < 0 ) {
-				delta = -delta;
-			}
+				if ( delta < 0 ) {
+					delta = -delta;
+				}
 
-			var maxInflate = Chains.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
-			inflateScale.Value = inflateScale.Value + ( maxInflate - inflateScale.Value ) * (float)Math.Clamp( delta / 3000, 0, 1 ); // this still needs to be eased because it can change quickly
-			maxInflate = inflateScale.Value;
+				var maxInflate = Chains.Select( x => x.NormalizedEnclosingCircleRadius * 1.2 ).Append( 0.5 ).Max();
+				inflateScale.Value = inflateScale.Value + ( maxInflate - inflateScale.Value ) * (float)Math.Clamp( delta / 3000, 0, 1 ); // this still needs to be eased because it can change quickly
+				maxInflate = inflateScale.Value;
 
-			var size = CameraSize.Value + new Vector2( (float)maxInflate * 2 );
+				var size = CameraSize.Value + new Vector2( (float)maxInflate * 2 );
 
-			double scale;
-			if ( size.X / size.Y > DrawSize.X / DrawSize.Y ) {
-				scale = DrawSize.X / size.X;
+				double scale;
+				if ( size.X / size.Y > DrawSize.X / DrawSize.Y ) {
+					scale = DrawSize.X / size.X;
+				}
+				else {
+					scale = DrawSize.Y / size.Y;
+				}
+
+				if ( double.IsFinite( scale ) ) {
+					CameraScale.Value = scale / 2;
+				}
+
+				Scale = new Vector2( (float)( CameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / PositionScale.Value );
+				Everything.Position = -CameraMiddle.Value * PositionScale.Value;
 			}
 			else {
-				scale = DrawSize.Y / size.Y;
-			}
+				Scale = new Vector2( (float)CameraScale.Value / PositionScale.Value );
+				Everything.Position = -CameraMiddle.Value * PositionScale.Value;
 
-			if ( double.IsFinite( scale ) ) {
-				cameraScale.Value = scale / 2;
+				CameraSize.Value = (DrawSize / 2 / (float)CameraScale.Value) - (Vector2.One * (float)inflateScale.Value * 2);
 			}
-
-			Scale = new Vector2( (float)( cameraScale.Value * ( doKiaiBeat.Value ? kiaiScale.Value : 1 ) ) / PositionScale.Value );
-			Everything.Position = -CameraMiddle.Value * PositionScale.Value;
 		}
 
 		protected override void UpdateAfterChildren () {
@@ -181,10 +193,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			UpdateCameraViewport( Time.Elapsed );
 		}
 
-		protected readonly Bindable<Vector2> CameraMiddle = new();
+		public readonly Bindable<Vector2> CameraMiddle = new();
 		protected readonly Bindable<Vector2> CameraSize = new();
+		public readonly BindableDouble CameraScale = new( 1 );
 
-		private BindableDouble cameraScale = new( 1 );
 		private BindableDouble kiaiScale = new( 1 );
 		private BindableDouble inflateScale = new( 1 );
 		protected virtual void UpdateCamera ( double delta ) {
@@ -218,6 +230,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 		public Vector2 ScreenSpacePositionOf ( Vector2 normalizedPosition ) {
 			return HitObjectContainer.ToScreenSpace( normalizedPosition * PositionScale.Value );
+		}
+
+		public Vector2 NormalizedPositionAtScreenSpace ( Vector2 screenSpace ) {
+			return HitObjectContainer.ToLocalSpace( screenSpace ) / PositionScale.Value;
 		}
 	}
 }
