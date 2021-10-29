@@ -5,6 +5,7 @@ using osu.Game.Screens.Edit.Compose.Components;
 using osuTK;
 using osuTK.Graphics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
 	public class HitokoriSelectionHandler : EditorSelectionHandler {
@@ -33,6 +34,14 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			}
 
 			visualizer.VisualizedConnector.Value = selectedTilePoint?.ToNext;
+
+			var chains = SelectedItems.OfType<TilePoint>().Select( x => x.ChainID ).Distinct().OrderBy( x => x );
+			if ( SelectedItems.Count == 1 ) {
+				SelectionBox.Text += $" | Chain {chains.First()}";
+			}
+			else if ( chains.Count() > 1 ) {
+				SelectionBox.Text += $" | Chains: {string.Join( ", ", chains.Select( x => x.ToString() ) )}";
+			}
 		}
 
 		protected override void Update () {
