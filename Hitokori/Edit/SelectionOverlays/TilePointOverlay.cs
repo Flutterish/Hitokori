@@ -12,13 +12,14 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 		private BufferedContainer<TilePointVisualPiece> buffer;
 
 		public TilePointOverlay ( TilePoint tp ) : base ( tp ) {
-			AddInternal( buffer = new BufferedContainer<TilePointVisualPiece> {
+			AddInternal( buffer = new BufferedContainer<TilePointVisualPiece> { // ew
 				Origin = Anchor.Centre,
 				Child = piece = new TilePointVisualPiece {
 					Origin = Anchor.Centre,
 					BorderColour = Colour4.Yellow,
 					Colour = Colour4.Transparent,
-					ShowShadows = false
+					ShowShadows = false,
+					OverlapConnectors = false
 				},
 				Alpha = 0.4f
 			} );

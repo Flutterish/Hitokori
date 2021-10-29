@@ -151,6 +151,16 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 		public readonly Bindable<Vector2d?> ToPosition = new( null );
 		public readonly Bindable<Vector2d> AroundPosition = new();
 
+		private bool overlapConnectors = true;
+		public bool OverlapConnectors {
+			get => overlapConnectors;
+			set {
+				overlapConnectors = value;
+				updateFromConnector();
+				updateToConnector();
+			}
+		}
+
 		private void updateFromConnector () {
 			if ( FromPosition.Value is null ) {
 				LineIn.Alpha = 0;
@@ -167,7 +177,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 				LineIn.Rotation = LineInOutline.Rotation = LineInShadow.Rotation = (float)around.AngleTo( from ).RadToDeg();
 
-				var expansion = (float)( ( from - around ).Length * PositionScale.Value + 2 ) / 2 * InAnimationProgress.Value;
+				var expansion = (float)( ( from - around ).Length * PositionScale.Value + ( overlapConnectors ? 2 : 0 ) ) / 2 * InAnimationProgress.Value;
 
 				LineIn.Width = Math.Max( expansion - 2, 0 );
 				LineInOutline.Width = Math.Max( expansion, 0 );
@@ -191,7 +201,7 @@ namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 
 				LineOut.Rotation = LineOutOutline.Rotation = LineOutShadow.Rotation = (float)around.AngleTo( to ).RadToDeg();
 
-				var expansion = (float)( ( to - around ).Length * PositionScale.Value + 2 ) / 2 * OutAnimationProgress.Value;
+				var expansion = (float)( ( to - around ).Length * PositionScale.Value + ( overlapConnectors ? 2 : 0 ) ) / 2 * OutAnimationProgress.Value;
 
 				LineOut.Width = Math.Max( expansion - 2, 0 );
 				LineOutOutline.Width = Math.Max( expansion, 0 );
