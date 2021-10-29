@@ -98,7 +98,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 					fromPrevious.To = this;
 				}
 				else {
-					old.To = null;
+					old!.To = null;
 					old.From = null;
 				}
 

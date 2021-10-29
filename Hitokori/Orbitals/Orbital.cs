@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
+using osu.Game.Rulesets.Hitokori.UI.Paths;
 using osuTK;
 using System;
 using System.Diagnostics.CodeAnalysis;

@@ -12,6 +12,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 		public HitokoriPlayfield Playfield { get; private set; }
 		[Resolved, MaybeNull, NotNull]
 		public HitokoriBeatmap Beatmap { get; private set; }
+		[Resolved, MaybeNull, NotNull]
+		public HitokoriHitObjectComposer Composer { get; private set; }
 
 		public readonly T HitObject;
 

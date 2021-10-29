@@ -13,6 +13,16 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Blueprints {
 			};
 		}
 
+		protected override void OnSelected () {
+			base.OnSelected();
+			overlay.Show();
+		}
+
+		protected override void OnDeselected () {
+			base.OnDeselected();
+			overlay.Hide();
+		}
+
 		public override Quad SelectionQuad => overlay.ScreenSpaceDrawQuad;
 	}
 }

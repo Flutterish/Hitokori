@@ -1,5 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterface;
@@ -7,6 +9,7 @@ using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
+using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.UI;
@@ -14,15 +17,22 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Components.TernaryButtons;
+using osu.Game.Screens.Edit.Compose;
 using osu.Game.Screens.Edit.Compose.Components;
+using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
+	[Cached]
 	public class HitokoriHitObjectComposer : HitObjectComposer<HitokoriHitObject> {
 		public HitokoriBeatmap Beatmap => (HitokoriBeatmap)EditorBeatmap.PlayableBeatmap;
 		new public HitokoriEditorPlayfield Playfield => (HitokoriEditorPlayfield)base.Playfield;
+
+		public readonly Container LayerAbovePlayfield;
+		public readonly CameraController CameraController;
+		public readonly MultiSelectionContainer ProxiedSelectionContainer;
 
 		[NotNull, MaybeNull]
 		private DependencyContainer dependencyContainer;
@@ -30,7 +40,38 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			return dependencyContainer = new DependencyContainer( base.CreateChildDependencies( parent ) );
 		}
 
-		public HitokoriHitObjectComposer ( Ruleset ruleset ) : base( ruleset ) { }
+		public HitokoriHitObjectComposer ( Ruleset ruleset ) : base( ruleset ) {
+			LayerAbovePlayfield = new Container {
+				Name = "Overlays",
+				RelativeSizeAxes = Axes.Both,
+				Children = new Drawable[] {
+					CameraController = new CameraController( this ),
+					ProxiedSelectionContainer = new MultiSelectionContainer {
+						Alpha = 0.4f
+					}
+				}
+			};
+
+			ProxiedSelectionContainer.OnUpdate += d => {
+				var pos = ComposeScreen.ToSpaceOfOtherDrawable( Vector2.Zero, d.Parent );
+				if ( d.Position != pos )
+					d.Position = ComposeScreen.ToSpaceOfOtherDrawable( Vector2.Zero, d.Parent );
+
+				if ( d.Size != ComposeScreen.DrawSize )
+					d.Size = ComposeScreen.DrawSize;
+			};
+		}
+
+		private ComposeScreen? composeScreen;
+		private ComposeScreen ComposeScreen => composeScreen ??= getContainingComposeScreen();
+
+		private ComposeScreen getContainingComposeScreen () {
+			Drawable drawable = this;
+			while ( !(drawable is ComposeScreen) ) 
+				drawable = drawable.Parent;
+
+			return (ComposeScreen)drawable;
+		}
 
 		protected override DrawableRuleset<HitokoriHitObject> CreateDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
 			=> new DrawableHitokoriRuleset( ruleset, beatmap, mods ) { IsEditor = true };
@@ -42,6 +83,18 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 		protected override void LoadComplete () {
 			base.LoadComplete();
+
+			var children = new Drawable[ InternalChildren.Count + 1 ];
+			var i = 0;
+			foreach ( var c in InternalChildren ) {
+				if ( c.Name == "Sidebar" ) { // NOTE this is terrible.
+					children[ i++ ] = LayerAbovePlayfield;
+				}
+				children[ i++ ] = c;
+			}
+			ClearInternal( disposeChildren: false );
+			InternalChildren = children;
+
 			EditorBeatmap.HitObjectRemoved += onHitObjectRemoved;
 			EditorBeatmap.HitObjectUpdated += onHitObjectUpdated;
 
@@ -54,8 +107,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 				else if ( v.NewValue == TernaryState.False ) 
 					Playfield.ShouldUpdateCamera = true;
 			}, true );
-
-			AddInternal( new CameraController( this ) { Depth = -1 } );
 		}
 
 		protected override void Update () {
