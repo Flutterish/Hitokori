@@ -6,6 +6,12 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		public Chain ( TilePoint beginning, string name ) {
 			Beginning = beginning;
 			Name = name;
+
+			NameBindable.BindValueChanged( v => {
+				if ( string.IsNullOrWhiteSpace( v.NewValue ) ) {
+					Name = ( ID + 1 ).ToSpreadsheetNotation();
+				}
+			} );
 		}
 
 		public int ID {

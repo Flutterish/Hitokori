@@ -77,10 +77,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			var chains = SelectedChains.OrderBy( x => x.Beginning.StartTime ).ThenBy( x => x.Beginning.ChainID );
 
 			if ( chains.Count() == 1 ) {
-				SelectionBox.Text += $" | Chain {chains.First().Name}";
+				SelectionBox.Text += $" | Chain {chains.First().Name.Trim()}";
 			}
 			else if ( chains.Count() > 1 ) {
-				SelectionBox.Text += $" | Chains: {string.Join( ", ", chains.Select( x => x.Name ) )}";
+				SelectionBox.Text += $" | Chains: {string.Join( ", ", chains.Select( x => x.Name.Trim() ) )}";
 			}
 		}
 

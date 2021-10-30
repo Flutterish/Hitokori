@@ -1,4 +1,5 @@
-﻿using osu.Framework.Localisation;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 
@@ -13,6 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Setup {
 			base.LoadComplete();
 
 			Add( new LabelledTextBox { FixedLabelWidth = LABEL_WIDTH, Label = "Name", Current = chain.NameBindable } );
+			Add( new LabelledNumberBox { FixedLabelWidth = LABEL_WIDTH, Label = "ID", Current = new Bindable<string>( chain.ID.ToString() ), ReadOnly = true } );
 		}
 
 		public override LocalisableString Title => $"Chain {chain.ID}";
