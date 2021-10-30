@@ -45,7 +45,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public void RemoveChain ( OrbitalGroup group ) {
 			chains.Remove( group );
 			chainsByID.Remove( group.CurrentTile.ChainID );
-			group.Expire();
+			Everything.Remove( group );
+			group.Dispose();
 		}
 		public void RemoveChain ( int id ) => RemoveChain( chainsByID[ id ] );
 

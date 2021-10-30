@@ -124,14 +124,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 			ensureValidStartTimes( EditorBeatmap.SelectedHitObjects.OfType<TilePoint>() );
 
-			if ( tp.NextIs( x => x.StartTime < tp.StartTime ) )
-				tp.StartTime = tp.Next.StartTime;
-
-			if ( tp.PreviousIs( x => x.StartTime > tp.StartTime ) )
-				tp.StartTime = tp.Previous.StartTime;
-
 			tp.Previous?.Invalidate();
 			tp.Invalidate();
+
+			Playfield.RemoveChain( tp.ChainID ); // this is done because chains have visual events that need to be reset when timing changes
+			Playfield.AddChain( tp );
 
 			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
 				i.UpdateInitialVisuals();

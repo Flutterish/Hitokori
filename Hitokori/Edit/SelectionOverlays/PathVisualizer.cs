@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				this.Loop( 300, x => x.TransformBindableTo( timeBindable, 0 ).Then().TransformBindableTo( timeBindable, value * 2, value * 2 ) );
 			}
 		}
-		private double startTime => VisualizedConnector.Value!.From.Previous is null ? (VisualizedConnector.Value.StartTime - 500) : (VisualizedConnector.Value.StartTime + 0.1);
+		private double startTime => VisualizedConnector.Value!.From.Previous is null ? (VisualizedConnector.Value.StartTime - VisualizedConnector.Value.Duration * 2) : (VisualizedConnector.Value.StartTime + 0.1);
 
 		protected override void Update () {
 			base.Update();
