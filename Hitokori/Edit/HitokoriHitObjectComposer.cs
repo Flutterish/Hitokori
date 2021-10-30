@@ -23,6 +23,7 @@ using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
 	[Cached]
@@ -121,6 +122,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		private void onHitObjectUpdated ( HitObject obj ) {
 			if ( obj is not TilePoint tp ) return;
 
+			ensureValidStartTimes( EditorBeatmap.SelectedHitObjects.OfType<TilePoint>() );
+
 			if ( tp.NextIs( x => x.StartTime < tp.StartTime ) )
 				tp.StartTime = tp.Next.StartTime;
 
@@ -132,6 +135,34 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
 				i.UpdateInitialVisuals();
+			}
+		}
+
+		/// <summary>
+		/// Makes sure no <see cref="TilePoint"/> starts before the previous one or ends after the next one.
+		/// </summary>
+		private void ensureValidStartTimes ( IEnumerable<TilePoint> tilePoints ) {
+			double undershootDelta = 0;
+			double overshootDelta = 0;
+
+			foreach ( var i in tilePoints ) {
+				if ( i.NextIs( x => x.StartTime < i.StartTime ) )
+					overshootDelta = Math.Max( overshootDelta, i.StartTime - i.Next.StartTime );
+
+				if ( i.PreviousIs( x => x.StartTime > i.StartTime ) )
+					undershootDelta = Math.Max( undershootDelta, i.Previous.StartTime - i.StartTime );
+			}
+
+			if ( undershootDelta != 0 && overshootDelta != 0 ) {
+				// TODO handle this if needed. it shouldnt be possible though, so whatever
+			}
+			else if ( undershootDelta != 0 ) {
+				foreach ( var i in tilePoints )
+					i.StartTime += undershootDelta;
+			}
+			else if ( overshootDelta != 0 ) {
+				foreach ( var i in tilePoints )
+					i.StartTime -= overshootDelta;
 			}
 		}
 

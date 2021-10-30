@@ -5,15 +5,9 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
-using osu.Game.Overlays;
 using osuTK;
 using osuTK.Input;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace osu.Game.Rulesets.Hitokori.Edit {
 	public class EditorSidebar : VisibilityContainer {
