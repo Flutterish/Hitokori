@@ -33,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		public readonly Container LayerAbovePlayfield;
 		public readonly CameraController CameraController;
 		public readonly MultiSelectionContainer ProxiedSelectionContainer;
+		public readonly EditorSidebar Sidebar;
 
 		[NotNull, MaybeNull]
 		private DependencyContainer dependencyContainer;
@@ -48,7 +49,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 					CameraController = new CameraController( this ),
 					ProxiedSelectionContainer = new MultiSelectionContainer {
 						Alpha = 0.4f
-					}
+					},
+					Sidebar = new EditorSidebar()
 				}
 			};
 

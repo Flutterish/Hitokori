@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		bool isDragged = false;
 		protected override bool OnMouseDown ( MouseDownEvent e ) {
 			if ( composer.ManualCameraToggle.Value == TernaryState.True ) {
-				if ( e.Button is MouseButton.Right or MouseButton.Middle ) {
+				if ( e.Button is MouseButton.Middle ) {
 					isDragged = true;
 					return true;
 				}

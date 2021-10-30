@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 				StartTime = 0
 			};
 			beatmap.HitObjects.Add( firstTile );
-			beatmap.Chains.Add( 0, new Chain( firstTile ) );
+			beatmap.Chains.Add( 0, new Chain( firstTile, (1).ToSpreadsheetNotation() ) );
 
 			foreach ( var i in original.HitObjects ) {
 				beatmap.HitObjects.AddRange( ConvertHitObject( i, original, cancellationToken ) );

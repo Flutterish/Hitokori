@@ -1,10 +1,11 @@
-﻿using osu.Game.Rulesets.Hitokori.Objects;
-using System.Diagnostics.CodeAnalysis;
+﻿using osu.Framework.Bindables;
+using osu.Game.Rulesets.Hitokori.Objects;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class Chain {
-		public Chain ( TilePoint beginning ) {
+		public Chain ( TilePoint beginning, string name ) {
 			Beginning = beginning;
+			Name = name;
 		}
 
 		public int ID {
@@ -17,11 +18,11 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		public TilePoint Beginning;
-		string? name = null;
-		[AllowNull]
 		public string Name {
-			get => name ?? (ID+1).ToSpreadsheetNotation();
-			set => name = value;
+			get => NameBindable.Value;
+			set => NameBindable.Value = value;
 		}
+
+		public readonly Bindable<string> NameBindable = new();
 	}
 }

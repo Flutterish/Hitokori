@@ -1,4 +1,5 @@
-﻿using osu.Game.Beatmaps;
+﻿using osu.Framework.Bindables;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +7,14 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmap : Beatmap<HitokoriHitObject> {
 		public bool IsLinked = false;
-		public readonly Dictionary<int, Chain> Chains = new();
+		public readonly BindableDictionary<int, Chain> Chains = new();
 
 		public int CreateChain ( TilePoint root ) {
 			int id = 0;
 			while ( Chains.Keys.Any( x => x == id ) )
 				id++;
 
-			Chains.Add( id, new Chain( root ) );
+			Chains.Add( id, new Chain( root, (id+1).ToSpreadsheetNotation() ) );
 
 			return id;
 		}
