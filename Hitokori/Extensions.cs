@@ -4,6 +4,7 @@ using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public static class Extensions {
@@ -114,6 +115,52 @@ namespace osu.Game.Rulesets.Hitokori {
 				maxX + inflate,
 				maxY + inflate
 			);
+		}
+
+		public static string ToRadix ( this int value, int radix, string prefix = "", string symbols = "0123456789ABCDEF" ) {
+			if ( radix < 2 ) {
+				throw new InvalidOperationException( $"Cannot cast an integer to a radix smaller than 2. The target radix was: {radix}" );
+			}
+			if ( symbols.Length < radix ) {
+				throw new InvalidOperationException( $"Not enough symbols to cast to target radix. The radix was {radix} and the amout of symbopls was {symbols.Length} ({symbols})" );
+			}
+
+			if ( value == 0 ) {
+				return prefix + symbols[ 0 ];
+			}
+			else if ( value < 0 ) {
+				return "-" + ( -value ).ToRadix( radix, prefix, symbols );
+			}
+
+			int length = (int)Math.Log( value, radix );
+			int amout = (int)Math.Pow( radix, length );
+			var sb = new StringBuilder( prefix, length + prefix.Length + 1 );
+
+			while ( amout > 0 ) {
+				int index = value / amout;
+				value -= index * amout;
+
+				sb.Append( symbols[ index ] );
+
+				amout /= radix;
+			}
+
+			return sb.ToString();
+		}
+
+		public static string ToRadix ( this int value, string symbols, string prefix = "" )
+			=> value.ToRadix( symbols.Length, prefix, symbols );
+
+		public static string ToSpreadsheetNotation ( this int column, string columns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ) {
+			string name = "";
+
+			while ( column > 0 ) {
+				int modulo = ( column - 1 ) % columns.Length;
+				name = columns[ modulo ] + name;
+				column = ( column - modulo ) / columns.Length;
+			}
+
+			return name;
 		}
 	}
 }

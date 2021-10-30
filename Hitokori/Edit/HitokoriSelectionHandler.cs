@@ -35,12 +35,14 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 			visualizer.VisualizedConnector.Value = selectedTilePoint?.ToNext;
 
-			var chains = SelectedItems.OfType<TilePoint>().Select( x => x.ChainID ).Distinct().OrderBy( x => x );
+			var chains = SelectedItems.OfType<TilePoint>().Select( x => x.ChainID ).Distinct()
+				.OrderBy( x => Composer.Beatmap.Chains[ x ].Beginning.StartTime ).ThenBy( x => x );
+
 			if ( SelectedItems.Count == 1 ) {
-				SelectionBox.Text += $" | Chain {chains.First()}";
+				SelectionBox.Text += $" | Chain {Composer.Beatmap.Chains[ chains.First() ].Name}";
 			}
 			else if ( chains.Count() > 1 ) {
-				SelectionBox.Text += $" | Chains: {string.Join( ", ", chains.Select( x => x.ToString() ) )}";
+				SelectionBox.Text += $" | Chains: {string.Join( ", ", chains.Select( x => Composer.Beatmap.Chains[ x ].Name ) )}";
 			}
 		}
 

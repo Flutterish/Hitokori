@@ -146,7 +146,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 					Playfield.AddChain( tp.Next! );
 				}
 
-				Beatmap.Chains[ tp.ChainID ] = tp.Next!;
+				Beatmap.Chains[ tp.ChainID ].Beginning = tp.Next!;
 				tp.Next!.ConstrainPosition = tp.Next.Position;
 				tp.Next.OrbitalState = tp.Next.OrbitalState; // constraining the value
 				tp.ToNext = null;

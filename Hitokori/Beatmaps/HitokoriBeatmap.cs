@@ -6,14 +6,14 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmap : Beatmap<HitokoriHitObject> {
 		public bool IsLinked = false;
-		public readonly Dictionary<int, TilePoint> Chains = new();
+		public readonly Dictionary<int, Chain> Chains = new();
 
 		public int CreateChain ( TilePoint root ) {
 			int id = 0;
 			while ( Chains.Keys.Any( x => x == id ) )
 				id++;
 
-			Chains.Add( id, root );
+			Chains.Add( id, new Chain( root ) );
 
 			return id;
 		}
