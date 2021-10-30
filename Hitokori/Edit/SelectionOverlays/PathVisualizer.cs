@@ -1,9 +1,11 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.UI.Paths;
 using osuTK;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 	public class PathVisualizer : CompositeDrawable {
@@ -12,6 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 		public Vector2 TilePosition;
 
 		FixedSizePath trail;
+		private List<Drawable> heads = new();
 
 		public PathVisualizer () {
 			Origin = Anchor.Centre;
@@ -25,6 +28,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				ClearTransforms();
 
 				if ( v.NewValue is not null ) {
+					Duration = 0;
 					Show();
 				}
 				else {
@@ -55,6 +59,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 			trail.ClearVertices();
 
 			if ( Duration == 0 ) {
+				foreach ( var i in heads )
+					i.Hide();
+
 				trail.AddVertex( (Vector2)VisualizedConnector.Value.GetStateAt( 0 ).PositionOfNth( VisualizedConnector.Value.TargetOrbitalIndex ) - TilePosition );
 				trail.AddVertex( (Vector2)VisualizedConnector.Value.GetStateAt( 1 ).PositionOfNth( VisualizedConnector.Value.TargetOrbitalIndex ) - TilePosition );
 			}
@@ -74,14 +81,33 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 					var t = ( Duration / ( count - 1 ) ) * i;
 					trail.AddVertex( positionAt( VisualizedConnector.Value, t ) - TilePosition );
 				}
+
+				var endState = VisualizedConnector.Value.GetStateAt( ( 1.0 / ( count - 1 ) ) * (end-1) );
+				foreach ( var i in heads )
+					i.Hide();
+
+				for ( int i = 0; i < endState.OrbitalCount; i++ ) {
+					if ( heads.Count <= i ) {
+						var head = new Circle {
+							Origin = Anchor.Centre,
+							Anchor = Anchor.Centre,
+							Size = new Vector2( 0.3f )
+						};
+
+						heads.Add( head );
+						AddInternal( head );
+					}
+
+					heads[ i ].Show();
+					heads[ i ].Position = (Vector2)endState.PositionOfNth( i ) - TilePosition;
+				}
 			}
 
 			trail.Position = -trail.PositionInBoundingBox( Vector2.Zero );
 		}
 
 		private static Vector2 positionAt ( TilePointConnector c, double t ) {
-			var state = c.Duration == 0 ? c.GetEndState() : c.GetStateAt( t / c.Duration );
-			return (Vector2)state.PositionOfNth( c.TargetOrbitalIndex );
+			return (Vector2)c.GetStateAt( t / c.Duration ).PositionOfNth( c.TargetOrbitalIndex );
 		}
 	}
 }
