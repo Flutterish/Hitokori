@@ -3,8 +3,8 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Overlays;
 using osuTK;
 using osuTK.Input;
 using System.Diagnostics.CodeAnalysis;
@@ -27,11 +27,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		protected override bool StartHidden => true;
 
 		[BackgroundDependencyLoader]
-		private void load () {
+		private void load ( OverlayColourProvider colourProvider ) {
 			AddInternal( new Box {
 				RelativeSizeAxes = Axes.Both,
-				Colour = OsuColour.Gray( 0.1f ),
-				Alpha = 0.8f
+				Colour = colourProvider.Background6,
+				Alpha = 0.6f
 			} );
 
 			OsuScrollContainer scroll;
