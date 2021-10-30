@@ -11,11 +11,11 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 		}
 
 		protected override void Apply ( double progress ) {
-			Target.Alpha = (float)(StartAlpha + ( TargetAlpha - StartAlpha ) * progress);
+			Target.Opacity = (float)(StartAlpha + ( TargetAlpha - StartAlpha ) * progress);
 		}
 
 		protected override void OnBegin () {
-			StartAlpha = Target.Alpha;
+			StartAlpha = Target.Opacity;
 		}
 
 		private static readonly string[] categories = new string[] { CategoryAlpha };

@@ -119,6 +119,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		/// Creates a new instance where the pivot changed by <paramref name="index"/> swaps. Resets <see cref="Offset"/>.
 		/// </summary>
 		public OrbitalState PivotNth ( int index ) => this with {
+			PivotPosition = IsNthPivot( index ) ? PivotPosition : (PivotPosition + Offset),
 			ActiveIndex = ActiveIndex + index,
 			Offset = Vector2d.Zero
 		};
@@ -138,6 +139,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 		/// <summary>
 		/// Creates a new instance where every oribital except the pivot is offset by the given amout. Gererally used to create stacks of tiles.
+		/// Note that when swapping tiles, this creates a visual jump.
 		/// </summary>
 		public OrbitalState WithOffset ( Vector2d offset ) => this with {
 			Offset = offset

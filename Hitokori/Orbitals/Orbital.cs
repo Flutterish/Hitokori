@@ -53,6 +53,13 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			base.Update();
 
 			updateTrail();
+			var state = StateAt( Time.Current );
+			head.Scale = ScaleForZ( state.Z );
+			Alpha = state.Alpha;
+		}
+
+		public Vector2 ScaleForZ ( double z ) {
+			return new Vector2( (float)Math.Sqrt( 1 + z ) );
 		}
 
 		private void updateTrail () {
@@ -109,6 +116,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		public TilePoint currentTile;
 		private double simulatedTime;
 
+		public float Opacity = 0;
 		public double Radius = 0; // TODO organize these better, with proper access modifiers
 		public readonly VisualEventSeeker VisualEvents = new();
 
@@ -180,8 +188,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 
 		private void updateState ( OrbitalState state ) {
 			currentState.Position = state.PivotPosition + state.OffsetOfNthOriginal( Index ) * Radius - Vector2d.UnitY * state.Z;
-			currentState.Alpha = Alpha;
-			head.Scale = new Vector2( (float)Math.Sqrt( 1 + state.Z ) );
+			currentState.Z = state.Z;
+			currentState.Alpha = Opacity;
 		}
 	}
 }

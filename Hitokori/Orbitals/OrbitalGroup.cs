@@ -67,6 +67,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			}
 		}
 
+		public IEnumerable<Orbital> ActiveOrbitals => activeOrbitals;
 		private List<Orbital> activeOrbitals = new List<Orbital>();
 		private Color4[] orbitalColors = new Color4[] {
 			Color4.Red,
