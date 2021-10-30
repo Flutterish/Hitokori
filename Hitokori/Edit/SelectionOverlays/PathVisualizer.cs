@@ -18,10 +18,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 
 		public PathVisualizer () {
 			Origin = Anchor.Centre;
+			AutoSizeAxes = Axes.Both;
 
 			AddInternal( trail = new FixedSizePath { 
 				PathRadius = 0.05f,
-				Alpha = 0.6f
+				Alpha = 0.6f,
+				Anchor = Anchor.Centre
 			} );
 
 			VisualizedConnector.BindValueChanged( v => {
