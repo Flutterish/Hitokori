@@ -130,6 +130,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			Playfield.RemoveChain( tp.ChainID ); // this is done because chains have visual events that need to be reset when timing changes
 			Playfield.AddChain( tp );
 
+			UpdateVisuals();
+		}
+
+		public void UpdateVisuals () {
 			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
 				i.UpdateInitialVisuals();
 			}

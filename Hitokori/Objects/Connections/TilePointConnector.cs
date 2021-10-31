@@ -176,6 +176,20 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			else return null;
 		}
 
+		public static string FormatMultiplier ( double value )
+			=> $"x{value.RadToDeg():N2}";
+		public static double? ParseMultiplier ( string value ) {
+			if ( value.StartsWith( "x" ) )
+				value = value.Substring( 1, value.Length - 1 );
+
+			if ( value.EndsWith( "x" ) )
+				value = value.Substring( 0, value.Length - 1 );
+
+			if ( double.TryParse( value.Trim(), out var d ) )
+				return d;
+			else return null;
+		}
+
 		#endregion
 	}
 }

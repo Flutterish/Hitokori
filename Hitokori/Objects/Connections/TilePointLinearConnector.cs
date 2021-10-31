@@ -12,8 +12,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 		double IHasVelocity.Velocity => Velocity;
 
 		public TilePointLinearConnector () {
-			Distance = new( recalculate, onConstraintChanged );// { Unit = "Tile", UnitPlural = "Tiles" };
-			Velocity = new( recalculate, onConstraintChanged );// { Unit = "Tile per second", UnitPlural = "Tiles per second", CustomFormat = x => 1000 * x };
+			Distance = new( recalculate, onConstraintChanged );
+			Velocity = new( recalculate, onConstraintChanged );
 		}
 
 		private double angle;

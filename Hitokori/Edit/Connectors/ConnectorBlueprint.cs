@@ -8,6 +8,7 @@ using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 		}
 
 		public virtual Drawable? CreateSettingsSection () => null;
+		public event Action? Modified;
+
+		// TODO Settings section for multi-selection
+
+		protected void InvokeModified () {
+			Modified?.Invoke();
+		}
 	}
 
 	public class ConnectorBlueprint<T> : ConnectorBlueprint where T : TilePointConnector {
@@ -31,18 +39,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 
 		protected class PropertySubsection : SetupSubsection {
 			private string title;
-			private bool adjustMargin;
 
-			public PropertySubsection ( string title, bool adjustMargin = false ) {
+			public PropertySubsection ( string title ) {
 				this.title = title;
-				this.adjustMargin = adjustMargin;
 			}
 
 			protected override void LoadComplete () {
 				base.LoadComplete();
-
-				if ( adjustMargin )
-					Margin = Margin with { Left = Margin.Left + 8 };
 			}
 
 			public override LocalisableString Title => title;
@@ -101,6 +104,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 					bindable.TriggerChange();
 					// TODO error message
 				}
+				finally {
+					InvokeModified();
+				}
 			};
 		}
 
@@ -131,7 +137,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 			var sections = members.GroupBy( x => x.GetCustomAttribute<InspectableAttribute>()!.Section ?? InspectableAttribute.SectionProperties );
 
 			foreach ( var memberSection in sections ) {
-				var section = new PropertySubsection( memberSection.Key, adjustMargin: true );
+				var section = new PropertySubsection( memberSection.Key );
 				container.Add( section );
 
 				foreach ( var member in memberSection ) {
@@ -218,19 +224,50 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 							format ??= v => Newtonsoft.Json.JsonConvert.SerializeObject( v );
 							parse ??= v => Newtonsoft.Json.JsonConvert.DeserializeObject( v, type );
 
-							var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = ( info.Label ?? member.Name ), ReadOnly = info.IsReadonly };
-							var commit = TrackValue( section, textBox,
-								() => member.GetMemberValue( Connector ),
-								v => member.SetMemberValue( Connector, v ),
-								v => format( v ),
-								v => parse( v ),
-								v => member.SetMemberValue( Connector, v )
-							);
-							textBox.OnCommit += ( _, newValue ) => {
-								if ( newValue ) commit();
-							};
-
 							var value = member.GetMemberValue( Connector );
+							
+							if ( value is Vector2d ) {
+								var subsection = new PropertySubsection( info.Label ?? member.Name );
+								section.Add( subsection );
+
+								subsection.OnLoadComplete += _ => {
+									var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = "X", ReadOnly = info.IsReadonly };
+									var commit = TrackValue<double?, string, LabelledTextBox>( subsection, textBox,
+										() => ( (Vector2d)member.GetMemberValue( Connector ) ).X,
+										v => { if ( v is double d ) member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { X = d } ); },
+										v => format.Invoke( ((Vector2d)member.GetMemberValue( Connector )).X ),
+										v => parse( v ) as double?,
+										v => member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { X = v!.Value } )
+									);
+									textBox.OnCommit += ( _, newValue ) => {
+										if ( newValue ) commit();
+									};
+									textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = "Y", ReadOnly = info.IsReadonly };
+									commit = TrackValue<double?, string, LabelledTextBox>( subsection, textBox,
+										() => ( (Vector2d)member.GetMemberValue( Connector ) ).Y,
+										v => { if ( v is double d ) member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { Y = d } ); },
+										v => format.Invoke( ((Vector2d)member.GetMemberValue( Connector )).Y ),
+										v => parse( v ) as double?,
+										v => member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { Y = v!.Value } )
+									);
+									textBox.OnCommit += ( _, newValue ) => {
+										if ( newValue ) commit();
+									};
+								};
+							}
+							else {
+								var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = ( info.Label ?? member.Name ), ReadOnly = info.IsReadonly };
+								var commit = TrackValue( section, textBox,
+									() => member.GetMemberValue( Connector ),
+									v => member.SetMemberValue( Connector, v ),
+									v => format( v ),
+									v => parse( v ),
+									v => member.SetMemberValue( Connector, v )
+								);
+								textBox.OnCommit += ( _, newValue ) => {
+									if ( newValue ) commit();
+								};
+							}
 						}
 					};
 				}

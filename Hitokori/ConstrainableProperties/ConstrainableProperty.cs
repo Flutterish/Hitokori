@@ -1,4 +1,5 @@
-﻿using System;
+﻿using osu.Framework.Extensions.TypeExtensions;
+using System;
 
 namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
 	public class ConstrainableProperty<T> where T : struct {
@@ -62,6 +63,9 @@ namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
 
 		public static implicit operator T ( ConstrainableProperty<T> p )
 			=> p.Value;
+
+		public override string ToString ()
+			=> $"Constrainable {typeof(T).ReadableName()} {{ {(IsComputed ? $"Value = {StringifyValue()}" : "Not computed")} | {(IsConstrained ? "Constrained" : "Not constrained")} }}";
 
 		public virtual string StringifyValue ()
 			=> Newtonsoft.Json.JsonConvert.SerializeObject( Value );

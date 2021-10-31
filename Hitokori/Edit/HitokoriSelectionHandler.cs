@@ -47,10 +47,15 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 					Composer!.Sidebar.Show();
 					Composer.Sidebar.Clear();
 					Composer.Sidebar.Add( settings );
+					Composer.Sidebar.Add( new ChainSubsection( SelectedChains.Single() ) );
 				}
 
 				connectorBlueprintContainer!.Clear();
 				connectorBlueprintContainer.Add( blueprint );
+
+				blueprint.Modified += () => {
+					Composer!.UpdateVisuals();
+				};
 			}
 
 			modifyToNextConnector = new MenuItem( "Edit next connector", () => {

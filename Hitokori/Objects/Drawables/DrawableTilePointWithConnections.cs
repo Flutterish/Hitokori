@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		public override void UpdateInitialVisuals () {
 			base.UpdateInitialVisuals();
 
+			piece.BorderColour = Colour4.White;
 			if ( HitObject.FromPrevious is IHasVelocity fromv && HitObject.ToNext is IHasVelocity tov ) {
 				if ( fromv.Speed / tov.Speed < 0.95 ) {
 					piece.Colour = Colour4.Tomato;
@@ -28,13 +29,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				else {
 					piece.Colour = Colour4.HotPink;
 				}
-			}
 
-			if ( HitObject.FromPrevious is TilePointRotationConnector && HitObject.ToNext is TilePointRotationConnector && Math.Sign( HitObject.FromPrevious.TargetOrbitalIndex ) != Math.Sign( HitObject.ToNext.TargetOrbitalIndex ) ) {
-				piece.BorderColour = Colour4.Yellow;
-			}
-			else {
-				piece.BorderColour = Colour4.White;
+				if ( Math.Sign( fromv.Velocity ) != Math.Sign( tov.Velocity ) ) {
+					piece.BorderColour = Colour4.Yellow;
+				}
 			}
 		}
 

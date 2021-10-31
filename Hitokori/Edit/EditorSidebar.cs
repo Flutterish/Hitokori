@@ -34,16 +34,16 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 				Alpha = 0.6f
 			} );
 
-			OsuScrollContainer scroll;
-			AddInternal( scroll = new OsuScrollContainer( Direction.Vertical ) {
-				Position = new Vector2( 5 ),
+			AddInternal( new OsuScrollContainer( Direction.Vertical ) {
+				ScrollbarVisible = false,
+				Padding = new MarginPadding( 14 ),
+				RelativeSizeAxes = Axes.Both,
 				Child = content = new FillFlowContainer {
 					Direction = FillDirection.Vertical,
 					RelativeSizeAxes = Axes.X,
 					AutoSizeAxes = Axes.Y
 				}
 			} );
-			scroll.OnUpdate += d => d.Size = new Vector2( Width - 10, DrawHeight - 10 );
 		}
 
 		[MaybeNull, NotNull]
