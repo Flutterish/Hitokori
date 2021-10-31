@@ -1,5 +1,7 @@
-﻿using osu.Game.Rulesets.Hitokori.Orbitals;
+﻿using osu.Game.Rulesets.Hitokori.Edit.Connectors;
+using osu.Game.Rulesets.Hitokori.Orbitals;
 using osuTK;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
@@ -89,7 +91,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public double StartTime => From.StartTime;
 
 		private double beatsPerMS;
-		public double BPM {
+		public double BPM { // TODO this is probably not updated in the editor
 			get => beatsPerMS * 60000;
 			set {
 				beatsPerMS = value / 60000;
@@ -97,6 +99,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 		}
 
+		[Inspectable( Section = InspectableAttribute.SectionTiming, Label = "Beat length" )]
 		public double Beats => Duration * beatsPerMS;
 
 		/// <summary>
@@ -113,5 +116,66 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		protected virtual void InvalidateProperties () {
 			
 		}
+
+		public virtual ConnectorBlueprint CreateEditorBlueprint () 
+			=> new ConnectorBlueprint<TilePointConnector>( this );
+
+		#region editor formatting
+
+		public static string FormatDistance ( double value )
+			=> value == 1 ? "1 Tile" : $"{value:0.##} Tiles";
+		public static double? ParseDistance ( string value ) {
+			if ( value.EndsWith( "Tile" ) )
+				value = value.Substring( 0, value.Length - 4 );
+
+			if ( value.EndsWith( "Tiles" ) )
+				value = value.Substring( 0, value.Length - 5 );
+
+			if ( double.TryParse( value.Trim(), out var d ) )
+				return d;
+			return null;
+		}
+
+		public static string FormatVelocity ( double value )
+			=> value == 0.001 ? "1 Tile per second" : $"{value*1000:0.##} Tiles per second";
+		public static double? ParseVelocity ( string value ) {
+			if ( value.EndsWith( "Tile per second" ) )
+				value = value.Substring( 0, value.Length - 15 );
+
+			if ( value.EndsWith( "Tiles per second" ) )
+				value = value.Substring( 0, value.Length - 16 );
+
+			if ( double.TryParse( value.Trim(), out var d ) )
+				return d / 1000;
+			else return null;
+		}
+
+		public static string FormatAngleRadiansToDegrees ( double value )
+			=> $"{value.RadToDeg():N2}°";
+		public static double? ParseDegreeAngleToRadians ( string value ) {
+			bool degrees = true;
+
+			if ( value.EndsWith( "rad" ) ) {
+				value = value.Substring( 0, value.Length - 3 );
+				degrees = false;
+			}
+			else if ( value.EndsWith( "radians" ) ) {
+				value = value.Substring( 0, value.Length - 7 );
+				degrees = false;
+			}
+			else if ( value.EndsWith( "°" ) ) {
+				value = value.Substring( 0, value.Length - 1 );
+			}
+
+			if ( double.TryParse( value.Trim(), out var d ) ) {
+				if ( degrees )
+					return d / 180 * Math.PI;
+				else
+					return d;
+			}
+			else return null;
+		}
+
+		#endregion
 	}
 }

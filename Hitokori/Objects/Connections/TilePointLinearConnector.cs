@@ -1,18 +1,23 @@
-﻿using osu.Game.Rulesets.Hitokori.Orbitals;
+﻿using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
+using osu.Game.Rulesets.Hitokori.Edit.Connectors;
+using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 	public class TilePointLinearConnector : TilePointConnector, IHasVelocity {
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatDistance ), ParseMethod = nameof( ParseDistance ) )]
 		public readonly ConstrainableProperty<double> Distance;
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatVelocity ), ParseMethod = nameof( ParseVelocity ) )]
 		public readonly ConstrainableProperty<double> Velocity;
 		double IHasVelocity.Velocity => Velocity;
 
 		public TilePointLinearConnector () {
-			Distance = new ConstrainableProperty<double>( recalculate, onConstraintChanged );
-			Velocity = new ConstrainableProperty<double>( recalculate, onConstraintChanged );
+			Distance = new( recalculate, onConstraintChanged );// { Unit = "Tile", UnitPlural = "Tiles" };
+			Velocity = new( recalculate, onConstraintChanged );// { Unit = "Tile per second", UnitPlural = "Tiles per second", CustomFormat = x => 1000 * x };
 		}
 
 		private double angle;
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatAngleRadiansToDegrees ), ParseMethod = nameof( ParseDegreeAngleToRadians ) )]
 		public double Angle {
 			get => angle;
 			set {
@@ -22,6 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 		}
 
 		private double distancePerBeat = 120d / 180 * Math.PI;
+		[Inspectable( Section = InspectableAttribute.SectionProperties, Label = "Distance per beat", FormatMethod = nameof( FormatDistance ), ParseMethod = nameof( ParseDistance ) )]
 		public double DistancePerBeat {
 			get => distancePerBeat;
 			set {
@@ -33,10 +39,18 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 		private void onConstraintChanged ( bool isConstrained )
 			=> Invalidate();
 
-		private void recalculate () {
+		protected override void InvalidateProperties () {
+			base.InvalidateProperties();
+
 			if ( Distance.IsConstrained && Velocity.IsConstrained )
-				throw new InvalidOperationException( $"Cannot constrian both velocity and distance in a {nameof(TilePointLinearConnector)}" );
-			else if ( Distance.IsConstrained ) {
+				throw new InvalidOperationException( $"Cannot constrian both velocity and distance in a Linear Connector" );
+
+			Distance.Invalidate();
+			Velocity.Invalidate();
+		}
+
+		private void recalculate () {
+			if ( Distance.IsConstrained ) {
 				Velocity.Value = Distance / Duration;
 			}
 			else if ( Velocity.IsConstrained ) {

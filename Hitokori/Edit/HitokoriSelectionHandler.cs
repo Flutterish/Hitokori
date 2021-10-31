@@ -1,8 +1,11 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
+using osu.Game.Rulesets.Hitokori.Edit.Connectors;
 using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
 using osu.Game.Rulesets.Hitokori.Objects;
@@ -22,19 +25,52 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		[MaybeNull, NotNull]
 		PathVisualizer visualizer;
 		TilePoint? selectedTilePoint;
-		public IEnumerable<Chain> SelectedChains => SelectedItems.OfType<TilePoint>().Select( x => x.ChainID ).Distinct().Select( x => Composer.Beatmap.Chains[ x ] );
+		public IEnumerable<Chain> SelectedChains => SelectedTiles.Select( x => x.ChainID ).Distinct().Select( x => Composer.Beatmap.Chains[ x ] );
+		public IEnumerable<TilePoint> SelectedTiles => SelectedItems.OfType<TilePoint>();
+
+		[MaybeNull, NotNull]
+		Container<ConnectorBlueprint> connectorBlueprintContainer;
 
 		public HitokoriSelectionHandler () {
 			modifyChain = new MenuItem( "Modify chain", () => {
+				if ( SelectedChains.Count() != 1 ) return;
+
 				Composer!.Sidebar.Show();
 				Composer.Sidebar.Clear();
 				Composer.Sidebar.Add( new ChainSubsection( SelectedChains.Single() ) { ShowSide = false } );
+			} );
+
+			void editConnector ( TilePointConnector connector ) {
+				var blueprint = connector.CreateEditorBlueprint();
+
+				if ( blueprint.CreateSettingsSection() is Drawable settings ) {
+					Composer!.Sidebar.Show();
+					Composer.Sidebar.Clear();
+					Composer.Sidebar.Add( settings );
+				}
+
+				connectorBlueprintContainer!.Clear();
+				connectorBlueprintContainer.Add( blueprint );
+			}
+
+			modifyToNextConnector = new MenuItem( "Edit next connector", () => {
+				if ( selectedTilePoint is null || selectedTilePoint.ToNext is null ) return;
+
+				editConnector( selectedTilePoint.ToNext );
+			} );
+			modifyFromPreviousConnector = new MenuItem( "Edit previous connector", () => {
+				if ( selectedTilePoint is null || selectedTilePoint.FromPrevious is null ) return;
+
+				editConnector( selectedTilePoint.FromPrevious );
 			} );
 		}
 
 		protected override void LoadComplete () {
 			base.LoadComplete();
 
+			Composer!.LayerAbovePlayfield.Add( connectorBlueprintContainer = new Container<ConnectorBlueprint> {
+				RelativeSizeAxes = Axes.Both
+			} );
 			AddInternal( visualizer = new PathVisualizer { Colour = Color4.Yellow } );
 			visualizer.Hide();
 		}
@@ -44,6 +80,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 		protected override void OnSelectionChanged () {
 			base.OnSelectionChanged();
+
+			if ( connectorBlueprintContainer.Children.Any( x => !SelectedTiles.Any( y => y.FromPrevious == x.Connector || y.ToNext == x.Connector ) ) ) {
+				Composer.Sidebar.Hide();
+				connectorBlueprintContainer.Clear();
+			}
 
 			if ( SelectedItems.Count == 1 ) {
 				selectedTilePoint = SelectedItems[ 0 ] as TilePoint;
@@ -95,9 +136,20 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		}
 
 		private MenuItem modifyChain;
+		private MenuItem modifyToNextConnector;
+		private MenuItem modifyFromPreviousConnector;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
+			}
+
+			if ( selectedTilePoint is not null ) {
+				if ( selectedTilePoint.ToNext is not null ) {
+					yield return modifyToNextConnector;
+				}
+				if ( selectedTilePoint.FromPrevious is not null ) {
+					yield return modifyFromPreviousConnector;
+				}
 			}
 		}
 	}

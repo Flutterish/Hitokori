@@ -13,6 +13,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Setup {
 	public abstract class SetupSubsection : SetupSection {
+		new public const float LABEL_WIDTH = SetupSection.LABEL_WIDTH;
+
 		[MaybeNull, NotNull]
 		Drawable side;
 

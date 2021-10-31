@@ -1,4 +1,6 @@
-﻿using osu.Game.Rulesets.Hitokori.Objects.Connections;
+﻿using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
+using osu.Game.Rulesets.Hitokori.Edit.Connectors;
+using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
 
@@ -10,21 +12,24 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// <summary>
 		/// The normalized distance from the pivot
 		/// </summary>
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatDistance ), ParseMethod = nameof( ParseDistance ) )]
 		public readonly ConstrainableProperty<double> Radius;
 		/// <summary>
 		/// The signed angle change in radians
 		/// </summary>
-		public readonly ConstrainableProperty<double> Angle;
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatAngleRadiansToDegrees ), ParseMethod = nameof( ParseDegreeAngleToRadians ) )]
+		public readonly ConstrainableAngle Angle;
 		/// <summary>
 		/// Signed speed in arclength per ms. This is essentially angle in radians per ms at <see cref="Radius"/> = 1
 		/// </summary>
+		[Inspectable( Section = InspectableAttribute.SectionProperties, FormatMethod = nameof( FormatVelocity ), ParseMethod = nameof( ParseVelocity ) )]
 		public readonly ConstrainableProperty<double> Velocity;
 		double IHasVelocity.Velocity => Velocity;
 
 		public TilePointRotationConnector () {
-			Radius = new( 1, recalculate, onConstraintChanged );
-			Angle = new( recalculate, onConstraintChanged );
-			Velocity = new( recalculate, onConstraintChanged );
+			Radius = new( 1, recalculate, onConstraintChanged );// { Unit = "Tile", UnitPlural = "Tiles" };
+			Angle = new ConstrainableAngle( recalculate, onConstraintChanged ) { IsRadians = true };
+			Velocity = new( recalculate, onConstraintChanged );// { Unit = "Tile per second", UnitPlural = "Tiles per second", CustomFormat = x => 1000 * x };
 		}
 
 		private void onConstraintChanged ( bool isConstrained )
@@ -39,6 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// <summary>
 		/// Distance in arclength per beat. This is essentially angle in radians per beat at <see cref="Radius"/> = 1.
 		/// </summary>
+		[Inspectable( Section = InspectableAttribute.SectionProperties, Label = "Distance per beat", FormatMethod = nameof( FormatDistance ), ParseMethod = nameof( ParseDistance ) )]
 		public double DistancePerBeat {
 			get => distancePerBeat;
 			set {
@@ -52,6 +58,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 
 		protected override void InvalidateProperties () {
 			base.InvalidateProperties();
+
+			if ( Radius.IsConstrained || Angle.IsConstrained || Velocity.IsConstrained ) {
+				throw new NotImplementedException( "Respecting constraints is not implemented yet" );
+			}
 
 			Radius.Invalidate();
 			Angle.Invalidate();

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
+namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
 	public class ConstrainableProperty<T> where T : struct {
 		public bool IsConstrained { get; private set; }
 
@@ -10,14 +10,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 			get {
 				if ( !IsComputed ) {
 					computeAction();
-					if ( !IsComputed ) 
+					if ( !IsComputed )
 						throw new InvalidOperationException( "Compute function of a constrainable property did not set its value" );
 				}
 
 				return value;
 			}
 			set {
-				if ( IsConstrained ) 
+				if ( IsConstrained )
 					throw new InvalidOperationException( "Cannot set a value of a constrained property" );
 
 				IsComputed = true;
@@ -27,9 +27,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 		}
 
 		public void Constrain ( T value ) {
-			Value = value;
 			IsConstrained = true;
+			this.value = value;
+			IsComputed = true;
 			onConstraintChanged( true );
+			onValueChanged?.Invoke();
 		}
 		public void ReleaseConstraint () {
 			IsConstrained = false;
@@ -60,5 +62,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 
 		public static implicit operator T ( ConstrainableProperty<T> p )
 			=> p.Value;
+
+		public virtual string StringifyValue ()
+			=> Newtonsoft.Json.JsonConvert.SerializeObject( Value );
+
+		public virtual T ParseValue ( string text )
+			=> Newtonsoft.Json.JsonConvert.DeserializeObject<T>( text );
 	}
 }

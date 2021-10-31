@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 
 			trail.ClearVertices();
 
-			if ( Duration == 0 ) {
+			if ( Duration <= 0 ) {
 				foreach ( var i in heads )
 					i.Hide();
 
