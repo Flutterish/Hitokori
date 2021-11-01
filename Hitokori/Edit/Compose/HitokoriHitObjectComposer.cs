@@ -38,6 +38,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		public readonly CameraController CameraController;
 		public readonly MultiSelectionContainer ProxiedSelectionContainer;
 		public readonly EditorSidebar Sidebar;
+		public readonly EditorToast Toast;
 
 		[NotNull, MaybeNull]
 		private DependencyContainer dependencyContainer;
@@ -54,7 +55,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 					ProxiedSelectionContainer = new MultiSelectionContainer {
 						Alpha = 0.4f
 					},
-					Sidebar = new EditorSidebar()
+					Sidebar = new EditorSidebar(),
+					Toast = new EditorToast( ShowTooltipsToggle )
 				}
 			};
 
@@ -84,9 +86,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 		public readonly Bindable<TernaryState> ManualCameraToggle = new Bindable<TernaryState>( TernaryState.False );
 		public readonly Bindable<TernaryState> PathVisualizerToggle = new Bindable<TernaryState>( TernaryState.True );
+		public readonly Bindable<TernaryState> ShowTooltipsToggle = new Bindable<TernaryState>( TernaryState.True );
 		protected override IEnumerable<TernaryButton> CreateTernaryButtons () {
 			yield return new TernaryButton( ManualCameraToggle, "Manual Camera", () => new SpriteIcon { Icon = FontAwesome.Solid.Video } );
 			yield return new TernaryButton( PathVisualizerToggle, "Path Visualizer", () => new SpriteIcon { Icon = FontAwesome.Solid.WaveSquare } );
+			yield return new TernaryButton( ShowTooltipsToggle, "Show Tooltips", () => new SpriteIcon { Icon = FontAwesome.Solid.InfoCircle } );
 		}
 
 		protected override void LoadComplete () {
@@ -110,8 +114,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			dependencyContainer.CacheAs( Beatmap );
 
 			ManualCameraToggle.BindValueChanged( v => {
-				if ( v.NewValue == TernaryState.True )
+				if ( v.NewValue == TernaryState.True ) {
 					Playfield.ShouldUpdateCamera = false;
+					Toast.ShowMessage( "MMB to pan, scroll to zoom" );
+				}
 				else if ( v.NewValue == TernaryState.False )
 					Playfield.ShouldUpdateCamera = true;
 			}, true );

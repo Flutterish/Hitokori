@@ -100,6 +100,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 						blueprint.Modified += () => {
 							Composer!.UpdateVisuals();
 						};
+						if ( !string.IsNullOrWhiteSpace( blueprint.Tooltip ) ) {
+							Composer.Toast.ShowMessage( blueprint.Tooltip );
+						}
 					}
 				}
 			}

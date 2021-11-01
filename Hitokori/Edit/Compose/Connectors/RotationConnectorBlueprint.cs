@@ -81,6 +81,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			InvokeModified();
 		}
 
+		public override string Tooltip => "Ctrl and Ctrl + Shift to snap";
+
 		protected override void Update () {
 			base.Update();
 

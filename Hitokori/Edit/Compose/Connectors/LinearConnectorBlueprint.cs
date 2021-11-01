@@ -44,6 +44,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			InvokeModified();
 		}
 
+		public override string Tooltip => "Ctrl and Ctrl + Shift to snap";
+
 		public override bool CanResetConstraints => Connector.Distance.IsConstrained || Connector.Velocity.IsConstrained;
 		public override void ResetConstraints () {
 			Connector.Distance.ReleaseConstraint();
