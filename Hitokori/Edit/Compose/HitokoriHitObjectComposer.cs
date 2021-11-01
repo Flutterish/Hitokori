@@ -8,6 +8,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;

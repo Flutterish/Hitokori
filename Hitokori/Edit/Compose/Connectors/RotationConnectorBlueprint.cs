@@ -1,17 +1,14 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
-	public class RotationConnectorBlueprint : ConnectorBlueprint<TilePointRotationConnector> {
+	public partial class RotationConnectorBlueprint : ConnectorBlueprint<TilePointRotationConnector> {
 		const float size = 120;
 		const float borderSize = 10;
 
@@ -30,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 				Current = angleDelta.Current,
 				Dragged = onDistanceHandleDragged
 			} );
-			AddInternal( angleHandle = new RotationHandle {
+			AddInternal( angleHandle = new MoveHandle {
 				Origin = Anchor.Centre,
 				Size = new Vector2( borderSize * 2 ),
 				Colour = Colour4.Yellow,
@@ -40,7 +37,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 		private CircularProgress angleDelta;
 		private DistanceHandle radiusHandle;
-		private RotationHandle angleHandle;
+		private MoveHandle angleHandle;
 
 		[BackgroundDependencyLoader]
 		private void load ( OsuColour colours ) {
@@ -58,7 +55,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			var delta = startAngle.AngleDifference( endAngle );
 
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
-				var snap = e.CurrentState.Keyboard.ShiftPressed ? Math.Tau / 36 /* 10 deg */  : Math.Tau / 16 /* 22.5 deg */ ;
+				var snap = e.CurrentState.Keyboard.ShiftPressed ? (Math.Tau / 36 /* 10 deg */) : (Math.Tau / 16 /* 22.5 deg */);
 				Connector.Angle.ConstrainRadians( Math.Round( ( Connector.Angle.ValueRadians + delta ) / snap ) * snap );
 			}
 			else {
@@ -113,50 +110,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			Connector.Angle.ReleaseConstraint();
 			Connector.Radius.ReleaseConstraint();
 			Connector.Velocity.ReleaseConstraint();
-		}
-
-		private class RotationHandle : CompositeDrawable {
-			public Action<DragEvent>? Dragged;
-
-			public RotationHandle () {
-				AddInternal( new Circle {
-					RelativeSizeAxes = Axes.Both
-				} );
-				AddInternal( new HoverSounds {
-					RelativeSizeAxes = Axes.Both
-				} );
-			}
-
-			private void prompt () {
-				this.ScaleTo( 1.4f, 100 );
-			}
-			private void unprompt () {
-				this.ScaleTo( 1f, 100 );
-			}
-
-			protected override bool OnDragStart ( DragStartEvent e ) {
-				if ( !IsHovered ) prompt();
-				return true;
-			}
-
-			protected override void OnDrag ( DragEvent e ) {
-				Dragged?.Invoke( e );
-			}
-
-			protected override void OnDragEnd ( DragEndEvent e ) {
-				if ( !IsHovered ) unprompt();
-				base.OnDragEnd( e );
-			}
-
-			protected override bool OnHover ( HoverEvent e ) {
-				if ( !IsDragged ) prompt();
-				return true;
-			}
-
-			protected override void OnHoverLost ( HoverLostEvent e ) {
-				if ( !IsDragged ) unprompt();
-				base.OnHoverLost( e );
-			}
 		}
 
 		private class HitboxedCircularProgress : CircularProgress {

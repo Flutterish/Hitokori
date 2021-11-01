@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 		}
 
 		public Vector2 ScaleForZ ( double z ) {
-			return new Vector2( (float)Math.Sqrt( 1 + z ) );
+			return new Vector2( (float)Math.Sqrt( 1 + Math.Abs( z ) ) );
 		}
 
 		private void updateTrail () {

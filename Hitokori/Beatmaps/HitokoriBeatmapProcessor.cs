@@ -25,8 +25,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		public double? ForcedAnglePerBeat = null;
-		public int? ForcedOrbitalCount = null;
-		public GameVariant Variant = GameVariant.Default;
+		public int? ForcedOrbitalCount = 1;
+		public GameVariant Variant = GameVariant.Solo;
 
 		private void processChain ( IEnumerable<TilePoint> tiles ) {
 			switch ( Variant ) {
