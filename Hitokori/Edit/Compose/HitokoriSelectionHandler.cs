@@ -6,8 +6,8 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using osu.Game.Rulesets.Hitokori.Edit.Connectors;
-using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Objects;
@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace osu.Game.Rulesets.Hitokori.Edit {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class HitokoriSelectionHandler : EditorSelectionHandler {
 		[Resolved, MaybeNull, NotNull]
 		public HitokoriHitObjectComposer Composer { get; private set; }
@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			} );
 
 			void editConnector ( TilePointConnector connector ) {
-				var blueprint = toNextBlueprint?.Connector == connector ? toNextBlueprint 
+				var blueprint = toNextBlueprint?.Connector == connector ? toNextBlueprint
 					: null;
 
 				if ( blueprint?.CreateSettingsSection() is Drawable settings ) {

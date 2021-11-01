@@ -6,7 +6,7 @@ using osuTK;
 using osuTK.Input;
 using System;
 
-namespace osu.Game.Rulesets.Hitokori.Edit {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class CameraController : CompositeDrawable {
 		private HitokoriHitObjectComposer composer;
 

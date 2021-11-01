@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osuTK;
 using System.Diagnostics.CodeAnalysis;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays {
 	public abstract class SelectionOverlay<T> : CompositeDrawable where T : HitokoriHitObject {
 		[Resolved, MaybeNull, NotNull]
 		public HitokoriPlayfield Playfield { get; private set; }

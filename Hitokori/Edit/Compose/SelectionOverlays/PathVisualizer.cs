@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays {
 	public class PathVisualizer : CompositeDrawable {
 		[Resolved, MaybeNull, NotNull]
 		public HitokoriHitObjectComposer Composer { get; private set; }
@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 			Origin = Anchor.Centre;
 			AutoSizeAxes = Axes.Both;
 
-			AddInternal( trail = new FixedSizePath { 
+			AddInternal( trail = new FixedSizePath {
 				PathRadius = 0.05f,
 				Alpha = 0.6f,
 				Anchor = Anchor.Centre
@@ -68,14 +68,14 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				this.Loop( 300, x => x.TransformBindableTo( timeBindable, 0 ).Then().TransformBindableTo( timeBindable, value * 2, value * 2 ) );
 			}
 		}
-		private double startTime => VisualizedConnector.Value!.From.Previous is null ? (VisualizedConnector.Value.StartTime - VisualizedConnector.Value.Duration * 2) : (VisualizedConnector.Value.StartTime + 0.1);
+		private double startTime => VisualizedConnector.Value!.From.Previous is null ? VisualizedConnector.Value.StartTime - VisualizedConnector.Value.Duration * 2 : VisualizedConnector.Value.StartTime + 0.1;
 
 		protected override void Update () {
 			base.Update();
 
 			if ( VisualizedConnector.Value is not TilePointConnector c ) return;
 			var d = c.EndTime - startTime;
-			Duration = d > 100 ? (d - 0.1) : (d * 0.999); // this is done so the small jump that OrbitalState.Offset produces is not shown
+			Duration = d > 100 ? d - 0.1 : d * 0.999; // this is done so the small jump that OrbitalState.Offset produces is not shown
 
 			trail.ClearVertices();
 
@@ -94,25 +94,25 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				int end = count;
 
 				if ( timeBindable.Value < Duration ) {
-					end = (int)( ( timeBindable.Value / Duration ) * count );
+					end = (int)( timeBindable.Value / Duration * count );
 				}
 				else {
 					start = (int)( ( timeBindable.Value / Duration - 1 ) * count );
 				}
 
 				var state = c.GetStateAt( 0 );
-				
+
 				void addVertex ( double time ) {
 					orbitals!.SeekTo( time );
 					trail.AddVertex( (Vector2)orbitals.ActiveOrbitals.Single( x => state.IsNthOriginalPivot( x.Index - c.TargetOrbitalIndex ) ).StateAt( time ).Position - TilePosition );
 				}
-				
-				addVertex( startTime + ( ( timeBindable.Value < Duration ) ? 0 : ( timeBindable.Value - Duration ) ) );
+
+				addVertex( startTime + ( timeBindable.Value < Duration ? 0 : timeBindable.Value - Duration ) );
 				for ( int i = start; i < end; i++ ) {
-					addVertex( startTime + ( Duration / ( count - 1 ) ) * i );
+					addVertex( startTime + Duration / ( count - 1 ) * i );
 				}
 
-				var endTime = startTime + ( ( timeBindable.Value < Duration ) ? timeBindable.Value : duration );
+				var endTime = startTime + ( timeBindable.Value < Duration ? timeBindable.Value : duration );
 				addVertex( endTime );
 
 				foreach ( var i in heads )

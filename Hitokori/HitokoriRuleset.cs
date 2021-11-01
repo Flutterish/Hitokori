@@ -12,7 +12,6 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using osu.Game.Rulesets.Hitokori.Edit;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Mods;

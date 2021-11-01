@@ -9,7 +9,7 @@ using osuTK;
 using osuTK.Input;
 using System.Diagnostics.CodeAnalysis;
 
-namespace osu.Game.Rulesets.Hitokori.Edit {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class EditorSidebar : VisibilityContainer {
 		public EditorSidebar () {
 			Origin = Anchor.Centre;

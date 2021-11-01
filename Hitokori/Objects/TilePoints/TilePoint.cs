@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
-using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Objects.Types;
 using osuTK;

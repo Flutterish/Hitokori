@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osuTK;
 using System.Diagnostics.CodeAnalysis;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.Blueprints {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints {
 	public abstract class HitokoriSelectionBlueprint<T> : HitObjectSelectionBlueprint<T> where T : HitokoriHitObject {
 		[Resolved, MaybeNull, NotNull]
 		public HitokoriPlayfield Playfield { get; private set; }

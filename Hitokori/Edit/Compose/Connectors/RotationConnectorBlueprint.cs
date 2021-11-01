@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osuTK;
 using System;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 	public class RotationConnectorBlueprint : ConnectorBlueprint<TilePointRotationConnector> {
 		const float size = 120;
 		const float borderSize = 10;
@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 			var delta = startAngle.AngleDifference( endAngle );
 
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
-				var snap = e.CurrentState.Keyboard.ShiftPressed ? ( Math.Tau / 36 /* 10 deg */ ) : ( Math.Tau / 16 /* 22.5 deg */ );
+				var snap = e.CurrentState.Keyboard.ShiftPressed ? Math.Tau / 36 /* 10 deg */  : Math.Tau / 16 /* 22.5 deg */ ;
 				Connector.Angle.ConstrainRadians( Math.Round( ( Connector.Angle.ValueRadians + delta ) / snap ) * snap );
 			}
 			else {
@@ -74,7 +74,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 
 			var distance = ( pos - (Vector2)pivot ).Length;
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
-				var snap = e.CurrentState.Keyboard.ShiftPressed ? ( 0.1 ) : ( 0.5 );
+				var snap = e.CurrentState.Keyboard.ShiftPressed ? 0.1 : 0.5;
 				Connector.Radius.Constrain( Math.Round( distance / snap ) * snap );
 			}
 			else {

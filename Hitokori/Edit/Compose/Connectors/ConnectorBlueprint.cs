@@ -21,7 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 	public abstract class ConnectorBlueprint : Container {
 		public readonly TilePointConnector Connector;
 
@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 	public class ConnectorBlueprint<T> : ConnectorBlueprint where T : TilePointConnector {
 		new public T Connector => (T)base.Connector;
 
-		public ConnectorBlueprint ( T connector ) : base ( connector ) { }
+		public ConnectorBlueprint ( T connector ) : base( connector ) { }
 
 		public override Drawable? CreateSettingsSection ()
 			=> new ReflectionBasedConnectorBlueprintSettingsSection( Connector );
@@ -181,7 +181,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 					var info = member.GetCustomAttribute<InspectableAttribute>()!;
 
 					var type = member is FieldInfo f ? f.FieldType : member is PropertyInfo p ? p.PropertyType : typeof( object );
-					info.IsReadonly |= member is FieldInfo ? false : member is PropertyInfo pp ? ( !pp.CanWrite ) : false;
+					info.IsReadonly |= member is FieldInfo ? false : member is PropertyInfo pp ? !pp.CanWrite : false;
 					var constrainableType = getGenericType( typeof( ConstrainableProperty<> ), type );
 					if ( constrainableType is not null )
 						type = constrainableType.GetGenericArguments()[ 0 ];
@@ -208,7 +208,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 
 					section.OnLoadComplete += _ => {
 						if ( constrainableType is not null ) {
-							var subsection = new PropertySubsection( ( info.Label ?? member.Name ) );
+							var subsection = new PropertySubsection( info.Label ?? member.Name );
 							section.Add( subsection );
 
 							subsection.OnLoadComplete += _ => {
@@ -247,7 +247,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 											() => doubleProp.Value,
 											v => { if ( v is double d ) doubleProp.Constrain( d ); },
 											v => format?.Invoke( doubleProp.Value ) ?? doubleProp.StringifyValue(),
-											v => parse is null ? doubleProp.ParseValue( v ) : ( parse( v ) as double? ),
+											v => parse is null ? doubleProp.ParseValue( v ) : parse( v ) as double?,
 											_ => doubleProp.ReleaseConstraint()
 										);
 										textBox.OnCommit += ( _, newValue ) => {
@@ -293,7 +293,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 								};
 							}
 							else {
-								var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = ( info.Label ?? member.Name ), ReadOnly = info.IsReadonly };
+								var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = info.Label ?? member.Name, ReadOnly = info.IsReadonly };
 								var commit = TrackValue( section, textBox,
 									() => member.GetMemberValue( Connector ),
 									v => member.SetMemberValue( Connector, v ),

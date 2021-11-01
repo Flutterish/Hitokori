@@ -3,7 +3,7 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Screens.Edit.Compose.Components;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.Blueprints {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints {
 	public class HitokoriComposeBlueprintContainer : ComposeBlueprintContainer {
 		new public HitokoriHitObjectComposer Composer => (HitokoriHitObjectComposer)base.Composer;
 

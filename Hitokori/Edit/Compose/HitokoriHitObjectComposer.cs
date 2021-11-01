@@ -8,8 +8,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using osu.Game.Rulesets.Hitokori.Edit.Blueprints;
-using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.UI;
@@ -26,7 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace osu.Game.Rulesets.Hitokori.Edit {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	[Cached]
 	public class HitokoriHitObjectComposer : HitObjectComposer<HitokoriHitObject> {
 		public HitokoriBeatmap Beatmap => (HitokoriBeatmap)EditorBeatmap.PlayableBeatmap;
@@ -73,7 +72,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 		private ComposeScreen getContainingComposeScreen () {
 			Drawable drawable = this;
-			while ( !(drawable is ComposeScreen) ) 
+			while ( !( drawable is ComposeScreen ) )
 				drawable = drawable.Parent;
 
 			return (ComposeScreen)drawable;
@@ -107,12 +106,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			EditorBeatmap.HitObjectUpdated += onHitObjectUpdated;
 
 			dependencyContainer.CacheAs<HitokoriPlayfield>( Playfield );
-			dependencyContainer.CacheAs<HitokoriBeatmap>( Beatmap );
+			dependencyContainer.CacheAs( Beatmap );
 
 			ManualCameraToggle.BindValueChanged( v => {
-				if ( v.NewValue == TernaryState.True ) 
+				if ( v.NewValue == TernaryState.True )
 					Playfield.ShouldUpdateCamera = false;
-				else if ( v.NewValue == TernaryState.False ) 
+				else if ( v.NewValue == TernaryState.False )
 					Playfield.ShouldUpdateCamera = true;
 			}, true );
 		}
@@ -120,7 +119,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		protected override void Update () {
 			base.Update();
 
-			if ( ManualCameraToggle.Value != TernaryState.True ) 
+			if ( ManualCameraToggle.Value != TernaryState.True )
 				Playfield.UpdateCameraViewport( Time.Elapsed );
 		}
 

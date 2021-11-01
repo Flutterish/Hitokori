@@ -1,4 +1,4 @@
-﻿using osu.Game.Rulesets.Hitokori.Edit.Connectors;
+﻿using osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using System;
 

@@ -3,13 +3,13 @@ using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays {
 	public class TilePointOverlay : SelectionOverlay<TilePoint> {
 		private TilePointVisualPiece piece;
 		private Drawable pieceProxy;
 		private bool proxyVisible = false;
 
-		public TilePointOverlay ( TilePoint tp ) : base ( tp ) {
+		public TilePointOverlay ( TilePoint tp ) : base( tp ) {
 			AddInternal( piece = new TilePointVisualPiece {
 				Origin = Anchor.Centre,
 				BorderColour = Colour4.Yellow,

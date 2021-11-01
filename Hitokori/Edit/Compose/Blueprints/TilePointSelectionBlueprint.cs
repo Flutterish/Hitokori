@@ -1,9 +1,9 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
-using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Objects;
 
-namespace osu.Game.Rulesets.Hitokori.Edit.Blueprints {
+namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints {
 	public class TilePointSelectionBlueprint : HitokoriSelectionBlueprint<TilePoint> {
 		private TilePointOverlay overlay;
 
