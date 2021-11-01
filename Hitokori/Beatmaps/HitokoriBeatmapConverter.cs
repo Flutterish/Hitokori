@@ -44,8 +44,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			}
 		}
 
-		public int? ForcedOrbitalCount = 1;
-		public GameVariant Variant = GameVariant.Solo;
+		public int? ForcedOrbitalCount = null;
+		public GameVariant Variant = GameVariant.Default;
 
 		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original, CancellationToken cancellationToken ) {
 			var beatmap = CreateBeatmap();
