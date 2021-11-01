@@ -42,9 +42,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			} );
 
 			void editConnector ( TilePointConnector connector ) {
-				var blueprint = connectorBlueprintContainer!.Children.Single( x => x.Connector == connector );
+				var blueprint = toNextBlueprint?.Connector == connector ? toNextBlueprint 
+					: null;
 
-				if ( blueprint.CreateSettingsSection() is Drawable settings ) {
+				if ( blueprint?.CreateSettingsSection() is Drawable settings ) {
 					Composer!.Sidebar.Show();
 					Composer.Sidebar.Clear();
 					Composer.Sidebar.Add( settings );
@@ -57,10 +58,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 				editConnector( selectedTilePoint.ToNext );
 			} );
-			modifyFromPreviousConnector = new MenuItem( "Edit previous connector", () => {
-				if ( selectedTilePoint is null || selectedTilePoint.FromPrevious is null ) return;
 
-				editConnector( selectedTilePoint.FromPrevious );
+			resetToNextConnector = new MenuItem( "Reset next connector", () => {
+				if ( toNextBlueprint is null ) return;
+
+				toNextBlueprint.ResetConstraints();
 			} );
 		}
 
@@ -78,6 +80,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		private BindablePool<string> bindableStringPool = new();
 		private List<Bindable<string>> boundNames = new();
 
+		ConnectorBlueprint? toNextBlueprint;
+
 		protected override void OnSelectionChanged () {
 			base.OnSelectionChanged();
 
@@ -90,7 +94,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 				selectedTilePoint = SelectedItems[ 0 ] as TilePoint;
 				if ( selectedTilePoint is not null ) {
 					connectorBlueprintContainer.Clear();
-					var blueprint = selectedTilePoint.ToNext?.CreateEditorBlueprint();
+					var blueprint = toNextBlueprint = selectedTilePoint.ToNext?.CreateEditorBlueprint(); // TODO cache these and remove them when the connector is deleted
 					if ( blueprint is not null ) {
 						connectorBlueprintContainer.Add( blueprint );
 						blueprint.Modified += () => {
@@ -149,18 +153,17 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 		private MenuItem modifyChain;
 		private MenuItem modifyToNextConnector;
-		private MenuItem modifyFromPreviousConnector;
+		private MenuItem resetToNextConnector;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
 			}
 
 			if ( selectedTilePoint is not null ) {
-				if ( selectedTilePoint.ToNext is not null ) {
+				if ( toNextBlueprint is not null ) {
 					yield return modifyToNextConnector;
-				}
-				if ( selectedTilePoint.FromPrevious is not null ) {
-					yield return modifyFromPreviousConnector;
+					if ( toNextBlueprint.CanResetConstraints )
+						yield return resetToNextConnector;
 				}
 			}
 		}

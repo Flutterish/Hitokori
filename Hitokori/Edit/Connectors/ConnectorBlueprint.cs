@@ -42,10 +42,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 		}
 
 		public virtual Drawable? CreateSettingsSection () => null;
-		public event Action? Modified;
+
+		public virtual bool CanResetConstraints => false;
+		public virtual void ResetConstraints () { }
 
 		// TODO Settings section for multi-selection
 
+		public event Action? Modified;
 		protected void InvokeModified () {
 			Modified?.Invoke();
 		}
@@ -60,6 +63,20 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 		new public T Connector => (T)base.Connector;
 
 		public ConnectorBlueprint ( T connector ) : base ( connector ) { }
+
+		public override Drawable? CreateSettingsSection ()
+			=> new ReflectionBasedConnectorBlueprintSettingsSection( Connector );
+	}
+
+	public class ReflectionBasedConnectorBlueprintSettingsSection : FillFlowContainer {
+		public readonly TilePointConnector Connector;
+		public event Action? Modified;
+		public ReflectionBasedConnectorBlueprintSettingsSection ( TilePointConnector connector ) {
+			Direction = FillDirection.Vertical;
+			AutoSizeAxes = Axes.Y;
+			RelativeSizeAxes = Axes.X;
+			Connector = connector;
+		}
 
 		protected class PropertySubsection : SetupSubsection {
 			private string title;
@@ -89,7 +106,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 		/// <param name="parse">A function that converts the format type to a value, or <see langword="null"/> if the format is invalid</param>
 		/// <param name="revert">A function that in case the new value causes an excpetion, reverts the value and performs any cleanup necessary</param>
 		/// <returns>An action to be performed when the user commits a value</returns>
-		protected Action TrackValue<V, F, D> ( Container<Drawable> tracker, D drawable,
+		public Action TrackValue<V, F, D> ( Container<Drawable> tracker, D drawable,
 			Func<V> getter, Action<V> setter, Func<V, F> format, Func<F, V?> parse, Action<V> revert
 		) where D : Drawable, IHasCurrentValue<F> {
 			Bindable<V> bindable = new Bindable<V>();
@@ -129,17 +146,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 					// TODO error message
 				}
 				finally {
-					InvokeModified();
+					Modified?.Invoke();
 				}
 			};
 		}
 
-		public override Drawable? CreateSettingsSection () {
-			FillFlowContainer container = new FillFlowContainer {
-				Direction = FillDirection.Vertical,
-				AutoSizeAxes = Axes.Y,
-				RelativeSizeAxes = Axes.X,
-			};
+		protected override void LoadComplete () {
+			base.LoadComplete();
 
 			Type? getGenericType ( Type generic, Type? current ) {
 				if ( current is null ) return null;
@@ -162,13 +175,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 
 			foreach ( var memberSection in sections ) {
 				var section = new PropertySubsection( memberSection.Key );
-				container.Add( section );
+				Add( section );
 
 				foreach ( var member in memberSection ) {
 					var info = member.GetCustomAttribute<InspectableAttribute>()!;
 
 					var type = member is FieldInfo f ? f.FieldType : member is PropertyInfo p ? p.PropertyType : typeof( object );
-					info.IsReadonly |= member is FieldInfo ? false : member is PropertyInfo pp ? (!pp.CanWrite) : false;
+					info.IsReadonly |= member is FieldInfo ? false : member is PropertyInfo pp ? ( !pp.CanWrite ) : false;
 					var constrainableType = getGenericType( typeof( ConstrainableProperty<> ), type );
 					if ( constrainableType is not null )
 						type = constrainableType.GetGenericArguments()[ 0 ];
@@ -230,11 +243,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 										trackConstraint( doubleProp );
 
 										var textBox = new LabelledTextBox { FixedLabelWidth = SetupSubsection.LABEL_WIDTH, Label = "Value", ReadOnly = info.IsReadonly };
-										var commit = TrackValue<double?,string,LabelledTextBox>( subsection, textBox,
+										var commit = TrackValue<double?, string, LabelledTextBox>( subsection, textBox,
 											() => doubleProp.Value,
 											v => { if ( v is double d ) doubleProp.Constrain( d ); },
 											v => format?.Invoke( doubleProp.Value ) ?? doubleProp.StringifyValue(),
-											v => parse is null ? doubleProp.ParseValue( v ) : (parse( v ) as double?),
+											v => parse is null ? doubleProp.ParseValue( v ) : ( parse( v ) as double? ),
 											_ => doubleProp.ReleaseConstraint()
 										);
 										textBox.OnCommit += ( _, newValue ) => {
@@ -249,7 +262,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 							parse ??= v => Newtonsoft.Json.JsonConvert.DeserializeObject( v, type );
 
 							var value = member.GetMemberValue( Connector );
-							
+
 							if ( value is Vector2d ) {
 								var subsection = new PropertySubsection( info.Label ?? member.Name );
 								section.Add( subsection );
@@ -259,7 +272,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 									var commit = TrackValue<double?, string, LabelledTextBox>( subsection, textBox,
 										() => ( (Vector2d)member.GetMemberValue( Connector ) ).X,
 										v => { if ( v is double d ) member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { X = d } ); },
-										v => format.Invoke( ((Vector2d)member.GetMemberValue( Connector )).X ),
+										v => format.Invoke( ( (Vector2d)member.GetMemberValue( Connector ) ).X ),
 										v => parse( v ) as double?,
 										v => member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { X = v!.Value } )
 									);
@@ -270,7 +283,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 									commit = TrackValue<double?, string, LabelledTextBox>( subsection, textBox,
 										() => ( (Vector2d)member.GetMemberValue( Connector ) ).Y,
 										v => { if ( v is double d ) member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { Y = d } ); },
-										v => format.Invoke( ((Vector2d)member.GetMemberValue( Connector )).Y ),
+										v => format.Invoke( ( (Vector2d)member.GetMemberValue( Connector ) ).Y ),
 										v => parse( v ) as double?,
 										v => member.SetMemberValue( Connector, ( (Vector2d)member.GetMemberValue( Connector ) ) with { Y = v!.Value } )
 									);
@@ -296,8 +309,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 					};
 				}
 			}
-
-			return container;
 		}
 	}
 }

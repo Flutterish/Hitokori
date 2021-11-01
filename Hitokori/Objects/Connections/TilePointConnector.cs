@@ -125,6 +125,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public static string FormatDistance ( double value )
 			=> value == 1 ? "1 Tile" : $"{value:0.##} Tiles";
 		public static double? ParseDistance ( string value ) {
+			if ( value is null ) return null;
+
 			if ( value.EndsWith( "Tile" ) )
 				value = value.Substring( 0, value.Length - 4 );
 
@@ -139,6 +141,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public static string FormatVelocity ( double value )
 			=> value == 0.001 ? "1 Tile per second" : $"{value*1000:0.##} Tiles per second";
 		public static double? ParseVelocity ( string value ) {
+			if ( value is null ) return null;
+
 			if ( value.EndsWith( "Tile per second" ) )
 				value = value.Substring( 0, value.Length - 15 );
 
@@ -153,6 +157,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public static string FormatAngleRadiansToDegrees ( double value )
 			=> $"{value.RadToDeg():N2}°";
 		public static double? ParseDegreeAngleToRadians ( string value ) {
+			if ( value is null ) return null;
+
 			bool degrees = true;
 
 			if ( value.EndsWith( "rad" ) ) {
@@ -179,6 +185,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public static string FormatMultiplier ( double value )
 			=> $"x{value:N2}";
 		public static double? ParseMultiplier ( string value ) {
+			if ( value is null ) return null;
+
 			if ( value.StartsWith( "x" ) )
 				value = value.Substring( 1, value.Length - 1 );
 

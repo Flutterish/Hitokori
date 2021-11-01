@@ -108,6 +108,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 			}
 		}
 
+		public override bool CanResetConstraints => Connector.Angle.IsConstrained || Connector.Radius.IsConstrained || Connector.Velocity.IsConstrained;
+		public override void ResetConstraints () {
+			Connector.Angle.ReleaseConstraint();
+			Connector.Radius.ReleaseConstraint();
+			Connector.Velocity.ReleaseConstraint();
+		}
+
 		private class RotationHandle : CompositeDrawable {
 			public Action<DragEvent>? Dragged;
 
