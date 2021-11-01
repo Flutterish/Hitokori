@@ -11,5 +11,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 			var k = Math.Clamp( progress, 0, 1 ) * 2 - 1;
 			return base.GetStateAt( progress ).WithZ( ( 1 - k * k ) * Distance * JumpZ );
 		}
+
+		public override ConnectorBlueprint CreateEditorBlueprint ()
+			=> new JumpingLinearConnectorBlueprint( this );
 	}
 }

@@ -66,5 +66,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 			0,
 			From.OrbitalState.PivotPosition + Angle.AngleToVector( Distance ) * Math.Clamp( progress, 0, 1 )
 		);
+
+		public override ConnectorBlueprint CreateEditorBlueprint ()
+			=> new LinearConnectorBlueprint( this );
 	}
 }

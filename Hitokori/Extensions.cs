@@ -38,12 +38,27 @@ namespace osu.Game.Rulesets.Hitokori {
 		public static double NormalizeAnglePiPi ( this double angle )
 			=> angle.NormalizeAngle0Tau() - Math.PI;
 
+		public static float AngleDifference ( this float a, float b )
+			=> ( b - a + MathF.PI ).Mod( MathF.Tau ) - MathF.PI;
+		public static double AngleDifference ( this double a, double b )
+			=> ( b - a + Math.PI ).Mod( Math.Tau ) - Math.PI;
+
 		public static Vector2 AngleToVector ( this float angle, float radius = 1 )
 			=> new Vector2( MathF.Cos( angle ), MathF.Sin( angle ) ) * radius;
 		public static Vector2d AngleToVector ( this double angle, double radius = 1 )
 			=> new Vector2d( Math.Cos( angle ), Math.Sin( angle ) ) * radius;
 
 		public static int Mod ( this int i, int mod ) {
+			i = i % mod;
+			if ( i < 0 ) return i + mod;
+			return i;
+		}
+		public static float Mod ( this float i, float mod ) {
+			i = i % mod;
+			if ( i < 0 ) return i + mod;
+			return i;
+		}
+		public static double Mod ( this double i, double mod ) {
 			i = i % mod;
 			if ( i < 0 ) return i + mod;
 			return i;

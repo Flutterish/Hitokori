@@ -3,8 +3,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects;
-using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.UI.Paths;
 using osuTK;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Linq;
 namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 	public class PathVisualizer : CompositeDrawable {
 		[Resolved, MaybeNull, NotNull]
-		public HitokoriPlayfield Playfield { get; private set; }
+		public HitokoriHitObjectComposer Composer { get; private set; }
 
 		public readonly Bindable<TilePointConnector?> VisualizedConnector = new();
 		Bindable<double> timeBindable = new();
@@ -32,18 +32,28 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				Alpha = 0.6f,
 				Anchor = Anchor.Centre
 			} );
+		}
+
+		protected override void LoadComplete () {
+			base.LoadComplete();
+
+			Composer.PathVisualizerToggle.BindValueChanged( v => {
+				updateVisibility();
+			} );
 
 			VisualizedConnector.BindValueChanged( v => {
-				ClearTransforms();
+				updateVisibility();
+			}, true );
+		}
 
-				if ( v.NewValue is not null ) {
-					Duration = 0;
-					Show();
-				}
-				else {
-					Hide();
-				}
-			} );
+		private void updateVisibility () {
+			if ( VisualizedConnector.Value is not null && Composer.PathVisualizerToggle.Value == TernaryState.True ) {
+				Duration = 0;
+				Show();
+			}
+			else {
+				Hide();
+			}
 		}
 
 		private double duration;
@@ -77,7 +87,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays {
 				trail.AddVertex( (Vector2)c.GetStateAt( 1 ).PositionOfNth( c.TargetOrbitalIndex ) - TilePosition );
 			}
 			else {
-				var orbitals = Playfield.ChainWithID( c.To.ChainID );
+				var orbitals = Composer.Playfield.ChainWithID( c.To.ChainID );
 
 				const int count = 100;
 				int start = 0;

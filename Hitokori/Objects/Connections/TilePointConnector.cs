@@ -177,7 +177,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public static string FormatMultiplier ( double value )
-			=> $"x{value.RadToDeg():N2}";
+			=> $"x{value:N2}";
 		public static double? ParseMultiplier ( string value ) {
 			if ( value.StartsWith( "x" ) )
 				value = value.Substring( 1, value.Length - 1 );

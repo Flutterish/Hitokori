@@ -1,25 +1,44 @@
 ﻿using AutoMapper.Internal;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterfaceV2;
+using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
 using osu.Game.Rulesets.Hitokori.Objects;
+using osu.Game.Rulesets.Hitokori.UI;
+using osu.Game.Screens.Edit;
 using osuTK;
+using osuTK.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
-	public abstract class ConnectorBlueprint : CompositeDrawable {
+	public abstract class ConnectorBlueprint : Container {
 		public readonly TilePointConnector Connector;
+
+		[Resolved, MaybeNull, NotNull]
+		protected HitokoriHitObjectComposer Composer { get; private set; }
+		protected HitokoriBeatmap Beatmap => Composer.Beatmap;
+		protected EditorBeatmap EditorBeatmap => Composer.EditorBeatmap;
+		protected HitokoriPlayfield Playfield => Composer.Playfield;
+
+		protected Vector2 PositionAt ( Vector2 normalized )
+			=> ToLocalSpace( Playfield.ScreenSpacePositionOf( normalized ) );
+		protected Vector2 PositionAt ( Vector2d normalized )
+			=> ToLocalSpace( Playfield.ScreenSpacePositionOf( (Vector2)normalized ) );
 
 		protected ConnectorBlueprint ( TilePointConnector connector ) {
 			Connector = connector;
+			RelativeSizeAxes = Axes.Both;
 		}
 
 		public virtual Drawable? CreateSettingsSection () => null;
@@ -29,6 +48,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Connectors {
 
 		protected void InvokeModified () {
 			Modified?.Invoke();
+		}
+
+		protected override bool OnMouseDown ( MouseDownEvent e ) { // we do this so the selection doesnt steal our click
+			return e.Button == MouseButton.Left
+				&& Children.Any( x => x.ReceivePositionalInputAt( e.ScreenSpaceMousePosition ) );
 		}
 	}
 

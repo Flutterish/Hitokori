@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
+using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Edit.Connectors;
 using osu.Game.Rulesets.Hitokori.Edit.SelectionOverlays;
@@ -41,7 +42,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			} );
 
 			void editConnector ( TilePointConnector connector ) {
-				var blueprint = connector.CreateEditorBlueprint();
+				var blueprint = connectorBlueprintContainer!.Children.Single( x => x.Connector == connector );
 
 				if ( blueprint.CreateSettingsSection() is Drawable settings ) {
 					Composer!.Sidebar.Show();
@@ -49,13 +50,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 					Composer.Sidebar.Add( settings );
 					Composer.Sidebar.Add( new ChainSubsection( SelectedChains.Single() ) );
 				}
-
-				connectorBlueprintContainer!.Clear();
-				connectorBlueprintContainer.Add( blueprint );
-
-				blueprint.Modified += () => {
-					Composer!.UpdateVisuals();
-				};
 			}
 
 			modifyToNextConnector = new MenuItem( "Edit next connector", () => {
@@ -73,8 +67,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		protected override void LoadComplete () {
 			base.LoadComplete();
 
-			Composer!.LayerAbovePlayfield.Add( connectorBlueprintContainer = new Container<ConnectorBlueprint> {
-				RelativeSizeAxes = Axes.Both
+			AddInternal( connectorBlueprintContainer = new Container<ConnectorBlueprint> {
+				RelativeSizeAxes = Axes.Both,
+				Depth = 1
 			} );
 			AddInternal( visualizer = new PathVisualizer { Colour = Color4.Yellow } );
 			visualizer.Hide();
@@ -93,6 +88,16 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 
 			if ( SelectedItems.Count == 1 ) {
 				selectedTilePoint = SelectedItems[ 0 ] as TilePoint;
+				if ( selectedTilePoint is not null ) {
+					connectorBlueprintContainer.Clear();
+					var blueprint = selectedTilePoint.ToNext?.CreateEditorBlueprint();
+					if ( blueprint is not null ) {
+						connectorBlueprintContainer.Add( blueprint );
+						blueprint.Modified += () => {
+							Composer!.UpdateVisuals();
+						};
+					}
+				}
 			}
 			else {
 				selectedTilePoint = null;
@@ -138,6 +143,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 				visualizer.Position = ToLocalSpace( Composer.Playfield.ScreenSpacePositionOf( (Vector2)selectedTilePoint.Position ) );
 				visualizer.TilePosition = (Vector2)selectedTilePoint.Position;
 			}
+
+			connectorBlueprintContainer.Alpha = Composer.CurrentTool is SelectTool ? 1 : 0;
 		}
 
 		private MenuItem modifyChain;

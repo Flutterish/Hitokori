@@ -16,6 +16,7 @@ using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.UI;
+using osu.Game.Screens.Edit;
 using osu.Game.Screens.Edit.Components.TernaryButtons;
 using osu.Game.Screens.Edit.Compose;
 using osu.Game.Screens.Edit.Compose.Components;
@@ -29,7 +30,9 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 	[Cached]
 	public class HitokoriHitObjectComposer : HitObjectComposer<HitokoriHitObject> {
 		public HitokoriBeatmap Beatmap => (HitokoriBeatmap)EditorBeatmap.PlayableBeatmap;
+		new public EditorBeatmap EditorBeatmap => base.EditorBeatmap;
 		new public HitokoriEditorPlayfield Playfield => (HitokoriEditorPlayfield)base.Playfield;
+		public HitObjectCompositionTool CurrentTool => BlueprintContainer.CurrentTool;
 
 		public readonly Container LayerAbovePlayfield;
 		public readonly CameraController CameraController;
@@ -79,9 +82,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 		protected override DrawableRuleset<HitokoriHitObject> CreateDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
 			=> new DrawableHitokoriRuleset( ruleset, beatmap, mods ) { IsEditor = true };
 
-		public readonly Bindable<TernaryState> ManualCameraToggle = new Bindable<TernaryState>();
+		public readonly Bindable<TernaryState> ManualCameraToggle = new Bindable<TernaryState>( TernaryState.False );
+		public readonly Bindable<TernaryState> PathVisualizerToggle = new Bindable<TernaryState>( TernaryState.True );
 		protected override IEnumerable<TernaryButton> CreateTernaryButtons () {
 			yield return new TernaryButton( ManualCameraToggle, "Manual Camera", () => new SpriteIcon { Icon = FontAwesome.Solid.Video } );
+			yield return new TernaryButton( PathVisualizerToggle, "Path Visualizer", () => new SpriteIcon { Icon = FontAwesome.Solid.WaveSquare } );
 		}
 
 		protected override void LoadComplete () {

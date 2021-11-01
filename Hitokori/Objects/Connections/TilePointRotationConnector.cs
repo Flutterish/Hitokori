@@ -211,8 +211,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public override OrbitalState GetStateAt ( double progress )
-			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress ).WithOffset(
+			=> From.OrbitalState.WithScale( From.OrbitalState.Scale + ( targetScale - From.OrbitalState.Scale ) * Math.Clamp( progress, 0, 1 ) ).RotatedBy( Angle * progress ).WithStackingOffset(
 				offset * progress
 			);
+
+		public override ConnectorBlueprint CreateEditorBlueprint ()
+			=> new RotationConnectorBlueprint( this );
 	}
 }
