@@ -21,19 +21,25 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			this.showTooltipsToggle.BindTo( showTooltipsToggle );
 
 			showTooltipsToggle.BindValueChanged( v => {
-				if ( v.NewValue == TernaryState.False )
+				if ( v.NewValue == TernaryState.False ) {
 					Hide();
+					lastMessage = "";
+				}
 				else
 					ShowMessage( "Tooltips will show right here!" );
 			} );
 		}
 
 		private double toastStartTime;
+		private LocalisableString lastMessage;
 		public void ShowMessage ( LocalisableString message ) {
+			if ( lastMessage == message )
+				return;
+
 			if ( showTooltipsToggle.Value != TernaryState.True )
 				return;
 
-			text.Text = message;
+			text.Text = lastMessage = message;
 			toastStartTime = Time.Current;
 			Show();
 		}
