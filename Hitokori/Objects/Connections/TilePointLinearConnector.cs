@@ -14,6 +14,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 		public TilePointLinearConnector () {
 			Distance = new( recalculate, onConstraintChanged );
 			Velocity = new( recalculate, onConstraintChanged );
+
+			TargetOrbitalIndex = 0;
 		}
 
 		private double angle;

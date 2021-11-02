@@ -14,9 +14,11 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Screens.Edit.Compose.Components;
 using osuTK;
 using osuTK.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class HitokoriSelectionHandler : EditorSelectionHandler {
@@ -31,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 		[MaybeNull, NotNull]
 		Container<ConnectorBlueprint> connectorBlueprintContainer;
+		Drawable? currentConnectorBlueprintSettings;
 
 		public HitokoriSelectionHandler () {
 			modifyChain = new MenuItem( "Modify chain", () => {
@@ -46,6 +49,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 					: null;
 
 				if ( blueprint?.CreateSettingsSection() is Drawable settings ) {
+					currentConnectorBlueprintSettings = settings;
 					Composer!.Sidebar.Show();
 					Composer.Sidebar.Clear();
 					Composer.Sidebar.Add( settings );
@@ -64,7 +68,39 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 				toNextBlueprint.ResetConstraints();
 			} );
+
+			typeChangers = getAvailableConnectorTypes( GetType().Assembly ).Select( x => (x, new MenuItem( x.Name.Replace( "TilePoint", "" ).Replace( "Connector", "" ).ToSentenceCase() + " Connector", () => {
+				if ( selectedTilePoint is null || selectedTilePoint.ToNext?.GetType() == x )
+					return;
+
+				var connector = (TilePointConnector)Activator.CreateInstance( x )!;
+
+				var next = selectedTilePoint.Next;
+				selectedTilePoint.ToNext = null;
+				selectedTilePoint.ToNext = connector;
+				selectedTilePoint.ToNext.To = next;
+				selectedTilePoint.ToNext.BPM = Composer!.Beatmap.ControlPointInfo.TimingPointAt( selectedTilePoint.StartTime ).BPM;
+
+				if ( Composer.Sidebar.Children.Any( x => x == currentConnectorBlueprintSettings ) ) {
+					Composer.Sidebar.Hide();
+				}
+				OnSelectionChanged();
+				Composer.UpdateVisuals();
+			} )) ).OrderByDescending( x => x.Item2.Text.Value.ToString() ).ToArray();
+
+			setToNextConnectorType = new MenuItem( "Change next connector type" );
 		}
+
+		private Type[] getAvailableConnectorTypes ( Assembly assembly ) {
+			var connectorType = typeof( TilePointConnector );
+			return assembly.GetTypes().Where( x => 
+				x.IsAssignableTo( connectorType ) 
+				&& !x.IsAbstract 
+				&& x.GetConstructors().Any( x => x.GetParameters().Length == 0 ) 
+			).ToArray();
+		}
+
+		private (Type connectorType, MenuItem menuItem)[] typeChangers; 
 
 		protected override void LoadComplete () {
 			base.LoadComplete();
@@ -157,6 +193,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		private MenuItem modifyChain;
 		private MenuItem modifyToNextConnector;
 		private MenuItem resetToNextConnector;
+		private MenuItem setToNextConnectorType;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
@@ -167,6 +204,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 					yield return modifyToNextConnector;
 					if ( toNextBlueprint.CanResetConstraints )
 						yield return resetToNextConnector;
+
+					setToNextConnectorType.Items = typeChangers.Where( x => x.connectorType != toNextBlueprint.Connector.GetType() )
+						.Select( x => x.menuItem ).ToArray();
+					yield return setToNextConnectorType;
 				}
 			}
 		}

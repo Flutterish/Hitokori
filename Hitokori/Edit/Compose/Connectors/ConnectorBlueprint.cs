@@ -66,8 +66,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 		public ConnectorBlueprint ( T connector ) : base( connector ) { }
 
-		public override Drawable? CreateSettingsSection ()
-			=> new ReflectionBasedConnectorBlueprintSettingsSection( Connector );
+		public override Drawable? CreateSettingsSection () {
+			var section = new ReflectionBasedConnectorBlueprintSettingsSection( Connector );
+
+			section.Modified += () => InvokeModified();
+
+			return section;
+		}
 	}
 
 	public class ReflectionBasedConnectorBlueprintSettingsSection : FillFlowContainer {
@@ -122,12 +127,19 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			tracker.Add( errorContainer );
 
 			tracker.OnUpdate += _ => {
+				if ( Connector.From is null || Connector.To is null ) return;
+
 				bindable.Value = getter();
 			};
 			bindable.BindValueChanged( v => {
+				if ( Connector.From is null || Connector.To is null ) return;
+
 				Schedule( () => drawable.Current.Value = format( v.NewValue ) ); // we need to schedule because some components are funky when you change the current twice in a single frame
 			} );
+
 			return () => {
+				if ( Connector.From is null || Connector.To is null ) return;
+
 				var oldValue = getter();
 
 				try {

@@ -135,6 +135,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			ensureValidStartTimes( EditorBeatmap.SelectedHitObjects.OfType<TilePoint>() );
 
+			if ( tp.ToNext is not null )
+				tp.ToNext.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.ToNext.StartTime ).BPM;
+			if ( tp.FromPrevious is not null )
+				tp.FromPrevious.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.FromPrevious.StartTime ).BPM;
+
 			tp.Previous?.Invalidate();
 			tp.Invalidate();
 

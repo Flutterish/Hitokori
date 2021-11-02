@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public static class Extensions {
@@ -176,6 +177,10 @@ namespace osu.Game.Rulesets.Hitokori {
 			}
 
 			return name;
+		}
+
+		public static string ToSentenceCase ( this string str ) {
+			return Regex.Replace( str, "[a-z][A-Z]", m => $"{m.Value[ 0 ]} {m.Value[ 1 ]}" );
 		}
 	}
 }

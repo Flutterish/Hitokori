@@ -59,13 +59,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// <summary>
 		/// Which orbital from the current pivot should meet the <see cref="To"/> <see cref="TilePoint"/>.
 		/// </summary>
+		[Inspectable( Section = InspectableAttribute.SectionProperties, Label = "Target Orbital" )]
 		public int TargetOrbitalIndex {
 			get => targetOrbitalIndex;
 			set {
 				if ( targetOrbitalIndex == value ) return;
 
 				targetOrbitalIndex = value;
-				Invalidate();
+				if ( To is not null ) // we are not initialzed yet
+					Invalidate();
 			}
 		}
 

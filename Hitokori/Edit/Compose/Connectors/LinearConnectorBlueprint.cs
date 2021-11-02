@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		private void onHandleMoved ( DragEvent e ) {
-			var posFrom = Connector.From.Position;
+			var posFrom = Connector.GetPositionAt( 0 );
 			var posTo = Playfield.NormalizedPositionAtScreenSpace( e.ScreenSpaceMousePosition );
 
 			var angle = posFrom.AngleTo( (Vector2d)posTo );

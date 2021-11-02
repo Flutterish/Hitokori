@@ -32,6 +32,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			Radius = new( 1, recalculate, onRadiusConstraintChanged );
 			Angle = new ConstrainableAngle( recalculate, onAngleConstraintChanged ) { IsRadians = true };
 			Velocity = new( recalculate, onVelocityConstraintChanged );
+
+			TargetOrbitalIndex = 1;
 		}
 
 		private void onVelocityConstraintChanged ( bool isConstrained ) {
@@ -64,7 +66,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// </summary>
 		public double Speed => Math.Abs( Velocity );
 
-		private double distancePerBeat = 120d / 180 * Math.PI;
+		private double distancePerBeat = Math.Tau;
 		/// <summary>
 		/// Distance in arclength per beat. This is essentially angle in radians per beat at <see cref="Radius"/> = 1.
 		/// </summary>

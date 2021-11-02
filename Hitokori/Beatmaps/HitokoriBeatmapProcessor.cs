@@ -53,7 +53,6 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 						From = prevTile!,
 						To = tile,
 						BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
-						TargetOrbitalIndex = 0,
 
 						Angle = angle
 					}
@@ -61,7 +60,6 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 						From = prevTile!,
 						To = tile,
 						BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
-						TargetOrbitalIndex = 0,
 
 						Angle = angle
 					};

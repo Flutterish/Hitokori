@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			var pos = Connector.GetPositionAt( 0.5 );
 			var delta = ((Vector2)pos - Playfield.NormalizedPositionAtScreenSpace( e.ScreenSpaceMousePosition )).Y;
 
-			Connector.JumpZ = delta / Connector.Distance;
+			Connector.JumpZ = ( Connector.Distance == 0 ) ? 0 : (delta / Connector.Distance);
 		}
 
 		protected override void Update () {
