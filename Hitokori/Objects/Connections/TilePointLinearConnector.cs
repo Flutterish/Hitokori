@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 			}
 			else {
 				Distance.Value = Math.Min( distancePerBeat * Beats, 5 );
-				Velocity.Value = Distance / Duration;
+				Velocity.Value = ( Duration == 0 ) ? double.PositiveInfinity : (Distance / Duration);
 			}
 		}
 
