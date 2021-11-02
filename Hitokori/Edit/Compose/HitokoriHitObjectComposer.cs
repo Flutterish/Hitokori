@@ -210,18 +210,18 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				tp.FromPrevious = null;
 			}
 			else {
-				splitNeighbours( tp );
+				SplitNeighbours( tp );
 			}
 		}
 
-		private void linkNeighbours ( TilePoint tp ) {
+		public void LinkNeighbours ( TilePoint tp ) {
 			var prev = tp.Previous!;
 			Playfield.RemoveChain( tp.ChainID );
 			tp.FromPrevious!.To = tp.Next;
 			Playfield.AddChain( prev );
 		}
 
-		private void splitNeighbours ( TilePoint tp ) {
+		public void SplitNeighbours ( TilePoint tp ) {
 			Playfield.RemoveChain( tp.ChainID );
 
 			tp.Next!.ConstrainPosition = tp.Next.Position;
@@ -237,6 +237,27 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			tp.ToNext = null;
 			tp.FromPrevious = null;
+
+			Playfield.AddChain( next );
+			Playfield.AddChain( prev );
+		}
+
+		public void SplitNeighbours ( TilePointConnector c ) {
+			Playfield.RemoveChain( c.From.ChainID );
+
+			c.To.ConstrainPosition = c.To.Position;
+			c.To.OrbitalState = c.To.OrbitalState; // constraining the value
+
+			c.To.ChainID = Beatmap.CreateChain( c.To );
+			foreach ( var i in c.To.AllNext ) {
+				i.ChainID = c.To.ChainID;
+			}
+
+			var next = c.To;
+			var prev = c.From;
+
+			c.To = null;
+			c.From = null;
 
 			Playfield.AddChain( next );
 			Playfield.AddChain( prev );

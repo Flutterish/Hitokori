@@ -89,6 +89,19 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			} )) ).OrderByDescending( x => x.Item2.Text.Value.ToString() ).ToArray();
 
 			setToNextConnectorType = new MenuItem( "Change next connector type" );
+
+			unlinkToNext = new MenuItem( "Remove next connector", () => {
+				if ( selectedTilePoint is null || selectedTilePoint.ToNext is null ) return;
+
+				Composer!.SplitNeighbours( selectedTilePoint.ToNext );
+
+				if ( Composer!.Sidebar.Children.Any( x => x == currentConnectorBlueprintSettings ) ) {
+					Composer.Sidebar.Hide();
+				}
+
+				OnSelectionChanged();
+				Composer.UpdateVisuals();
+			} );
 		}
 
 		private Type[] getAvailableConnectorTypes ( Assembly assembly ) {
@@ -194,6 +207,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		private MenuItem modifyToNextConnector;
 		private MenuItem resetToNextConnector;
 		private MenuItem setToNextConnectorType;
+		private MenuItem unlinkToNext;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
@@ -208,6 +222,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 					setToNextConnectorType.Items = typeChangers.Where( x => x.connectorType != toNextBlueprint.Connector.GetType() )
 						.Select( x => x.menuItem ).ToArray();
 					yield return setToNextConnectorType;
+					yield return unlinkToNext;
 				}
 			}
 		}
