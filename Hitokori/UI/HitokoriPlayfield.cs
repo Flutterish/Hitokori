@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private Dictionary<int, OrbitalGroup> chainsByID = new();
 
 		public readonly Container<Drawable> Everything;
-		public const float DefaultPositionScale = 90 * 0.6f;
+		public const float DefaultPositionScale = HitokoriConfigManager.DefaultPositionScale;
 		[Cached]
 		public readonly BeatProvider BeatProvider = new();
 

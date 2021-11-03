@@ -5,8 +5,14 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 	public class HitokoriConfigManager : RulesetConfigManager<HitokoriSetting> {
 		public HitokoriConfigManager ( SettingsStore settings, RulesetInfo ruleset, int? variant = null ) : base( settings, ruleset, variant ) { }
 
+		public const float DefaultPositionScale = 90f * 0.8f * 0.6f;
+
 		protected override void InitialiseDefaults () {
-			SetDefault( HitokoriSetting.PositionScale, 90f * 0.6f, 90f * 0.65f * 0.6f, 90f * 1.5f * 0.6f, 1f * 0.6f );
+			float defaultScale = 90f * 0.8f * 0.6f;
+			float minScale = defaultScale * 0.8f;
+			float maxScale = defaultScale * 1.8f;
+
+			SetDefault( HitokoriSetting.PositionScale, defaultScale, minScale, maxScale, 1f * 0.6f );
 			SetDefault( HitokoriSetting.DoKiaiBeat, true );
 
 			base.InitialiseDefaults();
