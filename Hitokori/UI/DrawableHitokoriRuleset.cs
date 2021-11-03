@@ -3,6 +3,7 @@ using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
 using osu.Game.Replays;
+using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Camera;
 using osu.Game.Rulesets.Hitokori.Edit;
 using osu.Game.Rulesets.Hitokori.Input;
@@ -19,6 +20,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public DrawableHitokoriRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod>? mods = null ) : base( ruleset, beatmap, mods ) { }
 
 		public bool IsEditor = false;
+		new public HitokoriBeatmap Beatmap => (HitokoriBeatmap)base.Beatmap;
 
 		public override DrawableHitObject<HitokoriHitObject>? CreateDrawableRepresentation ( HitokoriHitObject h )
 			=> null;

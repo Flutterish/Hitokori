@@ -107,7 +107,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var nextEnd = ends[ nextEndIndex ].Value;
 
 					// first end, then start
-					if ( nextEnd.EndTime <= nextStart.StartTime ) {
+					if ( nextEnd.EndTime <= nextStart.StartTime && nextStart != nextEnd ) {
 						if ( nextEnd.EndTime < time ) {
 							EventEnded?.Invoke( nextEnd );
 							nextEndIndex++;
@@ -163,8 +163,8 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var previousStart = this[ previousStartIndex ];
 					var previousEnd = ends[ previousEndIndex ].Value;
 
-					// first un-start then un-end
-					if ( previousStart.StartTime >= previousEnd.EndTime ) {
+					// first un-start then un-end ( except when its the same instance )
+					if ( previousStart.StartTime >= previousEnd.EndTime && previousStart != previousEnd ) {
 						if ( previousStart.StartTime > time ) {
 							EventRewound?.Invoke( previousStart );
 							previousStartIndex--;
@@ -224,7 +224,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var previousEnd = ends[ previousEndIndex ].Value;
 
 					// first un-start then un-end
-					if ( previousStart.StartTime >= previousEnd.EndTime ) {
+					if ( previousStart.StartTime >= previousEnd.EndTime && previousStart != previousEnd ) {
 						if ( previousStart.StartTime >= time ) {
 							EventRewound?.Invoke( previousStart );
 							previousStartIndex--;
@@ -283,7 +283,7 @@ namespace osu.Game.Rulesets.Hitokori.Collections {
 					var nextEnd = ends[ nextEndIndex ].Value;
 
 					// first end, then start
-					if ( nextEnd.EndTime <= nextStart.StartTime ) {
+					if ( nextEnd.EndTime <= nextStart.StartTime && nextStart != nextEnd ) {
 						if ( nextEnd.EndTime < time ) {
 							EventEnded?.Invoke( nextEnd );
 							nextEndIndex++;

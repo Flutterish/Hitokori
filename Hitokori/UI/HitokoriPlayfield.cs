@@ -4,8 +4,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
-using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Camera;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
@@ -51,7 +51,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public void RemoveChain ( int id ) => RemoveChain( chainsByID[ id ] );
 
 		CameraPath? path;
-		public HitokoriPlayfield ( Beatmap<HitokoriHitObject> beatmap, CameraPath? path = null ) {
+		public HitokoriPlayfield ( HitokoriBeatmap beatmap, CameraPath? path = null ) {
 			Origin = Anchor.Centre;
 			Anchor = Anchor.Centre;
 
@@ -65,8 +65,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			} );
 
 			AddInternal( BeatProvider );
-			foreach ( var tile in beatmap.HitObjects.OfType<TilePoint>().Where( x => x.Previous is null ) ) {
-				AddChain( tile );
+			foreach ( var i in beatmap.Chains ) {
+				AddChain( i.Value.Beginning );
 			}
 
 			PositionScale.BindValueChanged( _ => UpdateCameraViewport( 0 ) );
