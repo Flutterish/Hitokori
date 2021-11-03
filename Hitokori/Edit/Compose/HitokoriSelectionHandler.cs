@@ -75,17 +75,12 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 				var connector = (TilePointConnector)Activator.CreateInstance( x )!;
 
-				var next = selectedTilePoint.Next;
-				selectedTilePoint.ToNext = null;
-				selectedTilePoint.ToNext = connector;
-				selectedTilePoint.ToNext.To = next;
-				selectedTilePoint.ToNext.BPM = Composer!.Beatmap.ControlPointInfo.TimingPointAt( selectedTilePoint.StartTime ).BPM;
+				Composer!.Link( selectedTilePoint, selectedTilePoint.Next!, connector );
 
 				if ( Composer.Sidebar.Children.Any( x => x == currentConnectorBlueprintSettings ) ) {
 					Composer.Sidebar.Hide();
 				}
 				OnSelectionChanged();
-				Composer.UpdateVisuals();
 			} )) ).OrderByDescending( x => x.Item2.Text.Value.ToString() ).ToArray();
 
 			unlinkToNext = new MenuItem( "Next", () => {

@@ -220,6 +220,19 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			Playfield.RemoveChain( tp.ChainID );
 			tp.FromPrevious!.To = tp.Next;
 			Playfield.AddChain( prev );
+
+			UpdateVisuals();
+		}
+
+		public void Link ( TilePoint from, TilePoint to, TilePointConnector connector ) {
+			from.ToNext = null;
+
+			connector.From = from;
+			connector.To = to;
+
+			connector.BPM = Beatmap.ControlPointInfo.TimingPointAt( connector.StartTime ).BPM;
+
+			UpdateVisuals();
 		}
 
 		public void SplitNeighbours ( TilePoint tp ) {
@@ -241,6 +254,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			Playfield.AddChain( next );
 			Playfield.AddChain( prev );
+
+			UpdateVisuals();
 		}
 
 		public void SplitNeighbours ( TilePointConnector c ) {
@@ -262,6 +277,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			Playfield.AddChain( next );
 			Playfield.AddChain( prev );
+
+			UpdateVisuals();
 		}
 
 		protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => Array.Empty<HitObjectCompositionTool>();

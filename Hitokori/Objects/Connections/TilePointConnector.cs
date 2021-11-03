@@ -21,7 +21,15 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 				from = value;
 
 				if ( from is not null ) {
-					from.ToNext = this;
+					if ( old is not null ) {
+						var oldTo = To;
+						old.ToNext = null;
+						To = oldTo;
+						From = value;
+					}
+					else {
+						from.ToNext = this;
+					}
 				}
 				else {
 					old!.ToNext = null;
