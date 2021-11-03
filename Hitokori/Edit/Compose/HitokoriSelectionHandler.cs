@@ -130,6 +130,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		private List<Bindable<string>> boundNames = new();
 
 		ConnectorBlueprint? toNextBlueprint;
+		string lastTooltip = string.Empty;
 
 		protected override void OnSelectionChanged () {
 			base.OnSelectionChanged();
@@ -139,6 +140,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				connectorBlueprintContainer.Clear();
 			}
 
+			Composer.Toast.HideMessage( lastTooltip );
 			if ( SelectedItems.Count == 1 ) {
 				selectedTilePoint = SelectedItems[ 0 ] as TilePoint;
 				if ( selectedTilePoint is not null ) {
@@ -149,9 +151,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 						blueprint.Modified += () => {
 							Composer!.UpdateVisuals();
 						};
-						if ( !string.IsNullOrWhiteSpace( blueprint.Tooltip ) ) {
-							Composer.Toast.ShowMessage( blueprint.Tooltip );
-						}
 					}
 				}
 			}
@@ -198,6 +197,15 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				visualizer.Scale = new Vector2( (float)Composer.Playfield.CameraScale.Value );
 				visualizer.Position = ToLocalSpace( Composer.Playfield.ScreenSpacePositionOf( (Vector2)selectedTilePoint.Position ) );
 				visualizer.TilePosition = (Vector2)selectedTilePoint.Position;
+
+				if ( toNextBlueprint is not null ) {
+					if ( string.IsNullOrWhiteSpace( toNextBlueprint.Tooltip ) ) {
+						Composer.Toast.HideMessage( lastTooltip );
+					}
+					else {
+						Composer.Toast.ShowMessage( lastTooltip = toNextBlueprint.Tooltip );
+					}
+				}
 			}
 
 			connectorBlueprintContainer.Alpha = Composer.CurrentTool is SelectTool ? 1 : 0;

@@ -8,6 +8,8 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 	public class MoveHandle : CompositeDrawable {
 		public Action<DragEvent>? Dragged;
+		public Action<DragStartEvent>? DragStarted;
+		public Action<DragEndEvent>? DragEnded;
 
 		public MoveHandle () {
 			AddInternal( new Circle {
@@ -27,6 +29,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 		protected override bool OnDragStart ( DragStartEvent e ) {
 			if ( !IsHovered ) prompt();
+
+			DragStarted?.Invoke( e );
 			return true;
 		}
 
@@ -36,6 +40,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 		protected override void OnDragEnd ( DragEndEvent e ) {
 			if ( !IsHovered ) unprompt();
+
+			DragEnded?.Invoke( e );
 			base.OnDragEnd( e );
 		}
 

@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			Add( handle = new MoveHandle {
 				Size = new Vector2( 20 ),
 				Origin = Anchor.Centre,
-				Dragged = onHandleMoved
+				Dragged = onHandleMoved,
+				DragEnded = _ => Tooltip = string.Empty
 			} );
 		}
 
@@ -30,6 +31,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			var length = ( posTo - (Vector2)posFrom ).Length;
 
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
+				Tooltip = e.CurrentState.Keyboard.ShiftPressed
+					? "[Ctrl] + [Shift] → 0.1 Tiles, 10°"
+					: "[Ctrl] + Shift → 0.5 Tiles, 22.5°";
+
 				var angleSnap = e.CurrentState.Keyboard.ShiftPressed ? ( Math.Tau / 36 /* 10 deg */) : ( Math.Tau / 16 /* 22.5 deg */);
 				var distanceSnap = e.CurrentState.Keyboard.ShiftPressed ? 0.1 : 0.5;
 
@@ -37,14 +42,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 				Connector.Distance.Constrain( Math.Round( length / distanceSnap ) * distanceSnap );
 			}
 			else {
+				Tooltip = "Ctrl and Ctrl + Shift to snap";
 				Connector.Angle = angle;
 				Connector.Distance.Constrain( length );
 			}
 
 			InvokeModified();
 		}
-
-		public override string Tooltip => "Ctrl and Ctrl + Shift to snap";
 
 		public override bool CanResetConstraints => Connector.Distance.IsConstrained || Connector.Velocity.IsConstrained;
 		public override void ResetConstraints () {

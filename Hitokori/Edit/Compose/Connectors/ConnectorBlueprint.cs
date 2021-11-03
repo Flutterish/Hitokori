@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		public virtual bool CanResetConstraints => false;
 		public virtual void ResetConstraints () { }
 
-		public virtual string Tooltip => string.Empty;
+		public string Tooltip { get; protected set; } = string.Empty;
 
 		// TODO Settings section for multi-selection
 

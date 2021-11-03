@@ -1,9 +1,11 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class EditorToast : VisibilityContainer {
@@ -15,24 +17,36 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			Anchor = Anchor.BottomCentre;
 			AutoSizeAxes = Axes.Both;
 			Padding = new MarginPadding( 6 );
-			AddInternal( text = new OsuSpriteText() );
+			AddInternal( new FillFlowContainer {
+				Direction = FillDirection.Horizontal,
+				AutoSizeAxes = Axes.Both,
+				Children = new Drawable[] {
+					new SpriteIcon {
+						Size = new Vector2( 16 ),
+						Icon = FontAwesome.Solid.InfoCircle,
+						Margin = new MarginPadding { Right = 4 }
+					},
+					text = new OsuSpriteText()
+				}
+			} );
 			Y = -5;
 
 			this.showTooltipsToggle.BindTo( showTooltipsToggle );
 
 			showTooltipsToggle.BindValueChanged( v => {
 				if ( v.NewValue == TernaryState.False ) {
-					Hide();
 					lastMessage = "";
+					Hide();
 				}
 				else
-					ShowMessage( "Tooltips will show right here!" );
+					ShowMessage( "Tooltips will show right here!", 4000 );
 			} );
 		}
 
 		private double toastStartTime;
+		private double toastDuration;
 		private LocalisableString lastMessage;
-		public void ShowMessage ( LocalisableString message ) {
+		public void ShowMessage ( LocalisableString message, double duration = double.PositiveInfinity ) {
 			if ( lastMessage == message )
 				return;
 
@@ -41,13 +55,21 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			text.Text = lastMessage = message;
 			toastStartTime = Time.Current;
+			toastDuration = duration;
 			Show();
+		}
+
+		public void HideMessage ( LocalisableString message ) {
+			if ( lastMessage == message ) {
+				lastMessage = "";
+				Hide();
+			}
 		}
 
 		protected override void Update () {
 			base.Update();
 
-			if ( toastStartTime + 3000 < Time.Current )
+			if ( toastStartTime + toastDuration < Time.Current )
 				Hide();
 		}
 

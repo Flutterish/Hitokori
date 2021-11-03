@@ -25,13 +25,15 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 				Colour = Colour4.Yellow,
 				InnerRadius = borderSize / size,
 				Current = angleDelta.Current,
-				Dragged = onDistanceHandleDragged
+				Dragged = onDistanceHandleDragged,
+				DragEnded = _ => Tooltip = string.Empty,
 			} );
 			AddInternal( angleHandle = new MoveHandle {
 				Origin = Anchor.Centre,
 				Size = new Vector2( borderSize * 2 ),
 				Colour = Colour4.Yellow,
-				Dragged = onRotationHandleDragged
+				Dragged = onRotationHandleDragged,
+				DragEnded = _ => Tooltip = string.Empty,
 			} );
 		}
 
@@ -55,10 +57,15 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 			var delta = startAngle.AngleDifference( endAngle );
 
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
+				Tooltip = e.CurrentState.Keyboard.ShiftPressed
+					? "[Ctrl] + [Shift] → 10°"
+					: "[Ctrl] + Shift → 22.5°";
+
 				var snap = e.CurrentState.Keyboard.ShiftPressed ? (Math.Tau / 36 /* 10 deg */) : (Math.Tau / 16 /* 22.5 deg */);
 				Connector.Angle.ConstrainRadians( Math.Round( ( Connector.Angle.ValueRadians + delta ) / snap ) * snap );
 			}
 			else {
+				Tooltip = "Ctrl and Ctrl + Shift to snap";
 				Connector.Angle.ConstrainRadians( Connector.Angle.ValueRadians + delta );
 			}
 
@@ -71,17 +78,20 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 			var distance = ( pos - (Vector2)pivot ).Length;
 			if ( e.CurrentState.Keyboard.ControlPressed ) {
+				Tooltip = e.CurrentState.Keyboard.ShiftPressed
+					? "[Ctrl] + [Shift] → 0.1 Tiles"
+					: "[Ctrl] + Shift → 0.5 Tiles";
+
 				var snap = e.CurrentState.Keyboard.ShiftPressed ? 0.1 : 0.5;
 				Connector.Radius.Constrain( Math.Round( distance / snap ) * snap );
 			}
 			else {
+				Tooltip = "Ctrl and Ctrl + Shift to snap";
 				Connector.Radius.Constrain( distance );
 			}
 
 			InvokeModified();
 		}
-
-		public override string Tooltip => "Ctrl and Ctrl + Shift to snap";
 
 		protected override void Update () {
 			base.Update();
@@ -130,13 +140,21 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 
 		private class DistanceHandle : HitboxedCircularProgress {
 			public Action<DragEvent>? Dragged;
+			public Action<DragStartEvent>? DragStarted;
+			public Action<DragEndEvent>? DragEnded;
 
 			protected override bool OnDragStart ( DragStartEvent e ) {
+				DragStarted?.Invoke( e );
 				return true;
 			}
 
 			protected override void OnDrag ( DragEvent e ) {
 				Dragged?.Invoke( e );
+			}
+
+			protected override void OnDragEnd ( DragEndEvent e ) {
+				DragEnded?.Invoke( e );
+				base.OnDragEnd( e );
 			}
 		}
 	}

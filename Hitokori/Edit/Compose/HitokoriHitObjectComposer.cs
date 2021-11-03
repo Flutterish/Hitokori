@@ -116,10 +116,11 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			ManualCameraToggle.BindValueChanged( v => {
 				if ( v.NewValue == TernaryState.True ) {
 					Playfield.ShouldUpdateCamera = false;
-					Toast.ShowMessage( "MMB to pan, scroll to zoom" );
+					Toast.ShowMessage( "MMB to pan, scroll to zoom", 4000 );
 				}
-				else if ( v.NewValue == TernaryState.False )
+				else if ( v.NewValue == TernaryState.False ) {
 					Playfield.ShouldUpdateCamera = true;
+				}
 			}, true );
 		}
 
