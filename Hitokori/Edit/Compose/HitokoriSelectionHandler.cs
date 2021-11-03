@@ -118,6 +118,20 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			unlink = new MenuItem( "Unlink" );
 			unlink.Action.BindTo( unlinkBoth.Action );
 
+			link = new MenuItem( "Link", () => {
+				if ( SelectedTiles.Count() == 2 ) {
+					var ordered = SelectedTiles.OrderBy( x => x.StartTime );
+
+					var a = ordered.First();
+					var b = ordered.Last();
+
+					if ( a.Next is null && b.Previous is null ) {
+						Composer!.Link( a, b, new TilePointRotationConnector() );
+						OnSelectionChanged();
+					}
+				}
+			} );
+
 			resetToNextConnector = new MenuItem( "Reset connector", () => {
 				if ( toNextBlueprint is null ) return;
 
@@ -241,9 +255,21 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		private MenuItem unlinkToNext;
 		private MenuItem unlinkFromPrevious;
 		private MenuItem unlinkBoth;
+		private MenuItem link;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
+			}
+
+			if ( SelectedTiles.Count() == 2 ) {
+				var ordered = SelectedTiles.OrderBy( x => x.StartTime );
+				
+				var a = ordered.First();
+				var b = ordered.Last();
+
+				if ( a.Next is null && b.Previous is null ) {
+					yield return link;
+				}
 			}
 
 			if ( selectedTilePoint is not null ) {

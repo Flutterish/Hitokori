@@ -66,7 +66,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 
 			var firstTile = new NoJudgementTilePoint {
 				ConstrainPosition = Vector2d.Zero,
-				OrbitalState = new Orbitals.OrbitalState( orbitals ),
+				ConstrainOrbitalState = new Orbitals.OrbitalState( orbitals ),
 				StartTime = 0
 			};
 			beatmap.HitObjects.Add( firstTile );

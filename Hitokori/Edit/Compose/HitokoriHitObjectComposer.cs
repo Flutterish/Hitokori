@@ -199,7 +199,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 				Beatmap.Chains[ tp.ChainID ].Beginning = tp.Next!;
 				tp.Next!.ConstrainPosition = tp.Next.Position;
-				tp.Next.OrbitalState = tp.Next.OrbitalState; // constraining the value
+				tp.Next.ConstrainOrbitalState = tp.Next.OrbitalState;
 				tp.ToNext = null;
 			}
 			else if ( tp.Next is null ) {
@@ -224,14 +224,32 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			UpdateVisuals();
 		}
 
-		public void Link ( TilePoint from, TilePoint to, TilePointConnector connector ) {
+		public void Link ( TilePoint from, TilePoint to, TilePointConnector connector, bool unconstrain = true ) {
 			from.ToNext = null;
 
-			connector.From = from;
 			connector.To = to;
+			connector.From = from;
 
 			connector.BPM = Beatmap.ControlPointInfo.TimingPointAt( connector.StartTime ).BPM;
 
+			if ( unconstrain ) {
+				to.ConstrainableOrbitalState.ReleaseConstraint();
+				to.ConstrainablePosition.ReleaseConstraint();
+			}
+
+			if ( from.ChainID != to.ChainID ) {
+				Playfield.RemoveChain( to.ChainID );
+				Beatmap.Chains.Remove( to.ChainID );
+
+				foreach ( var i in to.AllInChain ) {
+					i.ChainID = from.ChainID;
+				}
+
+				Playfield.RemoveChain( from.ChainID );
+				Playfield.AddChain( from );
+			}
+
+			connector.Invalidate();
 			UpdateVisuals();
 		}
 
@@ -239,7 +257,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			Playfield.RemoveChain( tp.ChainID );
 
 			tp.Next!.ConstrainPosition = tp.Next.Position;
-			tp.Next.OrbitalState = tp.Next.OrbitalState; // constraining the value
+			tp.Next.ConstrainOrbitalState = tp.Next.OrbitalState;
 
 			tp.Next.ChainID = Beatmap.CreateChain( tp.Next );
 			foreach ( var i in tp.Next.AllNext ) {
@@ -262,7 +280,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			Playfield.RemoveChain( c.From.ChainID );
 
 			c.To.ConstrainPosition = c.To.Position;
-			c.To.OrbitalState = c.To.OrbitalState; // constraining the value
+			c.To.ConstrainOrbitalState = c.To.OrbitalState;
 
 			c.To.ChainID = Beatmap.CreateChain( c.To );
 			foreach ( var i in c.To.AllNext ) {

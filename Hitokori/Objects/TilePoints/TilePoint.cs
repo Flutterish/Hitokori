@@ -15,10 +15,21 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// </summary>
 	public abstract class TilePoint : HitokoriHitObject, IHasPosition {
 		public TilePoint () {
-			ConstrainablePosition = new ConstrainableProperty<Vector2d>( 
-				() => ConstrainablePosition!.Value = fromPrevious!.GetEndPosition(),
+			ConstrainablePosition = new ConstrainableProperty<Vector2d>(
+				() => {
+					ConstrainablePosition!.Value = fromPrevious!.GetEndPosition();
+					ToNext?.Invalidate();
+				},
 				onConstraintChanged,
 				() => BindablePosition.Value = Position!
+			);
+
+			ConstrainableOrbitalState = new ConstrainableProperty<OrbitalState>(
+				() => {
+					ConstrainableOrbitalState!.Value = ModifyOrbitalState( fromPrevious!.GetEndState() );
+					ToNext?.Invalidate();
+				},
+				onConstraintChanged
 			);
 
 			BindablePosition.ValueChanged += v => ConstrainablePosition.Value = v.NewValue;
@@ -43,41 +54,24 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		/// </summary>
 		protected virtual void InvalidateProperties () {
 			ConstrainablePosition.Invalidate();
-			isOrbitalStateComputed = false;
+			ConstrainableOrbitalState.Invalidate();
 		}
 
 		/// <summary>
 		/// Whether any properties are already computed.
 		/// </summary>
-		protected virtual bool IsInvalidationPossible => (!ConstrainablePosition.IsConstrained && ConstrainablePosition.IsComputed) || (!IsOrbitalStateConstrained && isOrbitalStateComputed);
+		protected virtual bool IsInvalidationPossible 
+			=> (!ConstrainablePosition.IsConstrained && ConstrainablePosition.IsComputed) 
+			|| (!ConstrainableOrbitalState.IsConstrained && ConstrainableOrbitalState.IsComputed);
 
 		public readonly Bindable<Vector2d> BindablePosition = new Bindable<Vector2d>();
 		public readonly ConstrainableProperty<Vector2d> ConstrainablePosition;
 		public Vector2d Position => ConstrainablePosition;
 		public Vector2d ConstrainPosition { set => ConstrainablePosition.Constrain( value ); }
 
-		private OrbitalState orbitalState;
-		/// <summary>
-		/// Is this <see cref="TilePoint"/>'s <see cref="OrbitalState"/> fixed (does not depend on the <see cref="TilePointConnector.GetEndPosition"/>).
-		/// </summary>
-		public bool IsOrbitalStateConstrained { get; private set; } = false;
-		private bool isOrbitalStateComputed = false;
-		/// <summary>
-		/// State of orbitals. Setting this property will constrain it.
-		/// </summary>
-		public OrbitalState OrbitalState {
-			get {
-				if ( !IsOrbitalStateConstrained && !isOrbitalStateComputed ) {
-					orbitalState = ModifyOrbitalState( fromPrevious!.GetEndState() );
-					isOrbitalStateComputed = true;
-				}
-				return orbitalState;
-			}
-			set {
-				IsOrbitalStateConstrained = true;
-				orbitalState = value;
-			}
-		}
+		public readonly ConstrainableProperty<OrbitalState> ConstrainableOrbitalState;
+		public OrbitalState OrbitalState => ConstrainableOrbitalState.Value;
+		public OrbitalState ConstrainOrbitalState { set => ConstrainableOrbitalState.Constrain( value ); }
 
 		/// <summary>
 		/// Modify and return an orbital state as appropriate for this <see cref="TilePoint"/>'s interaction.
