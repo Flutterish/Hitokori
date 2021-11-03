@@ -66,7 +66,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 
 		public override OrbitalState GetStateAt ( double progress ) => From.OrbitalState.PivotNth(
 			0,
-			From.OrbitalState.PivotPosition + Angle.AngleToVector( Distance ) * Math.Clamp( progress, 0, 1 )
+			From.OrbitalState.PivotPosition + Angle.AngleToVector( Distance ) * progress
 		);
 
 		public override ConnectorBlueprint CreateEditorBlueprint ()
