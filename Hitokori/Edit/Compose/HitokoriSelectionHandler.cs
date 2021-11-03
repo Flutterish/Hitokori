@@ -57,19 +57,19 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				}
 			}
 
-			modifyToNextConnector = new MenuItem( "Edit next connector", () => {
-				if ( selectedTilePoint is null || selectedTilePoint.ToNext is null ) return;
+			modifyToNextConnector = new MenuItem( "Modify connector" ) {
+				Items = new MenuItem[] {
+					inspectToNextConnector = new MenuItem( "Inspect", () => {
+						if ( selectedTilePoint is null || selectedTilePoint.ToNext is null ) return;
 
-				editConnector( selectedTilePoint.ToNext );
-			} );
+						editConnector( selectedTilePoint.ToNext );
+					} ),
+					setToNextConnectorType = new MenuItem( "Change type" )
+				}
+			};
+			modifyToNextConnector.Action.BindTo( inspectToNextConnector.Action );
 
-			resetToNextConnector = new MenuItem( "Reset next connector", () => {
-				if ( toNextBlueprint is null ) return;
-
-				toNextBlueprint.ResetConstraints();
-			} );
-
-			typeChangers = getAvailableConnectorTypes( GetType().Assembly ).Select( x => (x, new MenuItem( x.Name.Replace( "TilePoint", "" ).Replace( "Connector", "" ).ToSentenceCase() + " Connector", () => {
+			typeChangers = getAvailableConnectorTypes( GetType().Assembly ).Select( x => (x, new MenuItem( x.Name.Replace( "TilePoint", "" ).Replace( "Connector", "" ).ToSentenceCase(), () => {
 				if ( selectedTilePoint is null || selectedTilePoint.ToNext?.GetType() == x )
 					return;
 
@@ -88,9 +88,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				Composer.UpdateVisuals();
 			} )) ).OrderByDescending( x => x.Item2.Text.Value.ToString() ).ToArray();
 
-			setToNextConnectorType = new MenuItem( "Change next connector type" );
-
-			unlinkToNext = new MenuItem( "Remove next connector", () => {
+			unlinkToNext = new MenuItem( "Next", () => {
 				if ( selectedTilePoint is null || selectedTilePoint.ToNext is null ) return;
 
 				Composer!.SplitNeighbours( selectedTilePoint.ToNext );
@@ -101,6 +99,34 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 				OnSelectionChanged();
 				Composer.UpdateVisuals();
+			} );
+
+			unlinkFromPrevious = new MenuItem( "Previous", () => {
+				if ( selectedTilePoint is null || selectedTilePoint.FromPrevious is null ) return;
+
+				Composer!.SplitNeighbours( selectedTilePoint.FromPrevious );
+
+				OnSelectionChanged();
+				Composer.UpdateVisuals();
+			} );
+
+			unlinkBoth = new MenuItem( "Both", () => {
+				if ( selectedTilePoint is null ) return;
+
+				if ( selectedTilePoint.ToNext is not null )
+					unlinkToNext.Action.Value();
+
+				if ( selectedTilePoint.FromPrevious is not null )
+					unlinkFromPrevious.Action.Value();
+			} );
+
+			unlink = new MenuItem( "Unlink" );
+			unlink.Action.BindTo( unlinkBoth.Action );
+
+			resetToNextConnector = new MenuItem( "Reset connector", () => {
+				if ( toNextBlueprint is null ) return;
+
+				toNextBlueprint.ResetConstraints();
 			} );
 		}
 
@@ -213,9 +239,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 		private MenuItem modifyChain;
 		private MenuItem modifyToNextConnector;
+		private MenuItem inspectToNextConnector;
 		private MenuItem resetToNextConnector;
 		private MenuItem setToNextConnectorType;
+		private MenuItem unlink;
 		private MenuItem unlinkToNext;
+		private MenuItem unlinkFromPrevious;
+		private MenuItem unlinkBoth;
 		protected override IEnumerable<MenuItem> GetContextMenuItemsForSelection ( IEnumerable<SelectionBlueprint<HitObject>> selection ) {
 			if ( SelectedChains.Count() == 1 ) {
 				yield return modifyChain;
@@ -229,9 +259,20 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 					setToNextConnectorType.Items = typeChangers.Where( x => x.connectorType != toNextBlueprint.Connector.GetType() )
 						.Select( x => x.menuItem ).ToArray();
-					yield return setToNextConnectorType;
-					yield return unlinkToNext;
 				}
+
+				IEnumerable<MenuItem> unlinks = Array.Empty<MenuItem>();
+				if ( selectedTilePoint.ToNext is not null )
+					unlinks = unlinks.Append( unlinkToNext );
+				if ( selectedTilePoint.FromPrevious is not null )
+					unlinks = unlinks.Append( unlinkFromPrevious );
+				if ( unlinks.Count() == 2 )
+					unlinks = unlinks.Append( unlinkBoth );
+
+				unlink.Items = unlinks.ToArray();
+
+				if ( unlinks.Any() )
+					yield return unlink;
 			}
 		}
 	}
