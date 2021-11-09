@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Edit.Compose;
 using osu.Game.Rulesets.Hitokori.Edit.Setup;
+using osu.Game.Rulesets.Hitokori.Edit.Verify;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Mods;
 using osu.Game.Rulesets.Hitokori.Replays;
@@ -88,6 +89,8 @@ namespace osu.Game.Rulesets.Hitokori {
 			=> new HitokoriHitObjectComposer( this );
 		public override RulesetSetupSection CreateEditorSetupSection ()
 			=> new HitokoriSetupSection( RulesetInfo );
+		public override IBeatmapVerifier CreateBeatmapVerifier ()
+			=> new HitokoriBeatmapVerifier();
 
 		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
 			=> new HitokoriDifficultyCalculator( this, beatmap );

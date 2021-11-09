@@ -2,12 +2,14 @@
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints;
+using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>
@@ -167,7 +169,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		}
 
 		public IEnumerable<TilePoint> AllInChain
-			=> First.AllNext;
+			=> First.AllNext.Prepend( First );
 
 		/// <summary>
 		/// To which chain this <see cref="TilePoint"/> belongs to.
@@ -198,6 +200,23 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			=> Previous is null
 			? false
 			: predicate( Previous );
+
+		/// <summary>
+		/// Speed change in percentage
+		/// </summary>
+		public double? SpeedDifference {
+			get {
+				if ( FromPrevious is not IHasVelocity v1 )
+					return null;
+
+				if ( ToNext is not IHasVelocity v2 )
+					return null;
+
+				var diff = v2.Speed / v1.Speed;
+
+				return diff - 1;
+			}
+		}
 
 		public double LifetimeOffset 
 			=> Math.Max( 2000, FromPrevious is null ? 0 : FromPrevious.Duration );

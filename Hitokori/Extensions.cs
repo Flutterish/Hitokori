@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Internal;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Hitokori.Beatmaps;
+using osu.Game.Screens.Edit;
 using osuTK;
 using System;
 using System.Collections.Generic;
@@ -181,6 +183,15 @@ namespace osu.Game.Rulesets.Hitokori {
 
 		public static string ToSentenceCase ( this string str ) {
 			return Regex.Replace( str, "[a-z][A-Z]", m => $"{m.Value[ 0 ]} {m.Value[ 1 ]}" );
+		}
+
+		public static HitokoriBeatmap? GetHitokoriBeatmap ( this IBeatmap beatmap ) {
+			if ( beatmap is HitokoriBeatmap final )
+				return final;
+			else if ( beatmap is EditorBeatmap editor )
+				return editor.PlayableBeatmap.GetHitokoriBeatmap();
+			else
+				return null;
 		}
 	}
 }
