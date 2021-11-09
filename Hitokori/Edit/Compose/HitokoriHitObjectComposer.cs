@@ -192,23 +192,23 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				Playfield.RemoveChain( tp.ChainID );
 			}
 			else if ( tp.Previous is null ) {
-				if ( Playfield.ChainWithID( tp.ChainID ).CurrentTile == tp ) {
-					Playfield.RemoveChain( tp.ChainID );
-					Playfield.AddChain( tp.Next! );
-				}
+				Playfield.RemoveChain( tp.ChainID );
+				var attach = tp == obj ? tp.Next! : tp;
 
 				Beatmap.Chains[ tp.ChainID ].Beginning = tp.Next!;
 				tp.Next!.ConstrainPosition = tp.Next.Position;
 				tp.Next.ConstrainOrbitalState = tp.Next.OrbitalState;
 				tp.ToNext = null;
+
+				Playfield.AddChain( attach );
 			}
 			else if ( tp.Next is null ) {
-				if ( Playfield.ChainWithID( tp.ChainID ).CurrentTile == tp ) {
-					Playfield.RemoveChain( tp.ChainID );
-					Playfield.AddChain( tp.Previous! );
-				}
+				Playfield.RemoveChain( tp.ChainID );
+				var attach = tp == obj ? tp.Previous! : tp;
 
 				tp.FromPrevious = null;
+
+				Playfield.AddChain( attach );
 			}
 			else {
 				SplitNeighbours( tp );
