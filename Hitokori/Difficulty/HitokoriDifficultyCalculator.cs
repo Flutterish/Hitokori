@@ -17,12 +17,13 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 		public HitokoriDifficultyCalculator ( Ruleset ruleset, WorkingBeatmap beatmap ) : base( ruleset, beatmap ) { }
 
 		protected override DifficultyAttributes CreateDifficultyAttributes ( IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate ) {
-			double readingDifficulty = skills.First<Reading>().DifficultyValue() * STAR_SCALING_FACTOR;
-			double speedDifficulty = skills.First<Speed>().DifficultyValue() * STAR_SCALING_FACTOR;
-			double starRating = ( readingDifficulty + speedDifficulty ) / 2;
+			// BUG these are faulty and return values around 0.14*
+			//double readingDifficulty = skills.First<Reading>().DifficultyValue() * STAR_SCALING_FACTOR;
+			//double speedDifficulty = skills.First<Speed>().DifficultyValue() * STAR_SCALING_FACTOR;
+			//double starRating = ( readingDifficulty + speedDifficulty ) / 2;
 
 			return new DifficultyAttributes {
-				StarRating = starRating,
+				StarRating = beatmap.Difficulty.OverallDifficulty,
 				Mods = mods,
 				Skills = skills
 			};

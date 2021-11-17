@@ -1,12 +1,12 @@
 ﻿using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Scoring;
-using osu.Game.Users;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		{
 			var score = new Score
 			{
-				ScoreInfo = new ScoreInfo {User = new User {Username = BotNames.Random()}},
+				ScoreInfo = new ScoreInfo {User = new APIUser {Username = BotNames.Random()}},
 				Replay = new HitokoriAutoGenerator(beatmap as HitokoriBeatmap).Generate()
 			};
 			return score;

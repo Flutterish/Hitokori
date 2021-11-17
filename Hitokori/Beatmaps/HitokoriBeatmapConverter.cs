@@ -53,8 +53,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		protected override Beatmap<HitokoriHitObject> ConvertBeatmap ( IBeatmap original, CancellationToken cancellationToken ) {
 			var beatmap = CreateBeatmap() as HitokoriBeatmap;
 
-			Windows.SetDifficulty( Beatmap.BeatmapInfo.StarDifficulty );
-			AngleWindows.SetDifficulty( Beatmap.BeatmapInfo.StarDifficulty );
+			Windows.SetDifficulty( Beatmap.Difficulty.OverallDifficulty );
+			AngleWindows.SetDifficulty( Beatmap.Difficulty.OverallDifficulty );
 
 			beatmap.BeatmapInfo = original.BeatmapInfo;
 			beatmap.ControlPointInfo = original.ControlPointInfo;
