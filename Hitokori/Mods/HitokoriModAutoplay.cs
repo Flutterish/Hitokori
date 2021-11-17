@@ -1,8 +1,8 @@
 ﻿using osu.Game.Beatmaps;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Scoring;
-using osu.Game.Users;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override Score CreateReplayScore ( IBeatmap beatmap, IReadOnlyList<Mod> mods ) {
 			return new Score {
 				ScoreInfo = new ScoreInfo {
-					User = new User { Username = "Autosu" }
+					User = new APIUser { Username = "Autosu" }
 				},
 				Replay = new HitokoriReplayGenerator( beatmap ).Generate()
 			};

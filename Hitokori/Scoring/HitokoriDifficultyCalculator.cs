@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Scoring {
 		}
 
 		protected override DifficultyAttributes CreateDifficultyAttributes ( IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate ) {
-			return new DifficultyAttributes( mods, skills, beatmap.BeatmapInfo.StarDifficulty );
+			return new DifficultyAttributes( mods, skills, beatmap.Difficulty.OverallDifficulty );
 		}
 
 		protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects ( IBeatmap beatmap, double clockRate ) {
