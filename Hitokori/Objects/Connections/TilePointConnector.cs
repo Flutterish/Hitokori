@@ -130,6 +130,11 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 		public virtual ConnectorBlueprint CreateEditorBlueprint () 
 			=> new ConnectorBlueprint<TilePointConnector>( this );
 
+		/// <summary>
+		/// Apply sane defaults after being connected, such as keeping the same direction as the previous connector.
+		/// </summary>
+		public virtual void ApplyDefaults () { }
+
 		#region editor formatting
 
 		public static string FormatDistance ( double value )

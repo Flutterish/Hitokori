@@ -250,6 +250,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			}
 
 			connector.Invalidate();
+			connector.ApplyDefaults();
 			UpdateVisuals();
 		}
 

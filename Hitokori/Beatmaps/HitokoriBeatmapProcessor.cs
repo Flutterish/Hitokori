@@ -64,6 +64,8 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 						Angle = angle
 					};
 
+				connector.ApplyDefaults();
+
 				if ( random.NextDouble() < 0.5 ) {
 					angle += angleDelta;
 				}
@@ -87,23 +89,21 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 			var distancePerBeat = anglePerBeat * 2 / 180 * Math.PI;
 			TilePoint? prevTile = tiles.FirstOrDefault();
 
-			int direction = prevTile is PassThroughTilePoint ? -1 : 1;
-
 			foreach ( var tile in tiles.Skip( 1 ) ) {
 				var connector = new TilePointRotationConnector {
 					From = prevTile!,
 					To = tile,
 					BPM = (float)Beatmap.ControlPointInfo.TimingPointAt( prevTile!.StartTime ).BPM,
-					DistancePerBeat = distancePerBeat,
-					TargetOrbitalIndex = direction
+					DistancePerBeat = distancePerBeat
 				};
 
-				if ( tile is PassThroughTilePoint ) {
-					direction *= -1;
+				connector.ApplyDefaults();
+
+				if ( prevTile is PassThroughTilePoint ) {
+					connector.TargetOrbitalIndex *= -1;
 				}
 				else if ( tile is SwapTilePoint && Math.Abs( connector.Angle ) <= ( 80d - interiorAngle / 2 ) / 180 * Math.PI ) {
 					connector.TargetOrbitalIndex *= -1;
-					direction *= -1;
 				}
 
 				prevTile = tile;

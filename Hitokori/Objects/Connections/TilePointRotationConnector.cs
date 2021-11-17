@@ -217,6 +217,13 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 				offset * progress
 			);
 
+		public override void ApplyDefaults () {
+			TargetOrbitalIndex =
+				From.FromPreviousIs( x => x is IHasVelocity v && v.Velocity < 0 )
+				? -1
+				: 1;
+		}
+
 		public override ConnectorBlueprint CreateEditorBlueprint ()
 			=> new RotationConnectorBlueprint( this );
 	}
