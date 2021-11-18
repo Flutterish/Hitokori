@@ -152,7 +152,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 		public void UpdateVisuals () {
 			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
-				i.UpdateInitialVisuals();
+				EditorBeatmap.Update( i.HitObject );
 			}
 		}
 
