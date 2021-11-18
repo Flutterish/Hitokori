@@ -74,7 +74,8 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			}
 			else {
 				trail.Offset = Position + Parent.Position;
-				for ( int i = trail.VerticeCount - 1; i > 0; i-- ) {
+				trail.AddVertice( (Vector2)StateAt( ( Time.Current / verticeInterval - (trail.VerticeCount - 1) ) * verticeInterval ).Position * positionScale.Value );
+				for ( int i = trail.VerticeCount - 2; i > 0; i-- ) {
 					trail.AddVertice( (Vector2)StateAt( Math.Round( Time.Current / verticeInterval - i ) * verticeInterval ).Position * positionScale.Value );
 				}
 				trail.AddVertice( (Vector2)StateAt( Time.Current ).Position * positionScale.Value );
