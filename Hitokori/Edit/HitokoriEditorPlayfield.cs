@@ -1,5 +1,6 @@
 ﻿using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Camera;
+using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects;
 
@@ -15,5 +16,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit {
 			};
 			return true;
 		}
+
+		protected override HitokoriLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
+			=> new( hitObject, 4000 );
 	}
 }

@@ -218,8 +218,9 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 			}
 		}
 
-		public double LifetimeOffset 
-			=> Math.Max( 2000, FromPrevious is null ? 0 : FromPrevious.Duration );
+		public double MinumumLifetimeOffset = 2000;
+		public double LifetimeOffset
+			=> Math.Max( MinumumLifetimeOffset, FromPrevious is null ? 0 : FromPrevious.Duration );
 
 		Vector2 IHasPosition.Position => (Vector2)Position;
 		float IHasXPosition.X => (float)Position.X;

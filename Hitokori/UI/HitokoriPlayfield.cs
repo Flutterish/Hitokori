@@ -144,8 +144,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			public event Action<DrawableHitObject>? DrawableHitObjectAdded;
 		}
 
-		protected override HitObjectLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
-			=> new HitokoriLifetimeEntry( hitObject );
+		protected override HitokoriLifetimeEntry CreateLifetimeEntry ( HitObject hitObject )
+			=> new( hitObject );
 
 		/// <summary>
 		/// Should the camera be updated automatically or externaly?

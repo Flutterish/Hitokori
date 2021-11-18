@@ -39,14 +39,14 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		protected override void UpdateInitialTransforms () {
 			if ( HitObject.ToNext is not null ) {
 				this.TransformBindableTo( piece.OutAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( joinTime( HitObject.ToNext ) ) ) {
+				using ( BeginAbsoluteSequence( joinTime( HitObject.ToNext, -HitObject.MinumumLifetimeOffset ) ) ) {
 					this.TransformBindableTo( piece.OutAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
 
 			if ( HitObject.FromPrevious is not null ) {
 				this.TransformBindableTo( piece.InAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( joinTime( HitObject.FromPrevious ) ) ) {
+				using ( BeginAbsoluteSequence( joinTime( HitObject.FromPrevious, -HitObject.Previous.MinumumLifetimeOffset ) ) ) {
 					this.TransformBindableTo( piece.InAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
