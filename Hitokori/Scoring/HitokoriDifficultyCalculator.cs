@@ -10,13 +10,13 @@ namespace osu.Game.Rulesets.Hitokori.Scoring
 {
     public class HitokoriDifficultyCalculator : DifficultyCalculator
     {
-        public HitokoriDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap) : base(ruleset, beatmap)
+        public HitokoriDifficultyCalculator(Ruleset ruleset, IWorkingBeatmap beatmap) : base(ruleset.RulesetInfo, beatmap)
         {
         }
 
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
-            return new DifficultyAttributes(mods, skills, beatmap.BeatmapInfo.StarDifficulty);
+            return new DifficultyAttributes(mods, beatmap.BeatmapInfo.StarRating);
         }
 
         protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)

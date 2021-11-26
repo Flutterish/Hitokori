@@ -85,7 +85,7 @@ namespace osu.Game.Rulesets.Hitokori
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap)
             => new HitokoriBeatmapProcessor(beatmap);
 
-        public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap)
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap)
             => new HitokoriDifficultyCalculator(this, beatmap);
 
         public override IRulesetConfigManager CreateConfig(SettingsStore settings)
