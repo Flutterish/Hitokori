@@ -92,8 +92,8 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override IBeatmapVerifier CreateBeatmapVerifier ()
 			=> new HitokoriBeatmapVerifier();
 
-		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
-			=> new HitokoriDifficultyCalculator( this, beatmap );
+		public override DifficultyCalculator CreateDifficultyCalculator ( IWorkingBeatmap beatmap )
+			=> new HitokoriDifficultyCalculator( RulesetInfo, beatmap );
 
 		public override IRulesetConfigManager CreateConfig ( SettingsStore settings )
 			=> new HitokoriConfigManager( settings, RulesetInfo );
