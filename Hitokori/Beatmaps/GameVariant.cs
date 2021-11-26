@@ -1,6 +1,8 @@
-﻿namespace osu.Game.Rulesets.Hitokori.Beatmaps {
-	public enum GameVariant {
-		Default,
-		Solo
-	}
+﻿namespace osu.Game.Rulesets.Hitokori.Beatmaps
+{
+    public enum GameVariant
+    {
+        Default,
+        Solo
+    }
 }

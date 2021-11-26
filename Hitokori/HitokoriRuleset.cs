@@ -25,127 +25,140 @@ using osuTK;
 using System;
 using System.Collections.Generic;
 
-namespace osu.Game.Rulesets.Hitokori {
-	public class HitokoriRuleset : Ruleset {
-		public const string SHORT_NAME = "hitokori";
-		public override string Description => SHORT_NAME;
-		public override string ShortName => SHORT_NAME;
-		public override string PlayingVerb => "Playing with fire";
+namespace osu.Game.Rulesets.Hitokori
+{
+    public class HitokoriRuleset : Ruleset
+    {
+        public const string SHORT_NAME = "hitokori";
+        public override string Description => SHORT_NAME;
+        public override string ShortName => SHORT_NAME;
+        public override string PlayingVerb => "Playing with fire";
 
-		public HitokoriRuleset () {
-			
-		}
+        public HitokoriRuleset()
+        {
 
-		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
-			return type switch {
-				ModType.DifficultyReduction => new Mod[] {
-					new HitokoriModEasy(),
-					new HitokoriModNoFail(),
-					new MultiMod( 
-						new HitokoriModHalfTime(), 
-						new HitokoriModDaycore() 
-					) 
-				},
-				ModType.DifficultyIncrease => new Mod[] {
-					new MultiMod( 
-						new HitokoriModSuddenDeath(), 
-						new HitokoriModPerfect() 
-					),
-					new MultiMod( 
-						new HitokoriModDoubleTime(),
-						new HitokoriModNightcore()
-					) 
-				},
-				ModType.Conversion => new Mod[] { 
-					new HitokoriModAngles(),
-					new HitokoriModOrbitals()
-				},
-				ModType.Automation => new Mod[] { 
-					new HitokoriModAutoplay() 
-				},
-				ModType.Fun => new Mod[] {
-					new HitokoriModSolo()
-				},
-				ModType.System => Array.Empty<Mod>(),
+        }
 
-				_ => Array.Empty<Mod>()
-			};
-		}
+        public override IEnumerable<Mod> GetModsFor(ModType type)
+        {
+            return type switch
+            {
+                ModType.DifficultyReduction => new Mod[] {
+                    new HitokoriModEasy(),
+                    new HitokoriModNoFail(),
+                    new MultiMod(
+                        new HitokoriModHalfTime(),
+                        new HitokoriModDaycore()
+                    )
+                },
+                ModType.DifficultyIncrease => new Mod[] {
+                    new MultiMod(
+                        new HitokoriModSuddenDeath(),
+                        new HitokoriModPerfect()
+                    ),
+                    new MultiMod(
+                        new HitokoriModDoubleTime(),
+                        new HitokoriModNightcore()
+                    )
+                },
+                ModType.Conversion => new Mod[] {
+                    new HitokoriModAngles(),
+                    new HitokoriModOrbitals()
+                },
+                ModType.Automation => new Mod[] {
+                    new HitokoriModAutoplay()
+                },
+                ModType.Fun => new Mod[] {
+                    new HitokoriModSolo()
+                },
+                ModType.System => Array.Empty<Mod>(),
 
-		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod>? mods = null )
-			=> new DrawableHitokoriRuleset( this, beatmap, mods );
+                _ => Array.Empty<Mod>()
+            };
+        }
 
-		public override IBeatmapConverter CreateBeatmapConverter ( IBeatmap beatmap )
-			=> new HitokoriBeatmapConverter( beatmap, this );
-		public override IBeatmapProcessor CreateBeatmapProcessor ( IBeatmap beatmap )
-			=> new HitokoriBeatmapProcessor( beatmap );
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods = null)
+            => new DrawableHitokoriRuleset(this, beatmap, mods);
 
-		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
-			=> new HitokoriDifficultyCalculator( this, beatmap );
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap)
+            => new HitokoriBeatmapConverter(beatmap, this);
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap)
+            => new HitokoriBeatmapProcessor(beatmap);
 
-		public override IRulesetConfigManager CreateConfig ( SettingsStore settings )
-			=> new HitokoriConfigManager( settings, RulesetInfo );
-		public override RulesetSettingsSubsection CreateSettings ()
-			=> new HitokoriSettingsSubsection( this );
+        public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap)
+            => new HitokoriDifficultyCalculator(this, beatmap);
 
-		public override IConvertibleReplayFrame CreateConvertibleReplayFrame ()
-			=> new HitokoriReplayFrame();
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings)
+            => new HitokoriConfigManager(settings, RulesetInfo);
+        public override RulesetSettingsSubsection CreateSettings()
+            => new HitokoriSettingsSubsection(this);
 
-		public override IEnumerable<KeyBinding> GetDefaultKeyBindings ( int variant = 0 ) {
-			return new KeyBinding[] {
-				new( InputKey.Z, HitokoriAction.Action1 ),
-				new( InputKey.X, HitokoriAction.Action2 ),
-				new( InputKey.MouseLeft, HitokoriAction.Action1 ),
-				new( InputKey.MouseRight, HitokoriAction.Action2 )
-			};
-		}
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame()
+            => new HitokoriReplayFrame();
 
-		public override string GetDisplayNameForHitResult ( HitResult result ) {
-			return result switch {
-				HitResult.Perfect => "Perfect",
-				HitResult.Ok => "Ok",
-				HitResult.Meh => "Meh",
-				HitResult.Miss => "Miss",
-				_ => $"Invalid {nameof(HitResult)}"
-			};
-		}
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0)
+        {
+            return new KeyBinding[] {
+                new( InputKey.Z, HitokoriAction.Action1 ),
+                new( InputKey.X, HitokoriAction.Action2 ),
+                new( InputKey.MouseLeft, HitokoriAction.Action1 ),
+                new( InputKey.MouseRight, HitokoriAction.Action2 )
+            };
+        }
 
-		protected override IEnumerable<HitResult> GetValidHitResults () {
-			return new HitResult[] {
-				HitResult.Perfect,
-				HitResult.Ok,
-				HitResult.Meh,
-				HitResult.Miss
-			};
-		}
+        public override string GetDisplayNameForHitResult(HitResult result)
+        {
+            return result switch
+            {
+                HitResult.Perfect => "Perfect",
+                HitResult.Ok => "Ok",
+                HitResult.Meh => "Meh",
+                HitResult.Miss => "Miss",
+                _ => $"Invalid {nameof(HitResult)}"
+            };
+        }
 
-		public override Drawable CreateIcon ()
-			=> new HitokoriIcon( this );
+        protected override IEnumerable<HitResult> GetValidHitResults()
+        {
+            return new HitResult[] {
+                HitResult.Perfect,
+                HitResult.Ok,
+                HitResult.Meh,
+                HitResult.Miss
+            };
+        }
 
-		private class HitokoriIcon : CompositeDrawable {
-			private static LargeTextureStore? textureStore;
-			private HitokoriRuleset ruleset;
+        public override Drawable CreateIcon()
+            => new HitokoriIcon(this);
 
-			public HitokoriIcon ( HitokoriRuleset ruleset ) {
-				Anchor = Origin = Anchor.Centre;
-				this.ruleset = ruleset;
-				FillAspectRatio = 1;
-				FillMode = FillMode.Fit;
-				Size = new Vector2( 100, 100 );
-			}
+        private class HitokoriIcon : CompositeDrawable
+        {
+            private static LargeTextureStore? textureStore;
+            private HitokoriRuleset ruleset;
 
-			[BackgroundDependencyLoader]
-			private void load ( GameHost host ) {
-				textureStore ??= new LargeTextureStore( host.CreateTextureLoaderStore( ruleset.CreateResourceStore() ) );
+            public HitokoriIcon(HitokoriRuleset ruleset)
+            {
+                Anchor = Origin = Anchor.Centre;
+                this.ruleset = ruleset;
+                FillAspectRatio = 1;
+                FillMode = FillMode.Fit;
+                Size = new Vector2(100, 100);
+            }
 
-				AddInternal( new Sprite {
-					Anchor = Anchor.Centre,
-					Origin = Anchor.Centre,
-					RelativeSizeAxes = Axes.Both,
-					Texture = textureStore.Get( "Textures/HitokoriIcon" ),
-					EdgeSmoothness = new Vector2( 2 )
-				} );
-			}
-		}
-	}
+            [BackgroundDependencyLoader]
+            private void load(GameHost host)
+            {
+                textureStore ??= new LargeTextureStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                AddInternal(new Sprite
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Texture = textureStore.Get("Textures/HitokoriIcon"),
+                    EdgeSmoothness = new Vector2(2)
+                });
+            }
+        }
+    }
 }
