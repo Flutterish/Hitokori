@@ -8,11 +8,11 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Scoring {
 	public class HitokoriDifficultyCalculator : DifficultyCalculator {
-		public HitokoriDifficultyCalculator ( Ruleset ruleset, WorkingBeatmap beatmap ) : base( ruleset, beatmap ) {
+		public HitokoriDifficultyCalculator ( RulesetInfo rulesetInfo, IWorkingBeatmap beatmap ) : base( rulesetInfo, beatmap ) {
 		}
 
 		protected override DifficultyAttributes CreateDifficultyAttributes ( IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate ) {
-			return new DifficultyAttributes( mods, skills, beatmap.Difficulty.OverallDifficulty );
+			return new DifficultyAttributes( mods, beatmap.Difficulty.OverallDifficulty );
 		}
 
 		protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects ( IBeatmap beatmap, double clockRate ) {
