@@ -24,6 +24,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		private void onHandleMoved ( DragEvent e ) {
+			if ( IsDisposed ) return;
+
 			var posFrom = Connector.GetPositionAt( 0 );
 			var posTo = Playfield.NormalizedPositionAtScreenSpace( e.ScreenSpaceMousePosition );
 

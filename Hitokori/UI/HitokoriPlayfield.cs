@@ -34,6 +34,10 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		public IEnumerable<OrbitalGroup> Chains => chains.Keys;
 		public OrbitalGroup ChainWithID ( int id ) => chainsByID[ id ];
 
+		public IEnumerable<TilePoint> AliveTiles
+			=> HitObjectContainer.AliveObjects.Where( x => x.HitObject is TilePoint )
+				.Select( x => (TilePoint)x.HitObject );
+
 		public OrbitalGroup AddChain ( TilePoint firstTile ) {
 			var orbitals = new OrbitalGroup( firstTile );
 			chains.Add( orbitals, firstTile );

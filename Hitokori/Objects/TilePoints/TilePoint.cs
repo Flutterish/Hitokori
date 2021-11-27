@@ -34,7 +34,10 @@ namespace osu.Game.Rulesets.Hitokori.Objects {
 				onConstraintChanged
 			);
 
-			BindablePosition.ValueChanged += v => ConstrainablePosition.Value = v.NewValue;
+			BindablePosition.ValueChanged += v => {
+				if ( v.NewValue != ConstrainablePosition.Value )
+					ConstrainablePosition.Value = v.NewValue;
+			};
 		}
 
 		private void onConstraintChanged ( bool isConstrained ) {

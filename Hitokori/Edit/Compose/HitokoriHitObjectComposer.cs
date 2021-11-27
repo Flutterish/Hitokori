@@ -10,6 +10,7 @@ using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
+using osu.Game.Rulesets.Hitokori.Edit.Compose.Tools;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables;
 using osu.Game.Rulesets.Hitokori.UI;
@@ -93,6 +94,10 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			yield return new TernaryButton( ShowTooltipsToggle, "Show Tooltips", () => new SpriteIcon { Icon = FontAwesome.Solid.InfoCircle } );
 		}
 
+		protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[] {
+			new TilePointCompositionTool( "Add Tile" )
+		};
+
 		protected override void LoadComplete () {
 			base.LoadComplete();
 
@@ -107,6 +112,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			ClearInternal( disposeChildren: false );
 			InternalChildren = children;
 
+			EditorBeatmap.HitObjectAdded += onHitObjectAdded;
 			EditorBeatmap.HitObjectRemoved += onHitObjectRemoved;
 			EditorBeatmap.HitObjectUpdated += onHitObjectUpdated;
 
@@ -131,57 +137,28 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 				Playfield.UpdateCameraViewport( Time.Elapsed );
 		}
 
-		private void onHitObjectUpdated ( HitObject obj ) {
+		new public void Schedule ( Action action )
+			=> base.Schedule( action );
+
+		private void onHitObjectAdded ( HitObject obj ) {
 			if ( obj is not TilePoint tp ) return;
+
+			if ( tp.Previous is null && tp.Next is null ) {
+				tp.ChainID = Beatmap.CreateChain( tp );
+				Playfield.AddChain( tp );
+			}
+
+			EditorBeatmap.Update( obj );
+		}
+
+		private void onHitObjectUpdated ( HitObject obj ) {
+			if ( obj is not TilePoint tp || !Beatmap.Chains.ContainsKey( tp.ChainID ) ) return; // for whatever reason it updates it after deleting, se we need to check if its 'alive'
 
 			ensureValidStartTimes( EditorBeatmap.SelectedHitObjects.OfType<TilePoint>() );
 
-			if ( tp.ToNext is not null )
-				tp.ToNext.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.ToNext.StartTime ).BPM;
-			if ( tp.FromPrevious is not null )
-				tp.FromPrevious.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.FromPrevious.StartTime ).BPM;
-
-			tp.Previous?.Invalidate();
-			tp.Invalidate();
-
-			Playfield.RemoveChain( tp.ChainID ); // this is done because chains have visual events that need to be reset when timing changes
-			Playfield.AddChain( tp );
-
+			updateTilePoint( tp );
+			UpdateOrbitals( tp ); // this is done because chains have visual events that need to be reset when timing changes
 			UpdateVisuals();
-		}
-
-		public void UpdateVisuals () {
-			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
-				EditorBeatmap.Update( i.HitObject );
-			}
-		}
-
-		/// <summary>
-		/// Makes sure no <see cref="TilePoint"/> starts before the previous one or ends after the next one.
-		/// </summary>
-		private void ensureValidStartTimes ( IEnumerable<TilePoint> tilePoints ) {
-			double undershootDelta = 0;
-			double overshootDelta = 0;
-
-			foreach ( var i in tilePoints ) {
-				if ( i.NextIs( x => x.StartTime < i.StartTime ) )
-					overshootDelta = Math.Max( overshootDelta, i.StartTime - i.Next.StartTime );
-
-				if ( i.PreviousIs( x => x.StartTime > i.StartTime ) )
-					undershootDelta = Math.Max( undershootDelta, i.Previous.StartTime - i.StartTime );
-			}
-
-			if ( undershootDelta != 0 && overshootDelta != 0 ) {
-				// TODO handle this if needed. it shouldnt be possible though, so whatever
-			}
-			else if ( undershootDelta != 0 ) {
-				foreach ( var i in tilePoints )
-					i.StartTime += undershootDelta;
-			}
-			else if ( overshootDelta != 0 ) {
-				foreach ( var i in tilePoints )
-					i.StartTime -= overshootDelta;
-			}
 		}
 
 		private void onHitObjectRemoved ( HitObject obj ) {
@@ -215,6 +192,64 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			}
 		}
 
+		private void updateTilePoint ( TilePoint tp ) {
+			if ( tp.ToNext is not null )
+				tp.ToNext.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.ToNext.StartTime ).BPM;
+			if ( tp.FromPrevious is not null )
+				tp.FromPrevious.BPM = Beatmap.ControlPointInfo.TimingPointAt( tp.FromPrevious.StartTime ).BPM;
+
+			tp.Previous?.Invalidate();
+			tp.Invalidate();
+		}
+
+		public void UpdateVisuals () {
+			foreach ( DrawableHitokoriHitObject i in Playfield.HitObjectContainer.AliveObjects ) {
+				if ( i.HitObject is not TilePoint tp ) 
+					continue;
+
+				updateTilePoint( tp );
+				i.UpdateInitialVisuals();
+			}
+		}
+
+		public void UpdateOrbitals ( int ID ) {
+			Playfield.RemoveChain( ID );
+			Playfield.AddChain( Beatmap.Chains[ ID ].Beginning );
+		}
+
+		public void UpdateOrbitals ( TilePoint tp ) {
+			Playfield.RemoveChain( tp.ChainID );
+			Playfield.AddChain( tp );
+		}
+
+		/// <summary>
+		/// Makes sure no <see cref="TilePoint"/> starts before the previous one or ends after the next one.
+		/// </summary>
+		private void ensureValidStartTimes ( IEnumerable<TilePoint> tilePoints ) {
+			double undershootDelta = 0;
+			double overshootDelta = 0;
+
+			foreach ( var i in tilePoints ) {
+				if ( i.NextIs( x => x.StartTime < i.StartTime ) )
+					overshootDelta = Math.Max( overshootDelta, i.StartTime - i.Next.StartTime );
+
+				if ( i.PreviousIs( x => x.StartTime > i.StartTime ) )
+					undershootDelta = Math.Max( undershootDelta, i.Previous.StartTime - i.StartTime );
+			}
+
+			if ( undershootDelta != 0 && overshootDelta != 0 ) {
+				// TODO handle this if needed. it shouldnt be possible though, so whatever
+			}
+			else if ( undershootDelta != 0 ) {
+				foreach ( var i in tilePoints )
+					i.StartTime += undershootDelta;
+			}
+			else if ( overshootDelta != 0 ) {
+				foreach ( var i in tilePoints )
+					i.StartTime -= overshootDelta;
+			}
+		}
+
 		public void LinkNeighbours ( TilePoint tp ) {
 			var prev = tp.Previous!;
 			Playfield.RemoveChain( tp.ChainID );
@@ -245,8 +280,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 					i.ChainID = from.ChainID;
 				}
 
-				Playfield.RemoveChain( from.ChainID );
-				Playfield.AddChain( from );
+				UpdateOrbitals( from );
 			}
 
 			connector.Invalidate();
@@ -299,8 +333,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 			UpdateVisuals();
 		}
-
-		protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => Array.Empty<HitObjectCompositionTool>();
 
 		protected override ComposeBlueprintContainer CreateBlueprintContainer ()
 			=> new HitokoriComposeBlueprintContainer( this );

@@ -154,7 +154,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 						bindable.TriggerChange();
 					}
 				}
-				catch ( Exception e ) {
+				catch ( Exception ) {
 					revert( oldValue );
 					bindable.TriggerChange();
 					// TODO error message

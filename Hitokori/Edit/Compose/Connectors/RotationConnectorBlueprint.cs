@@ -49,6 +49,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		private void onRotationHandleDragged ( DragEvent e ) {
+			if ( IsDisposed ) return;
+
 			var b = Connector.GetPositionAt( 1 ) - Connector.GetStateAt( 1 ).StackingOffsetOfNth( Connector.TargetOrbitalIndex );
 			var pivot = Connector.GetStateAt( 0 ).PivotPosition;
 
@@ -73,6 +75,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		private void onDistanceHandleDragged ( DragEvent e ) {
+			if ( IsDisposed ) return;
+
 			var pivot = Connector.GetStateAt( 0 ).PivotPosition;
 			var pos = Playfield.NormalizedPositionAtScreenSpace( e.ScreenSpaceMousePosition );
 

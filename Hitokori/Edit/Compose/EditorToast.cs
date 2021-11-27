@@ -17,6 +17,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			Anchor = Anchor.BottomCentre;
 			AutoSizeAxes = Axes.Both;
 			Padding = new MarginPadding( 6 );
+			AlwaysPresent = true;
+
 			AddInternal( new FillFlowContainer {
 				Direction = FillDirection.Horizontal,
 				AutoSizeAxes = Axes.Both,
@@ -56,13 +58,13 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 			text.Text = lastMessage = message;
 			toastStartTime = Time.Current;
 			toastDuration = duration;
-			Show();
+			Schedule( Show );
 		}
 
 		public void HideMessage ( LocalisableString message ) {
 			if ( lastMessage == message ) {
 				lastMessage = "";
-				Hide();
+				Schedule( Hide );
 			}
 		}
 
