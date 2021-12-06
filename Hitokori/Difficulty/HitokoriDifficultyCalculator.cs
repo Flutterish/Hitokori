@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 	public class HitokoriDifficultyCalculator : DifficultyCalculator {
 		private const double STAR_SCALING_FACTOR = 0.04125; //Taken from Taiko's difficulty calculations
 
-		public HitokoriDifficultyCalculator ( Ruleset ruleset, WorkingBeatmap beatmap ) : base( ruleset, beatmap ) { }
+		public HitokoriDifficultyCalculator ( IRulesetInfo ruleset, IWorkingBeatmap beatmap ) : base( ruleset, beatmap ) { }
 
 		protected override DifficultyAttributes CreateDifficultyAttributes ( IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate ) {
 			// BUG these are faulty and return values around 0.14*
@@ -24,8 +24,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 
 			return new DifficultyAttributes {
 				StarRating = beatmap.Difficulty.OverallDifficulty,
-				Mods = mods,
-				Skills = skills
+				Mods = mods
 			};
 		}
 

@@ -39,8 +39,8 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override RulesetSettingsSubsection CreateSettings ()
 			=> new HitokoriSettingsSubsection( this );
 
-		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
-			=> new HitokoriDifficultyCalculator( this, beatmap );
+		public override DifficultyCalculator CreateDifficultyCalculator ( IWorkingBeatmap beatmap )
+			=> new HitokoriDifficultyCalculator( RulesetInfo, beatmap );
 		public override HealthProcessor CreateHealthProcessor ( double drainStartTime )
 			=> new HitokoriHealthProcessor();
 		public override ScoreProcessor CreateScoreProcessor () {
