@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override Type[] IncompatibleMods => base.IncompatibleMods.Concat( new[] { typeof( ModEasy ), typeof( ModDifficultyAdjust ) } ).ToArray();
 
 		public override bool HasImplementation => true;
-		public override IconUsage? Icon => OsuIcon.ModHardrock;
+		public override IconUsage? Icon => OsuIcon.ModHardRock;
 		public override ModType Type => ModType.DifficultyIncrease;
 
 		[Modifies( typeof( HitokoriBeatmapConverter ), nameof( HitokoriBeatmapConverter.Speed ) )]

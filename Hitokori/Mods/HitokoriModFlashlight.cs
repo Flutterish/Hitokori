@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Game.Configuration;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
@@ -16,8 +17,8 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		HitokoriFlashlight flashlight;
 
-		public override Flashlight CreateFlashlight ()
-			=> flashlight = new HitokoriFlashlight();
+		protected override Flashlight CreateFlashlight ()
+			=> flashlight = new HitokoriFlashlight( this );
 
 		public void Update ( Playfield playfield ) {
 			flashlight?.Update( playfield );
@@ -25,7 +26,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 		private class HitokoriFlashlight : Flashlight {
 			float FLASHLIGHT_SIZE => (float)Math.Max( ( Playfield?.Hitokori.Radius.Length ?? 200 ), 200 ) * 1.1f;
-			public HitokoriFlashlight () {
+			public HitokoriFlashlight ( HitokoriModFlashlight mod ) : base( mod ) {
 				FlashlightSize = new Vector2( 0, FLASHLIGHT_SIZE );
 			}
 
@@ -53,5 +54,9 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				this.TransformBindableTo( comboModifier, getSizeFor( e.NewValue ), FLASHLIGHT_FADE_DURATION );
 			}
 		}
+
+		public override BindableNumber<float> SizeMultiplier { get; } = new( 1 );
+		public override BindableBool ComboBasedSize { get; } = new( true );
+		public override float DefaultFlashlightSize { get; } = 1;
 	}
 }

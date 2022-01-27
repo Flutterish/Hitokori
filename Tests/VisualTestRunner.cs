@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Hitokori.Tests {
 	public static class VisualTestRunner {
 		[STAThread]
 		public static int Main ( string[] args ) {
-			using ( DesktopGameHost host = Host.GetSuitableHost( @"osu", true ) ) {
+			using ( DesktopGameHost host = Host.GetSuitableDesktopHost( @"osu", new() { BindIPC = true } ) ) {
 				host.Run( new OsuTestBrowser() );
 				return 0;
 			}
