@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override double ScoreMultiplier => 1;
 		public override ModType Type => ModType.Conversion;
 
-		public override IconUsage? Icon => OsuIcon.ModSpunout;
+		public override IconUsage? Icon => OsuIcon.ModSpunOut;
 		public override bool HasImplementation => true;
 
 		public override bool RequiresConfiguration => true;

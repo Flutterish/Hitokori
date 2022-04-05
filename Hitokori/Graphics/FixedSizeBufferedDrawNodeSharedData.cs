@@ -89,8 +89,9 @@ namespace osu.Game.Rulesets.Hitokori.Graphics {
         internal void ResetCurrentEffectBuffer () => currentEffectBuffer = -1;
 
         public void Dispose () {
-            Action dispose = () => Dispose( true );
-            typeof( GLWrapper ).GetMethod( "ScheduleDisposal", BindingFlags.NonPublic | BindingFlags.Static )!.Invoke( null, new object[] { dispose } ); // :))))))) its internal
+            Action<FixedSizeBufferedDrawNodeSharedData> dispose = (FixedSizeBufferedDrawNodeSharedData t) => t.Dispose( true );
+            typeof( GLWrapper ).GetMethod( "ScheduleDisposal", BindingFlags.NonPublic | BindingFlags.Static )!
+                .MakeGenericMethod( typeof(FixedSizeBufferedDrawNodeSharedData) ).Invoke( null, new object[] { dispose, this } ); // :))))))) its internal
             GC.SuppressFinalize( this );
         }
 

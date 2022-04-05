@@ -100,17 +100,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 
 		protected override void LoadComplete () {
 			base.LoadComplete();
-
-			var children = new Drawable[ InternalChildren.Count + 1 ];
-			var i = 0;
-			foreach ( var c in InternalChildren ) {
-				if ( c.Name == "Sidebar" ) { // NOTE this is terrible.
-					children[ i++ ] = LayerAbovePlayfield;
-				}
-				children[ i++ ] = c;
-			}
-			ClearInternal( disposeChildren: false );
-			InternalChildren = children;
+			AddInternal( LayerAbovePlayfield );
 
 			EditorBeatmap.HitObjectAdded += onHitObjectAdded;
 			EditorBeatmap.HitObjectRemoved += onHitObjectRemoved;

@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		private void processTapTapDashChain ( IEnumerable<TilePoint> tiles ) {
-			var random = new Random( Beatmap.Metadata.ID );
+			var random = new Random( Beatmap.BeatmapInfo.ID.GetHashCode() );
 
 			double angle = 0;
 			TilePoint? prevTile = tiles.FirstOrDefault();
