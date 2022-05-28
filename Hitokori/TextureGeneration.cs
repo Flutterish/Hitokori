@@ -8,12 +8,15 @@ namespace osu.Game.Rulesets.Hitokori {
 	public static class TextureGeneration {
 		public static TextureUpload Generate ( int width, int height, Func<int, int, Rgba32> generator ) {
 			Image<Rgba32> image = new Image<Rgba32>( width, height );
-			for ( int y = 0; y < height; y++ ) {
-				var span = image.GetPixelRowSpan( y );
-				for ( int x = 0; x < width; x++ ) {
-					span[ x ] = generator( x, height - y - 1 );
+			image.ProcessPixelRows( rows => {
+				for ( int y = 0; y < height; y++ ) {
+					var span = rows.GetRowSpan( y );
+					for ( int x = 0; x < width; x++ ) {
+						span[x] = generator( x, height - y - 1 );
+					}
 				}
-			}
+			} );
+			
 			return new TextureUpload( image );
 		}
 
