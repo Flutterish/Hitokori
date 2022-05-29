@@ -1,15 +1,10 @@
-﻿using osu.Framework.Bindables;
-using osu.Game.Rulesets.Edit;
+﻿using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.Blueprints;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Objects.Types;
-using osuTK;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {
 	/// <summary>

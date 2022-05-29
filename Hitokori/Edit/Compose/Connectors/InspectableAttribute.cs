@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
+﻿namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 	/// <summary>
 	/// Indiactes that this property can be inspected in the beatmap editor.
 	/// </summary>

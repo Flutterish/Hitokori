@@ -1,7 +1,4 @@
-﻿using osu.Framework.Bindables;
-using System.Collections.Generic;
-
-namespace osu.Game.Rulesets.Hitokori {
+﻿namespace osu.Game.Rulesets.Hitokori {
 	public class BindablePool<T> {
 		private Stack<Bindable<T>> pool = new();
 		public Bindable<T> Rent () {

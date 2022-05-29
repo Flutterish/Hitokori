@@ -1,7 +1,5 @@
 ﻿using osu.Framework.Lists;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>

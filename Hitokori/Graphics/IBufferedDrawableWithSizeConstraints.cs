@@ -3,9 +3,6 @@
 ///
 
 
-using osu.Framework.Graphics;
-using osuTK;
-
 namespace osu.Game.Rulesets.Hitokori.Graphics {
 	public interface IBufferedDrawableWithSizeConstraints : IBufferedDrawable {
 		Vector2 MaximumFrameBufferSize { get; }

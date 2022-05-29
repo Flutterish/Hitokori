@@ -2,9 +2,6 @@
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
-using osuTK;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayRecorder : ReplayRecorder<HitokoriAction> {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
+﻿namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
 	public class ConstrainableAngle : ConstrainableProperty<double> {
 		public bool IsRadians = true;
 

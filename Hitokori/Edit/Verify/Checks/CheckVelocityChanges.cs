@@ -2,9 +2,6 @@
 using osu.Game.Rulesets.Edit.Checks.Components;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Verify.Checks {
 	public class CheckVelocityChanges : ICheck {

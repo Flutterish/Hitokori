@@ -1,15 +1,8 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.UI.Paths;
-using osuTK;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays {
 	public class PathVisualizer : CompositeDrawable {

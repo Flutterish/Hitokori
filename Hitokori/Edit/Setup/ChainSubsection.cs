@@ -1,5 +1,4 @@
-﻿using osu.Framework.Bindables;
-using osu.Framework.Localisation;
+﻿using osu.Framework.Localisation;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 

@@ -3,8 +3,6 @@ using osu.Game.Replays.Legacy;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Replays.Types;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayFrame : ReplayFrame, IConvertibleReplayFrame {

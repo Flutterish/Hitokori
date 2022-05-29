@@ -1,7 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Utils;
-using System;
-using System.Collections.Generic;
+﻿using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 	/// <summary>

@@ -1,6 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input;
@@ -15,12 +13,9 @@ using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Hitokori.Orbitals;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
-using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Tools {
 	public class TilePointCompositionTool : HitObjectCompositionTool {

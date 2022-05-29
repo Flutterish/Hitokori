@@ -1,7 +1,5 @@
 ﻿using osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors;
 using osu.Game.Rulesets.Hitokori.Orbitals;
-using osuTK;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Objects {

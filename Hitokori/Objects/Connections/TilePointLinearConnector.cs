@@ -1,7 +1,6 @@
 ﻿using osu.Game.Rulesets.Hitokori.ConstrainableProperties;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors;
 using osu.Game.Rulesets.Hitokori.Orbitals;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Connections {
 	public class TilePointLinearConnector : TilePointConnector, IHasVelocity {

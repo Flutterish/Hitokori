@@ -1,8 +1,5 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -15,10 +12,6 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
-using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	[Cached]

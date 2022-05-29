@@ -1,6 +1,4 @@
 ﻿using osu.Game.Rulesets.Hitokori.Collections;
-using System;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 	public class VisualEventSeeker : VisualEventSeeker<VisualEvent> { }

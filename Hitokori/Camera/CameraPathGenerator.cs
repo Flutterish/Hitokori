@@ -1,6 +1,4 @@
 ﻿using osu.Game.Rulesets.Hitokori.Collections;
-using osuTK;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.Camera {
 	public abstract class CameraPathGenerator {

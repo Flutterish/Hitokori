@@ -1,10 +1,4 @@
-﻿using osu.Framework.Bindables;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
-using osuTK;
-using osuTK.Graphics;
-using System;
+﻿using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.UI.Visuals {
 	public class TilePointVisualPiece : CompositeDrawable {

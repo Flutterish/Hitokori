@@ -1,11 +1,8 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI.Visuals;
 using osu.Game.Rulesets.Objects.Drawables;
-using System;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public class DrawableTilePointWithConnections<T> : DrawableHitokoriHitObject<T> where T : TilePoint {

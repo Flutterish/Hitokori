@@ -3,8 +3,6 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
-using System;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Scoring {
 	public class HitokoriDifficultyCalculator : DifficultyCalculator {

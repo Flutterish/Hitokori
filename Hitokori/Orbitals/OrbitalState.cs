@@ -1,9 +1,4 @@
-﻿using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace osu.Game.Rulesets.Hitokori.Orbitals {
+﻿namespace osu.Game.Rulesets.Hitokori.Orbitals {
 	/// <summary>
 	/// Represents the state of multiple orbitals at a given time.
 	/// </summary>

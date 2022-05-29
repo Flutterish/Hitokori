@@ -6,17 +6,13 @@
 using osu.Framework.Allocation;
 using osu.Framework.Caching;
 using osu.Framework.Extensions.EnumExtensions;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Hitokori.Graphics;
-using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.UI.Paths {

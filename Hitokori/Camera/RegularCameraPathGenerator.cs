@@ -1,9 +1,5 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
-using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Camera {
 	public class RegularCameraPathGenerator : CameraPathGenerator {

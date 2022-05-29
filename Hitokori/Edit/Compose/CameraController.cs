@@ -1,10 +1,6 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Input.Events;
+﻿using osu.Framework.Input.Events;
 using osu.Game.Graphics.UserInterface;
-using osuTK;
 using osuTK.Input;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 	public class CameraController : CompositeDrawable {

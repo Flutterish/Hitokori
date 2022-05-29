@@ -1,5 +1,4 @@
-﻿using osu.Framework.Bindables;
-using osu.Game.Rulesets.Hitokori.Objects;
+﻿using osu.Game.Rulesets.Hitokori.Objects;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class Chain {

@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Extensions.TypeExtensions;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.ConstrainableProperties {
 	public class ConstrainableProperty<T> where T : struct {

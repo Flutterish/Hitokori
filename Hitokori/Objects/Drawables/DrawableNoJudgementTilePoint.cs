@@ -1,5 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
+﻿using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {

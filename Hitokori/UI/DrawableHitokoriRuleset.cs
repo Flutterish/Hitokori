@@ -13,7 +13,6 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class DrawableHitokoriRuleset : DrawableRuleset<HitokoriHitObject> {

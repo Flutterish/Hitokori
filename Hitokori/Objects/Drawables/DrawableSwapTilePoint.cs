@@ -1,5 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Input.Bindings;
+﻿using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;

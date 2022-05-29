@@ -2,9 +2,6 @@
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmapProcessor : BeatmapProcessor {

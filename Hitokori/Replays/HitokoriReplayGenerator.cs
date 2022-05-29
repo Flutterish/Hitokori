@@ -3,8 +3,6 @@ using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Replays;
-using System;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayGenerator : AutoGenerator<HitokoriReplayFrame> {

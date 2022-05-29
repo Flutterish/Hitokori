@@ -1,6 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
@@ -26,9 +24,6 @@ using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Setup;
-using osuTK;
-using System;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori {
 	public class HitokoriRuleset : Ruleset {

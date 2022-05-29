@@ -1,0 +1,9 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Text;
+global using osu.Framework.Graphics;
+global using osu.Framework.Graphics.Shapes;
+global using osu.Framework.Graphics.Containers;
+global using osu.Framework.Bindables;
+global using osuTK;

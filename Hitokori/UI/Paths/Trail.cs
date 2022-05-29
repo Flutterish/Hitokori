@@ -1,18 +1,16 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Primitives;
+﻿using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Hitokori.Collections;
-using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.UI.Paths {
 	public class Trail : CompositeDrawable {
 		private FixedSizePath line;
 		public Vector2 Offset;
 		public float PathRadius = 6;
-		CircularBuffer<Vector2> vertices = new CircularBuffer<Vector2>( 100 );
+		CircularBuffer<Vector2> vertices;
 		public int VerticeCount => vertices.Capacity;
 
-		public Trail () {
+		public Trail ( int verticeBufferSize = 100 ) {
+			vertices = new CircularBuffer<Vector2>( verticeBufferSize );
 			InternalChildren = new Drawable[] {
 				line = new FixedSizePath() {
 					BufferSize = new Vector2( 500 )

@@ -1,9 +1,7 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.UI;
-using osuTK;
 using System.Diagnostics.CodeAnalysis;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays {

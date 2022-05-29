@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Screens.Edit;
-using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace osu.Game.Rulesets.Hitokori {

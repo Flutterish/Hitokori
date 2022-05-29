@@ -1,10 +1,7 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
-using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hitokori.Settings;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Objects.Drawables;
-using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject> {

@@ -1,7 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Primitives;
-using osuTK;
+﻿using osu.Framework.Graphics.Primitives;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class TransformContainer<T> : Container<T> where T : Drawable {

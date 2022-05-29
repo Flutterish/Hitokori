@@ -3,7 +3,6 @@ using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Scoring;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModAutoplay : ModAutoplay {

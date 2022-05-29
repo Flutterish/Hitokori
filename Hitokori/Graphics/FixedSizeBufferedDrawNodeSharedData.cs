@@ -6,7 +6,6 @@
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.OpenGL.Buffers;
 using osuTK.Graphics.ES30;
-using System;
 using System.Reflection;
 
 namespace osu.Game.Rulesets.Hitokori.Graphics {

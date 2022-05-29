@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	public class CircularBuffer<T> : IEnumerable<T> {

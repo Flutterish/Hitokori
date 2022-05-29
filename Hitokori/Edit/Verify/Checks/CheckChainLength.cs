@@ -1,8 +1,6 @@
 ﻿using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Checks.Components;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Verify.Checks {
 	public class CheckChainLength : ICheck {

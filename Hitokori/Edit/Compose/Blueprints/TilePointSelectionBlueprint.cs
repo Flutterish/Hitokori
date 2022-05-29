@@ -1,5 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Primitives;
+﻿using osu.Framework.Graphics.Primitives;
 using osu.Game.Rulesets.Hitokori.Edit.Compose.SelectionOverlays;
 using osu.Game.Rulesets.Hitokori.Objects;
 

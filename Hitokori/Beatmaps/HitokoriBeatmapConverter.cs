@@ -3,9 +3,6 @@ using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.TilePoints;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
-using osuTK;
-using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {

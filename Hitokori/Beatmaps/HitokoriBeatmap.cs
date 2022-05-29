@@ -1,8 +1,5 @@
-﻿using osu.Framework.Bindables;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Objects;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 	public class HitokoriBeatmap : Beatmap<HitokoriHitObject> {

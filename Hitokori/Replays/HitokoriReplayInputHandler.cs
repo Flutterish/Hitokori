@@ -2,7 +2,6 @@
 using osu.Game.Replays;
 using osu.Game.Rulesets.Hitokori.Input;
 using osu.Game.Rulesets.Replays;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
 	public class HitokoriReplayInputHandler : FramedReplayInputHandler<HitokoriReplayFrame> {

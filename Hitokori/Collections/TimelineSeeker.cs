@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace osu.Game.Rulesets.Hitokori.Collections {
+﻿namespace osu.Game.Rulesets.Hitokori.Collections {
 	/// <summary>
 	/// A timeline where entries have duration. It keeps track of current time and rises events as entries are passed.
 	/// </summary>

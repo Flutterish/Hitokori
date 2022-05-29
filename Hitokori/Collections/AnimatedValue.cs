@@ -1,7 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hitokori.Orbitals.Events;
-using System;
-using System.Collections.Generic;
+﻿using osu.Game.Rulesets.Hitokori.Orbitals.Events;
 
 namespace osu.Game.Rulesets.Hitokori.Collections {
 	public class AnimatedValue<T> where T : struct {

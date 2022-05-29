@@ -1,10 +1,7 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Objects.Connections;
-using osuTK;
-using System;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 	public class LinearConnectorBlueprint : ConnectorBlueprint<TilePointLinearConnector> {

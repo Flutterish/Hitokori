@@ -1,7 +1,4 @@
-﻿using osu.Framework.Graphics;
-using System.Collections.Generic;
-
-namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
+﻿namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 	public class FadeVisualEvent : VisualEvent<Orbital> {
 		public double StartAlpha;
 		public double TargetAlpha;

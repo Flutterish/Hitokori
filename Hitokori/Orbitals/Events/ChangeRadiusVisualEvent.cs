@@ -1,7 +1,4 @@
-﻿using osu.Framework.Graphics;
-using System.Collections.Generic;
-
-namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
+﻿namespace osu.Game.Rulesets.Hitokori.Orbitals.Events {
 	public class ChangeRadiusVisualEvent : VisualEvent<Orbital> {
 		public double TargetRadius;
 		public double StartRadius;

@@ -1,7 +1,5 @@
-﻿using osu.Framework.Bindables;
-using osu.Framework.Localisation;
+﻿using osu.Framework.Localisation;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Edit.Setup {
 	public class ChainsSubsection : SetupSubsection {
