@@ -98,6 +98,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		protected override void Update () {
+			if ( IsDisposed ) return;
 			base.Update();
 
 			var pivot = Connector.GetStateAt( 0 ).PivotPosition;

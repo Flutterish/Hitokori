@@ -33,6 +33,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		protected override void Update () {
+			if ( IsDisposed ) return;
 			base.Update();
 
 			handle.Position = PositionAt( Connector.GetPositionAt( 0.5 ) - Vector2d.UnitY * Connector.Distance * Connector.JumpZ );

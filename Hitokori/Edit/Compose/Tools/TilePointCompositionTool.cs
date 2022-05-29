@@ -190,6 +190,8 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Tools {
 
 				Composer.UpdateOrbitals( HitObject.ChainID );
 			}
+
+			Composer.UpdateVisuals();
 		}
 
 		private LocalisableString tooltip = "";
@@ -206,7 +208,6 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Tools {
 			if ( connector is not null && PlacementActive != PlacementState.Finished ) {
 				Composer.Schedule( () => {
 					removeConnector();
-					Composer.UpdateVisuals();
 				} );
 			}
 		}

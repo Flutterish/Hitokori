@@ -142,7 +142,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose {
 		}
 
 		private void onHitObjectUpdated ( HitObject obj ) {
-			if ( obj is not TilePoint tp || !Beatmap.Chains.ContainsKey( tp.ChainID ) ) return; // for whatever reason it updates it after deleting, se we need to check if its 'alive'
+			if ( obj is not TilePoint tp ) return;
 
 			ensureValidStartTimes( EditorBeatmap.SelectedHitObjects.OfType<TilePoint>() );
 

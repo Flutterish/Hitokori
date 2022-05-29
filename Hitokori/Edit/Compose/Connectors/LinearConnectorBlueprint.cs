@@ -59,6 +59,7 @@ namespace osu.Game.Rulesets.Hitokori.Edit.Compose.Connectors {
 		}
 
 		protected override void Update () {
+			if ( IsDisposed ) return;
 			base.Update();
 
 			handle.Position = PositionAt( Connector.GetEndPosition() );

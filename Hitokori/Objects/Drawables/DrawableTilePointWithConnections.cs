@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		}
 
 		public override void UpdateInitialVisuals () {
+			RefreshStateTransforms();
 			base.UpdateInitialVisuals();
 
 			piece.BorderColour = Colour4.White;
@@ -46,7 +47,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 
 			if ( HitObject.FromPrevious is not null ) {
 				this.TransformBindableTo( piece.InAnimationProgress, 0 );
-				using ( BeginAbsoluteSequence( joinTime( HitObject.FromPrevious, -HitObject.Previous.MinumumLifetimeOffset ) ) ) {
+				using ( BeginAbsoluteSequence( joinTime( HitObject.FromPrevious, -HitObject.Previous!.MinumumLifetimeOffset ) ) ) {
 					this.TransformBindableTo( piece.InAnimationProgress, 1, 750, Easing.Out );
 				}
 			}
