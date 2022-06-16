@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Hitokori.Objects;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Objects;
+using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Difficulty {
 	public class HitokoriDifficultyHitObject : DifficultyHitObject {
@@ -22,7 +23,9 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 		/// </summary>
 		public double? HoldAngle { get; private set; }
 
-		public HitokoriDifficultyHitObject ( HitObject hitObject, HitObject lastObject, double bpm, double clockRate ) : base( hitObject, lastObject, clockRate ) {
+		public HitokoriDifficultyHitObject ( HitObject hitObject, HitObject lastObject, double bpm, double clockRate, 
+			List<DifficultyHitObject> objects, int index ) : base( hitObject, lastObject, clockRate, objects, index ) {
+
 			HitokoriTileObject hitokoriObject = (HitokoriTileObject)hitObject;
 			HitokoriTileObject lastHitokoriObject = (HitokoriTileObject)lastObject;
 

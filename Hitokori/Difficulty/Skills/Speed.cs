@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 			return Math.Pow( bpm / BASE_BPM, 0.6 );
 		}
 
-		protected override double CalculateInitialStrain ( double time ) => 0;
+		protected override double CalculateInitialStrain ( double time, DifficultyHitObject current ) 
+			=> 0;
 	}
 }

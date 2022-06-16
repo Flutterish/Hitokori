@@ -79,14 +79,11 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			"Merg"
 		};
 
-		public override Score CreateReplayScore ( IBeatmap beatmap, IReadOnlyList<Mod> mods)
-		{
-			var score = new Score
-			{
-				ScoreInfo = new ScoreInfo {User = new APIUser {Username = BotNames.Random()}},
-				Replay = new HitokoriAutoGenerator(beatmap as HitokoriBeatmap).Generate()
-			};
-			return score;
+		public override ModReplayData CreateReplayData ( IBeatmap beatmap, IReadOnlyList<Mod> mods ) {
+			var replay = new HitokoriAutoGenerator( beatmap as HitokoriBeatmap ).Generate();
+			return new ModReplayData( replay, new ModCreatedUser {
+				Username = BotNames.Random()
+			} );
 		}
 	}
 }

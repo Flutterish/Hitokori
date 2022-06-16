@@ -30,11 +30,15 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty {
 
 		protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects ( IBeatmap beatmap, double clockRate ) {
 			HitObject last = beatmap.HitObjects.First();
+			List<DifficultyHitObject> objects = new();
+			int index = 0;
 			foreach ( HitObject hitObject in beatmap.HitObjects.Skip( 1 ) ) {
 				TimingControlPoint timingControlPoint = beatmap.ControlPointInfo.TimingPointAt( hitObject.StartTime );
-				yield return new HitokoriDifficultyHitObject( hitObject, last, timingControlPoint.BPM, clockRate );
+				objects.Add( new HitokoriDifficultyHitObject( hitObject, last, timingControlPoint.BPM, clockRate, objects, index++ ) );
 				last = hitObject;
 			}
+
+			return objects;
 		}
 
 		protected override Skill[] CreateSkills ( IBeatmap beatmap, Mod[] mods, double clockRate ) {

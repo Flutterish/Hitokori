@@ -30,6 +30,8 @@ namespace osu.Game.Rulesets.Hitokori.Difficulty.Skills {
 			return Math.Abs( ( Math.Abs( angle ) - Math.PI ) / ( Math.PI * 3 / 2 ) );
 		}
 
-		protected override double CalculateInitialStrain ( double time ) => 0;
+
+		protected override double CalculateInitialStrain ( double time, DifficultyHitObject current )
+			=> 0;
 	}
 }
