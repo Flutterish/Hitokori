@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
@@ -128,10 +129,10 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override string GetDisplayNameForHitResult ( HitResult result ) {
 			return result switch
 			{
-				HitResult.Miss => "Miss",
-				HitResult.Great => "Late",
-				HitResult.Ok => "Early",
-				_ => "Perfect"
+				HitResult.Miss => GetLocalisedHack( Localisation.Judgement.Strings.Miss ),
+				HitResult.Great => GetLocalisedHack( Localisation.Judgement.Strings.Late ),
+				HitResult.Ok => GetLocalisedHack( Localisation.Judgement.Strings.Early ),
+				_ => GetLocalisedHack( Localisation.Judgement.Strings.Perfect )
 			};
 		}
 
@@ -142,6 +143,21 @@ namespace osu.Game.Rulesets.Hitokori {
 				HitResult.Great,
 				HitResult.Perfect
 			};
+		}
+
+		static Dictionary<LocalisableString, ILocalisedBindableString> localisationHack = new();
+		public static Func<LocalisableString, ILocalisedBindableString> LocalisationHackFactory;
+		public static string GetLocalisedHack ( LocalisableString str ) {
+			if ( !localisationHack.TryGetValue( str, out var bindable ) ) {
+				if ( LocalisationHackFactory is null ) {
+					return str.ToString();
+				}
+				else {
+					localisationHack.Add( str, bindable = LocalisationHackFactory( str ) );
+				}
+			}
+
+			return bindable.Value;
 		}
 	}
 }

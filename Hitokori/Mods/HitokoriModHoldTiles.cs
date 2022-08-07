@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModHoldTiles : AutoImplementedMod {
 		public override string Name => "Hold Tiles";
 		public override string Acronym => "HDT";
-		public override string Description => "Don't hold yourself back";
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.HoldDescription );
 
 		public override double ScoreMultiplier => 1;
 

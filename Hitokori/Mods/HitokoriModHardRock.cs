@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override double ScoreMultiplier => 1.1;
 		public override string Name => "Hard Rock";
 		public override string Acronym => "HR";
-		public override string Description => "Through the fire and the flames";
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.HardRockDescription );
 
 		public override Type[] IncompatibleMods => base.IncompatibleMods.Concat( new[] { typeof( ModEasy ), typeof( ModDifficultyAdjust ) } ).ToArray();
 

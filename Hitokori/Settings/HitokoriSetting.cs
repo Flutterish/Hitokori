@@ -1,4 +1,6 @@
-﻿namespace osu.Game.Rulesets.Hitokori.Settings {
+﻿using osu.Framework.Localisation;
+
+namespace osu.Game.Rulesets.Hitokori.Settings {
 	public enum HitokoriSetting {
 		CameraSpeed,
 		RingOpacity,
@@ -26,10 +28,13 @@
 	}
 
 	public enum DashStyle {
+		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Dashed ) )]
 		Dashed,
 
+		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Dotted ) )]
 		Dotted,
 
+		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Solid ) )]
 		Solid
 	}
 }

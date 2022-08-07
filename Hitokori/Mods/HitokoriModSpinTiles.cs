@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModSpinTiles : AutoImplementedMod {
 		public override string Name => "Spin Tiles";
 		public override string Acronym => "SPT";
-		public override string Description => "Prepare for a spin";
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.SpinDescription );
 
 		public override double ScoreMultiplier => 1;
 

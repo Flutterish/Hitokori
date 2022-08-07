@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
@@ -37,7 +38,6 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 				Child = Text = new OsuSpriteText {
 					Anchor = Anchor.Centre,
 					Origin = Anchor.Centre,
-					Text = Type.GetDescription().ToUpperInvariant(),
 					Font = OsuFont.Numeric.With( size: 20 ),
 					Colour = colours.ForHitResult( Type ),
 					Scale = new Vector2( 0.5f ),
@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			};
 
 			var result = GetADOFAIResult();
-			Text.Text = result.GetDescription().ToUpperInvariant();
+			Text.Text = new CaseTransformableString( result.GetLocalisableDescription(), Casing.UpperCase );
 		}
 
 		protected override void ApplyHitAnimations () {
@@ -87,16 +87,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		[Description( "" )]
 		None,
 
-		[Description( "Miss" )]
+		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Miss ) )]
 		Miss,
 
-		[Description( "Early" )]
+		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Early ) )]
 		Early,
 
-		[Description( "Late" )]
+		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Late ) )]
 		Late,
 
-		[Description( "Perfect" )]
+		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Perfect ) )]
 		Perfect
 	}
 }

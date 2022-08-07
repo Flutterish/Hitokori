@@ -10,19 +10,19 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		public override IEnumerable<BeatmapStatistic> GetStatistics () {
 			var taps = HitObjects.OfType<TapTile>();
 			if ( taps.Any() ) yield return new BeatmapStatistic {
-				Name = "Press Tiles",
+				Name = Localisation.Stats.Strings.PressTiles,
 				Content = taps.Count().ToString(),
 				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.Circle }
 			};
 			var holds = HitObjects.OfType<HoldTile>();
 			if ( holds.Any() ) yield return new BeatmapStatistic {
-				Name = "Hold Tiles",
+				Name = Localisation.Stats.Strings.HoldTiles,
 				Content = holds.Count().ToString(),
 				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.HandHolding }
 			};
 			var spins = HitObjects.OfType<SpinTile>();
 			if ( spins.Any() ) yield return new BeatmapStatistic {
-				Name = "Spin Tiles",
+				Name = Localisation.Stats.Strings.SpinTiles,
 				Content = spins.Count().ToString(),
 				CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.RedoAlt }
 			};

@@ -2,6 +2,6 @@
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModNoFail : ModNoFail {
-		public override string Description => "True legends never die";
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.NoFailDescription );
 	}
 }

@@ -18,39 +18,39 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			Children = new Drawable[] {
 				new SettingsSlider<double,SpeedSlider> {
-					LabelText = "Camera speed",
+					LabelText = Localisation.Setting.Strings.CameraSpeed,
 					Current = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = "Orbit ring opacity",
+					LabelText = Localisation.Setting.Strings.RingOpacity,
 					Current = config.GetBindable<double>( HitokoriSetting.RingOpacity )
 				},
 				new SettingsEnumDropdown<DashStyle> {
-					LabelText = "Orbit ring border style",
+					LabelText = Localisation.Setting.Strings.RingStyle,
 					Current = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = "Connector width",
+					LabelText = Localisation.Setting.Strings.ConnectorWidth,
 					Current = config.GetBindable<double>( HitokoriSetting.ConnectorWidth )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = "Hold/Spin connector width",
+					LabelText = Localisation.Setting.Strings.ConnectorHoldWidth,
 					Current = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
 				},
 				new SettingsCheckbox {
-					LabelText = "Show speed changes below cyan/orange tiles",
+					LabelText = Localisation.Setting.Strings.ShowSpeed,
 					Current = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = "First orbital color",
+					LabelText = Localisation.Setting.Strings.FirstColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.HiColor )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = "Second orbital color",
+					LabelText = Localisation.Setting.Strings.SecondColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.KoriColor )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = "Third orbital color",
+					LabelText = Localisation.Setting.Strings.ThirdColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.GreenBitchColor )
 				},
 			};

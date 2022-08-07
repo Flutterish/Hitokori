@@ -1,19 +1,17 @@
 ﻿using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Replays;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Scoring;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModAuto : ModAutoplay {
 		public override string Name => "Auto";
 		public override string Acronym => "AT";
-		public override string Description => "Let the cute bot do all the hard work";
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.AutoplayDescription );
 
 		public override bool UserPlayable => false;
 

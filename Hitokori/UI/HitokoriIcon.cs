@@ -1,12 +1,23 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
 	public class HitokoriIcon : Container {
+		[Resolved]
+		private LocalisationManager localisation { get; set; }
+
 		public HitokoriIcon () {
+			if ( HitokoriRuleset.LocalisationHackFactory is null ) {
+				HitokoriRuleset.LocalisationHackFactory = str => {
+					return localisation.GetLocalisedBindableString( str );
+				};
+			}
+
 			this.Center();
 			RelativeSizeAxes = Axes.Both;
 
