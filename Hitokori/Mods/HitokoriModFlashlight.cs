@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 			}
 		}
 
-		public override BindableFloat SizeMultiplier { get; } = new( 1 );
+		public override BindableFloat SizeMultiplier { get; } = new( 1 ) { MinValue = 0.5f, MaxValue = 2, Precision = 0.1f };
 		public override BindableBool ComboBasedSize { get; } = new( true );
 		public override float DefaultFlashlightSize { get; } = 1;
 	}
