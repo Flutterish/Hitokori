@@ -3,6 +3,7 @@ using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
@@ -22,7 +23,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			public Bindable<float> HueBindable { get; init; }
 			public Bindable<bool> LockedBindable { get; init; }
 
-			public HuePicker () {
+			[BackgroundDependencyLoader]
+			private void load ( IRenderer renderer ) {
 				int scale = 3;
 				float width = 12;
 				float radius = MathF.Sqrt( 2 ) * PICKER_SIZE / 2 + 2;
@@ -30,7 +32,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				AddInternal( continuousHue = new Sprite().Center() );
 				{
 					if ( continuousTexture is null ) {
-						continuousHue.Texture = continuousTexture = new Texture( (int)( radius + width + 4 ) * 2 * scale, (int)( radius + width + 4 ) * 2 * scale );
+						continuousHue.Texture = continuousTexture = renderer.CreateTexture( (int)( radius + width + 4 ) * 2 * scale, (int)( radius + width + 4 ) * 2 * scale );
 						continuousHue.Texture.SetData( TextureGeneration.HSVCircle( (int)( radius + width + 4 ) * 2 * scale, radius * scale, ( radius + width ) * scale ) );
 					}
 					else continuousHue.Texture = continuousTexture;
@@ -42,7 +44,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 					radius -= width + 1;
 					width += 1;
 					if ( discreteTexture is null ) {
-						discreteHue.Texture = discreteTexture = new Texture( (int)( radius + width + 4 ) * 2 * scale, (int)( radius + width + 4 ) * 2 * scale );
+						discreteHue.Texture = discreteTexture = renderer.CreateTexture( (int)( radius + width + 4 ) * 2 * scale, (int)( radius + width + 4 ) * 2 * scale );
 						discreteHue.Texture.SetData( TextureGeneration.HSVCircle( (int)( radius + width + 4 ) * 2 * scale, radius * scale, ( radius + width ) * scale, value: 0.7f, saturation: 0.9f, discreteCount: DISCRETE_COUNT ) );
 					}
 					else discreteHue.Texture = discreteTexture;

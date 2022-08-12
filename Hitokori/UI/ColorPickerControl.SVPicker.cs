@@ -3,9 +3,9 @@ using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
@@ -24,17 +24,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			SVNotch svNotch;
 
 			public SVPicker () {
-				InternalChildren = new Drawable[] {
-					svBox = new Sprite {
-						RelativeSizeAxes = Axes.Both,
-						Texture = new Texture( (int)PICKER_SIZE, (int)PICKER_SIZE )
-					},
-					svNotch = new SVNotch {
-						Origin = Anchor.Centre,
-						RelativePositionAxes = Axes.Both
-					}
-				};
-
 				Size = new Vector2( PICKER_SIZE );
 			}
 
@@ -62,8 +51,19 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			Sample notchSample;
 			[BackgroundDependencyLoader]
-			private void load ( ISampleStore samples ) {
+			private void load ( ISampleStore samples, IRenderer renderer ) {
 				notchSample = samples.Get( "UI/notch-tick" );
+
+				InternalChildren = new Drawable[] {
+					svBox = new Sprite {
+						RelativeSizeAxes = Axes.Both,
+						Texture = renderer.CreateTexture( (int)PICKER_SIZE, (int)PICKER_SIZE )
+					},
+					svNotch = new SVNotch {
+						Origin = Anchor.Centre,
+						RelativePositionAxes = Axes.Both
+					}
+				};
 			}
 
 			protected override bool OnDragStart ( DragStartEvent e ) {
