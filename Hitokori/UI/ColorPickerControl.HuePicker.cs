@@ -23,8 +23,12 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 			public Bindable<float> HueBindable { get; init; }
 			public Bindable<bool> LockedBindable { get; init; }
 
+			Sample notchSample;
+
 			[BackgroundDependencyLoader]
-			private void load ( IRenderer renderer ) {
+			private void load ( IRenderer renderer, ISampleStore samples ) {
+				notchSample = samples.Get( "UI/notch-tick" );
+
 				int scale = 3;
 				float width = 12;
 				float radius = MathF.Sqrt( 2 ) * PICKER_SIZE / 2 + 2;
@@ -73,12 +77,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				HueBindable.BindValueChanged( v => {
 					notch.RotateTo( v.NewValue );
 				}, true );
-			}
-
-			Sample notchSample;
-			[BackgroundDependencyLoader]
-			private void load ( ISampleStore samples ) {
-				notchSample = samples.Get( "UI/notch-tick" );
 			}
 
 			protected override bool OnDragStart ( DragStartEvent e ) {

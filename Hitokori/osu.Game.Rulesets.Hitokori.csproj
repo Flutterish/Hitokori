@@ -13,4 +13,8 @@
     <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Localisation\Resx\" />
+  </ItemGroup>
+
 </Project>

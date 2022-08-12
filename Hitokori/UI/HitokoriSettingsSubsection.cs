@@ -52,7 +52,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				new ColorPicker<OrbitalColorPicker> {
 					LabelText = Localisation.SettingStrings.ThirdColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.GreenBitchColor )
-				},
+				}
 			};
 		}
 	}
