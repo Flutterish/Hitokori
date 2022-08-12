@@ -3,8 +3,8 @@
 
 using osu.Framework.Localisation;
 
-namespace osu.Game.Rulesets.Hitokori.Localisation.Setting.Ring {
-	public static class Strings {
+namespace osu.Game.Rulesets.Hitokori.Localisation.Setting {
+	public static class RingStrings {
 		private const string PREFIX = "osu.Game.Rulesets.Hitokori.Localisation.Setting.Ring.Strings";
 		private static string getKey( string key ) => $"{PREFIX}:{key}";
 

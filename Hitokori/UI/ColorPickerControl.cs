@@ -89,7 +89,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 									}
 								},
 								lockToggle = new OsuCheckbox {
-									LabelText = Localisation.Setting.Strings.LockColor,
+									LabelText = Localisation.SettingStrings.LockColor,
 									RelativeSizeAxes = Axes.X,
 									AutoSizeAxes = Axes.Y,
 									Current = lockedBindable

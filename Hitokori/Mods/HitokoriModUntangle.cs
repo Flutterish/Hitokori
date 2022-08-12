@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModUntangle : AutoImplementedMod {
 		public override string Name => "Untangle";
 		public override string Acronym => "UN";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.UntangleDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.UntangleDescription );
 
 		public override double ScoreMultiplier => 1;
 

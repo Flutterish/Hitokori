@@ -3,8 +3,8 @@
 
 using osu.Framework.Localisation;
 
-namespace osu.Game.Rulesets.Hitokori.Localisation.Mod.SuddenDeath {
-	public static class Strings {
+namespace osu.Game.Rulesets.Hitokori.Localisation.Mod {
+	public static class SuddenDeathStrings {
 		private const string PREFIX = "osu.Game.Rulesets.Hitokori.Localisation.Mod.SuddenDeath.Strings";
 		private static string getKey( string key ) => $"{PREFIX}:{key}";
 

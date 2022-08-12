@@ -2,6 +2,6 @@
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModEasy : ModEasy {
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.EasyDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.EasyDescription );
 	}
 }

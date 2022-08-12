@@ -129,10 +129,10 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override string GetDisplayNameForHitResult ( HitResult result ) {
 			return result switch
 			{
-				HitResult.Miss => GetLocalisedHack( Localisation.Judgement.Strings.Miss ),
-				HitResult.Great => GetLocalisedHack( Localisation.Judgement.Strings.Late ),
-				HitResult.Ok => GetLocalisedHack( Localisation.Judgement.Strings.Early ),
-				_ => GetLocalisedHack( Localisation.Judgement.Strings.Perfect )
+				HitResult.Miss => GetLocalisedHack( Localisation.JudgementStrings.Miss ),
+				HitResult.Great => GetLocalisedHack( Localisation.JudgementStrings.Late ),
+				HitResult.Ok => GetLocalisedHack( Localisation.JudgementStrings.Early ),
+				_ => GetLocalisedHack( Localisation.JudgementStrings.Perfect )
 			};
 		}
 

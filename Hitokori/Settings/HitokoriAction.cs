@@ -2,10 +2,10 @@
 
 namespace osu.Game.Rulesets.Hitokori.Settings {
 	public enum HitokoriAction {
-		[LocalisableDescription( typeof( Localisation.Action.Strings ), nameof( Localisation.Action.Strings.Action1 ) )]
+		[LocalisableDescription( typeof( Localisation.ActionStrings ), nameof( Localisation.ActionStrings.Action1 ) )]
 		Action1,
 
-		[LocalisableDescription( typeof( Localisation.Action.Strings ), nameof( Localisation.Action.Strings.Action2 ) )]
+		[LocalisableDescription( typeof( Localisation.ActionStrings ), nameof( Localisation.ActionStrings.Action2 ) )]
 		Action2
 	}
 }

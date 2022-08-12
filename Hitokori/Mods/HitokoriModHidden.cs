@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModHidden : ModHidden {
 		public override double ScoreMultiplier => 1.10;
 
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.HiddenDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.HiddenDescription );
 
 		protected override void ApplyNormalVisibilityState ( DrawableHitObject hitObject, ArmedState state ) {
 			if ( hitObject is DrawableTilePoint tile ) {

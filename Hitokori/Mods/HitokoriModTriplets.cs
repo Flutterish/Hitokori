@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModTriplets : AutoImplementedMod {
 		public override string Name => "Triplets";
 		public override string Acronym => "TR";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.TripletsDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.TripletsDescription );
 
 		public override double ScoreMultiplier => 1;
 

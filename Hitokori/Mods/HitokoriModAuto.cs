@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModAuto : ModAutoplay {
 		public override string Name => "Auto";
 		public override string Acronym => "AT";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.AutoplayDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.AutoplayDescription );
 
 		public override bool UserPlayable => false;
 

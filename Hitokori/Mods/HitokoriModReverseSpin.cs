@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModReverseSpin : Mod {
 		public override string Name => "Reverse Spin";
 		public override string Acronym => "RS";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.ReverseSpinDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.ReverseSpinDescription );
 
 		public override double ScoreMultiplier => 1;
 

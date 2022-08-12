@@ -2,6 +2,6 @@
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModSuddenDeath : ModSuddenDeath {
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.Mod.Strings.SuddenDeathDescription );
+		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.SuddenDeathDescription );
 	}
 }

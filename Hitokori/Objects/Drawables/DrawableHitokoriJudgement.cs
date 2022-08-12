@@ -87,16 +87,16 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 		[Description( "" )]
 		None,
 
-		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Miss ) )]
+		[LocalisableDescription( typeof( Localisation.JudgementStrings ), nameof( Localisation.JudgementStrings.Miss ) )]
 		Miss,
 
-		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Early ) )]
+		[LocalisableDescription( typeof( Localisation.JudgementStrings ), nameof( Localisation.JudgementStrings.Early ) )]
 		Early,
 
-		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Late ) )]
+		[LocalisableDescription( typeof( Localisation.JudgementStrings ), nameof( Localisation.JudgementStrings.Late ) )]
 		Late,
 
-		[LocalisableDescription( typeof( Localisation.Judgement.Strings ), nameof( Localisation.Judgement.Strings.Perfect ) )]
+		[LocalisableDescription( typeof( Localisation.JudgementStrings ), nameof( Localisation.JudgementStrings.Perfect ) )]
 		Perfect
 	}
 }

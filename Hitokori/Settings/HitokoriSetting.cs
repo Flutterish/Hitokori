@@ -28,13 +28,13 @@ namespace osu.Game.Rulesets.Hitokori.Settings {
 	}
 
 	public enum DashStyle {
-		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Dashed ) )]
+		[LocalisableDescription( typeof( Localisation.Setting.RingStrings ), nameof( Localisation.Setting.RingStrings.Dashed ) )]
 		Dashed,
 
-		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Dotted ) )]
+		[LocalisableDescription( typeof( Localisation.Setting.RingStrings ), nameof( Localisation.Setting.RingStrings.Dotted ) )]
 		Dotted,
 
-		[LocalisableDescription( typeof( Localisation.Setting.Ring.Strings ), nameof( Localisation.Setting.Ring.Strings.Solid ) )]
+		[LocalisableDescription( typeof( Localisation.Setting.RingStrings ), nameof( Localisation.Setting.RingStrings.Solid ) )]
 		Solid
 	}
 }

@@ -18,39 +18,39 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 			Children = new Drawable[] {
 				new SettingsSlider<double,SpeedSlider> {
-					LabelText = Localisation.Setting.Strings.CameraSpeed,
+					LabelText = Localisation.SettingStrings.CameraSpeed,
 					Current = config.GetBindable<double>( HitokoriSetting.CameraSpeed )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = Localisation.Setting.Strings.RingOpacity,
+					LabelText = Localisation.SettingStrings.RingOpacity,
 					Current = config.GetBindable<double>( HitokoriSetting.RingOpacity )
 				},
 				new SettingsEnumDropdown<DashStyle> {
-					LabelText = Localisation.Setting.Strings.RingStyle,
+					LabelText = Localisation.SettingStrings.RingStyle,
 					Current = config.GetBindable<DashStyle>( HitokoriSetting.RingDashStyle )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = Localisation.Setting.Strings.ConnectorWidth,
+					LabelText = Localisation.SettingStrings.ConnectorWidth,
 					Current = config.GetBindable<double>( HitokoriSetting.ConnectorWidth )
 				},
 				new SettingsSlider<double,PercentageSlider> {
-					LabelText = Localisation.Setting.Strings.ConnectorHoldWidth,
+					LabelText = Localisation.SettingStrings.ConnectorHoldWidth,
 					Current = config.GetBindable<double>( HitokoriSetting.HoldConnectorWidth )
 				},
 				new SettingsCheckbox {
-					LabelText = Localisation.Setting.Strings.ShowSpeed,
+					LabelText = Localisation.SettingStrings.ShowSpeed,
 					Current = config.GetBindable<bool>( HitokoriSetting.ShowSpeeedChange )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = Localisation.Setting.Strings.FirstColor,
+					LabelText = Localisation.SettingStrings.FirstColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.HiColor )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = Localisation.Setting.Strings.SecondColor,
+					LabelText = Localisation.SettingStrings.SecondColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.KoriColor )
 				},
 				new ColorPicker<OrbitalColorPicker> {
-					LabelText = Localisation.Setting.Strings.ThirdColor,
+					LabelText = Localisation.SettingStrings.ThirdColor,
 					Current = config.GetBindable<Color4>( HitokoriSetting.GreenBitchColor )
 				},
 			};

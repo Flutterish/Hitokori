@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="autoplay-description"><value>Pozwól słodzaczkobotowi zrobić wszystko za Ciebie</value></data>
+  <data name="daycore-description"><value>Ice, ice, baby</value></data>
+  <data name="double-time-description"><value>SzyyBBkKoooO</value></data>
+  <data name="easy-description"><value>Nie bawię się z ogniem</value></data>
+  <data name="flashlight-description"><value>Witaj w Night City</value></data>
+  <data name="half-time-description"><value>Mrozi</value></data>
+  <data name="hard-rock-description"><value>Through the fire and the flames</value></data>
+  <data name="hidden-description"><value>Tak jak twoje uczucia</value></data>
+  <data name="hold-description"><value>Za rączki?</value></data>
+  <data name="nightcore-description"><value>Uguuuuuuuu...</value></data>
+  <data name="no-fail-description"><value>True legends never die</value></data>
+  <data name="perfect-description"><value>SS albo nic</value></data>
+  <data name="reverse-spin-description"><value>You make me spin right round, baby right round</value></data>
+  <data name="spin-description"><value>Przygotuj się na młyn</value></data>
+  <data name="sudden-death-description"><value>Jak po staremu</value></data>
+  <data name="triplets-description"><value>Trzy razy więcej zabawy</value></data>
+  <data name="untangle-description"><value>WIP</value></data>
+  </root>
