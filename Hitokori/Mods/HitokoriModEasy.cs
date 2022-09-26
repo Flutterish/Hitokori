@@ -1,7 +1,8 @@
-﻿using osu.Game.Rulesets.Mods;
+﻿using osu.Framework.Localisation;
+using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModEasy : ModEasy {
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.EasyDescription );
+		public override LocalisableString Description => Localisation.ModStrings.EasyDescription;
 	}
 }

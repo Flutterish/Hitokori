@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Mods;
 
@@ -6,7 +7,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModSpinTiles : AutoImplementedMod {
 		public override string Name => "Spin Tiles";
 		public override string Acronym => "SPT";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.SpinDescription );
+		public override LocalisableString Description => Localisation.ModStrings.SpinDescription;
 
 		public override double ScoreMultiplier => 1;
 

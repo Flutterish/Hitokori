@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
@@ -10,7 +11,7 @@ using System;
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModFlashlight : ModFlashlight<HitokoriHitObject>, IUpdatableByPlayfield {
 		public override double ScoreMultiplier => 1.12;
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.FlashlightDescription );
+		public override LocalisableString Description => Localisation.ModStrings.FlashlightDescription;
 
 		public override bool HasImplementation => true;
 

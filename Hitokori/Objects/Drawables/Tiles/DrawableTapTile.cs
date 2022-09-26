@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		protected override void ClearNestedHitObjects () {
-			RemoveInternal( PressPoint );
+			RemoveInternal( PressPoint, false );
 
 			PressPoint = null;
 		}

@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -11,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModAuto : ModAutoplay {
 		public override string Name => "Auto";
 		public override string Acronym => "AT";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.AutoplayDescription );
+		public override LocalisableString Description => Localisation.ModStrings.AutoplayDescription;
 
 		public override bool UserPlayable => false;
 

@@ -1,11 +1,12 @@
 ﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModReverseSpin : Mod {
 		public override string Name => "Reverse Spin";
 		public override string Acronym => "RS";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.ReverseSpinDescription );
+		public override LocalisableString Description => Localisation.ModStrings.ReverseSpinDescription;
 
 		public override double ScoreMultiplier => 1;
 

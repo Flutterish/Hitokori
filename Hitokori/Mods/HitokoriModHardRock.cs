@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Mods;
@@ -10,7 +11,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override double ScoreMultiplier => 1.1;
 		public override string Name => "Hard Rock";
 		public override string Acronym => "HR";
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.HardRockDescription );
+		public override LocalisableString Description => Localisation.ModStrings.HardRockDescription;
 
 		public override Type[] IncompatibleMods => base.IncompatibleMods.Concat( new[] { typeof( ModEasy ), typeof( ModDifficultyAdjust ) } ).ToArray();
 

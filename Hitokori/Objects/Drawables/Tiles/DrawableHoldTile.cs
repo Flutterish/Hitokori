@@ -129,8 +129,8 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 		}
 
 		protected override void ClearNestedHitObjects () {
-			RemoveInternal( StartPoint );
-			RemoveInternal( EndPoint );
+			RemoveInternal( StartPoint, false );
+			RemoveInternal( EndPoint, false );
 
 			StartPoint = null;
 			EndPoint = null;

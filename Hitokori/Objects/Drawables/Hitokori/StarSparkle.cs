@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
 		public StarSparkle Borrow ( double duration ) {
 			foreach ( var sparkle in sparkles ) {
 				if ( !sparkle.IsBorrowed ) {
-					( sparkle.Parent as Container )?.Remove( sparkle );
+					( sparkle.Parent as Container )?.Remove( sparkle, false );
 					sparkle.StartTime = Clock.CurrentTime;
 					sparkle.Duration = duration;
 					sparkle.Clock = Clock;

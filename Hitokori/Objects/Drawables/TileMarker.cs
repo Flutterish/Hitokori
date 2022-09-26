@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
 			Circle.Alpha = 0;
 		}
 		public void Free () {
-			RemoveAll( x => x != Circle && x != TargetMarker );
+			RemoveAll( x => x != Circle && x != TargetMarker, false );
 			ClearTransforms( true );
 			Circle.Alpha = 0;
 			LineToMe = null;

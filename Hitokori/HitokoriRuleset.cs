@@ -126,13 +126,13 @@ namespace osu.Game.Rulesets.Hitokori {
 			};
 		}
 
-		public override string GetDisplayNameForHitResult ( HitResult result ) {
+		public override LocalisableString GetDisplayNameForHitResult ( HitResult result ) {
 			return result switch
 			{
-				HitResult.Miss => GetLocalisedHack( Localisation.JudgementStrings.Miss ),
-				HitResult.Great => GetLocalisedHack( Localisation.JudgementStrings.Late ),
-				HitResult.Ok => GetLocalisedHack( Localisation.JudgementStrings.Early ),
-				_ => GetLocalisedHack( Localisation.JudgementStrings.Perfect )
+				HitResult.Miss => Localisation.JudgementStrings.Miss,
+				HitResult.Great => Localisation.JudgementStrings.Late,
+				HitResult.Ok => Localisation.JudgementStrings.Early,
+				_ => Localisation.JudgementStrings.Perfect
 			};
 		}
 
@@ -143,21 +143,6 @@ namespace osu.Game.Rulesets.Hitokori {
 				HitResult.Great,
 				HitResult.Perfect
 			};
-		}
-
-		static Dictionary<LocalisableString, ILocalisedBindableString> localisationHack = new();
-		public static Func<LocalisableString, ILocalisedBindableString> LocalisationHackFactory;
-		public static string GetLocalisedHack ( LocalisableString str ) {
-			if ( !localisationHack.TryGetValue( str, out var bindable ) ) {
-				if ( LocalisationHackFactory is null ) {
-					return str.ToString();
-				}
-				else {
-					localisationHack.Add( str, bindable = LocalisationHackFactory( str ) );
-				}
-			}
-
-			return bindable.Value;
 		}
 	}
 }

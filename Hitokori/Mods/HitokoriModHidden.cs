@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -7,7 +8,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModHidden : ModHidden {
 		public override double ScoreMultiplier => 1.10;
 
-		public override string Description => HitokoriRuleset.GetLocalisedHack( Localisation.ModStrings.HiddenDescription );
+		public override LocalisableString Description => Localisation.ModStrings.HiddenDescription;
 
 		protected override void ApplyNormalVisibilityState ( DrawableHitObject hitObject, ArmedState state ) {
 			if ( hitObject is DrawableTilePoint tile ) {

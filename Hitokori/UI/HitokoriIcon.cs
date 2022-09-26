@@ -12,12 +12,6 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		private LocalisationManager localisation { get; set; }
 
 		public HitokoriIcon () {
-			if ( HitokoriRuleset.LocalisationHackFactory is null ) {
-				HitokoriRuleset.LocalisationHackFactory = str => {
-					return localisation.GetLocalisedBindableString( str );
-				};
-			}
-
 			this.Center();
 			RelativeSizeAxes = Axes.Both;
 

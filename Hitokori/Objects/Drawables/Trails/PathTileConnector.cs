@@ -162,7 +162,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 		public bool IsBorrowed { get; private set; }
 		public void Release () {
 			IsBorrowed = false;
-			( Parent as Container )?.Remove( this );
+			( Parent as Container )?.Remove( this, false );
 		}
 
 		public void Borrow () {

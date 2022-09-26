@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
 
 		protected override void ClearNestedHitObjects () {
 			foreach ( var i in Points ) {
-				RemoveInternal( i );
+				RemoveInternal( i, false );
 			}
 
 			Points.Clear();
