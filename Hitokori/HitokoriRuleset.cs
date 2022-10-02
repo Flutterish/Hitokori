@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -31,10 +32,6 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override string Description => SHORT_NAME;
 		public override string ShortName => SHORT_NAME;
 		public override string PlayingVerb => "Playing with fire";
-
-		public HitokoriRuleset () {
-			
-		}
 
 		public override IEnumerable<Mod> GetModsFor ( ModType type ) {
 			return type switch {
@@ -80,8 +77,8 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override IBeatmapProcessor CreateBeatmapProcessor ( IBeatmap beatmap )
 			=> new HitokoriBeatmapProcessor( beatmap );
 
-		public override DifficultyCalculator CreateDifficultyCalculator ( WorkingBeatmap beatmap )
-			=> new HitokoriDifficultyCalculator( this, beatmap );
+		public override DifficultyCalculator CreateDifficultyCalculator ( IWorkingBeatmap beatmap )
+			=> new HitokoriDifficultyCalculator( RulesetInfo, beatmap );
 
 		public override IRulesetConfigManager CreateConfig ( SettingsStore settings )
 			=> new HitokoriConfigManager( settings, RulesetInfo );
@@ -100,7 +97,7 @@ namespace osu.Game.Rulesets.Hitokori {
 			};
 		}
 
-		public override string GetDisplayNameForHitResult ( HitResult result ) {
+		public override LocalisableString GetDisplayNameForHitResult ( HitResult result ) {
 			return result switch {
 				HitResult.Perfect => "Perfect",
 				HitResult.Ok => "Ok",
@@ -136,7 +133,7 @@ namespace osu.Game.Rulesets.Hitokori {
 
 			[BackgroundDependencyLoader]
 			private void load ( GameHost host ) {
-				textureStore ??= new LargeTextureStore( host.CreateTextureLoaderStore( ruleset.CreateResourceStore() ) );
+				textureStore ??= new LargeTextureStore( host.Renderer, host.CreateTextureLoaderStore( ruleset.CreateResourceStore() ) );
 
 				AddInternal( new Sprite {
 					Anchor = Anchor.Centre,

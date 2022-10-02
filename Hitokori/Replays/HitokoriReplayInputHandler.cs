@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hitokori.Replays {
 		public HitokoriReplayInputHandler ( Replay replay ) : base( replay ) { }
 
 		protected override bool IsImportant ( HitokoriReplayFrame frame ) => true;
-		public override void CollectPendingInputs ( List<IInput> inputs ) {
+		protected override void CollectReplayInputs ( List<IInput> inputs ) {
 			inputs.Add( new ReplayState<HitokoriAction> {
 				PressedActions = CurrentFrame?.Actions ?? new List<HitokoriAction>()
 			} );

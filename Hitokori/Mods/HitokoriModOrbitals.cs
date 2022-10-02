@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
@@ -11,7 +12,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override string Name => "Adjust Orbitals";
 		public override string SettingDescription => $"{OrbitalCount.Value} Orbitals";
 		public override string Acronym => "AO";
-		public override string Description => "The more the merrier";
+		public override LocalisableString Description => "The more the merrier";
 		public override double ScoreMultiplier => 1;
 		public override ModType Type => ModType.Conversion;
 

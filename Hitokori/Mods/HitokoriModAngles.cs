@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
@@ -39,11 +40,11 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override string Name => "Adjust Angles";
 		public override string SettingDescription => AnglePerBeatPreset.Value is PresetAngles.Nonstandard ? $"{AnglePerBeat.Value}°" : $"[{AnglePerBeatPreset.Value}] {AnglePerBeat.Value}°";
 		public override string Acronym => "AA";
-		public override string Description => "Look at it from a different angle";
+		public override LocalisableString Description => "Look at it from a different angle";
 		public override double ScoreMultiplier => 1;
 		public override ModType Type => ModType.Conversion;
 
-		public override IconUsage? Icon => OsuIcon.ModSpunout;
+		public override IconUsage? Icon => OsuIcon.ModSpunOut;
 		public override bool HasImplementation => true;
 
 		public override bool RequiresConfiguration => true;

@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hitokori.Beatmaps;
 using osu.Game.Rulesets.Mods;
@@ -8,7 +9,7 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 	public class HitokoriModSolo : Mod, IApplicableToBeatmapProcessor, IApplicableToBeatmapConverter {
 		public override string Name => "Solo";
 		public override string Acronym => "SL";
-		public override string Description => "Play with just 1 orbital";
+		public override LocalisableString Description => "Play with just 1 orbital";
 		public override double ScoreMultiplier => 1;
 
 		public override IconUsage? Icon => FontAwesome.Solid.Adjust;

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osuTK;
 using System;
 using System.Collections.Generic;

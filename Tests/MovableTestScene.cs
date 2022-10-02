@@ -22,15 +22,15 @@ namespace osu.Game.Rulesets.Hitokori.Tests {
 		public override void Add ( Drawable drawable ) {
 			container.Add( drawable );
 		}
-		public override bool Remove ( Drawable drawable ) {
-			return container.Remove( drawable );
+		public override bool Remove ( Drawable drawable, bool disposeImmediately ) {
+			return container.Remove( drawable, disposeImmediately );
 		}
 
 		public void AddOverlay ( Drawable drawable ) {
 			base.Add( drawable );
 		}
-		public bool RemoveOverlay ( Drawable drawable ) {
-			return base.Remove( drawable );
+		public bool RemoveOverlay ( Drawable drawable, bool disposeImmediately ) {
+			return base.Remove( drawable, disposeImmediately );
 		}
 
 		protected override bool OnDragStart ( DragStartEvent e ) {

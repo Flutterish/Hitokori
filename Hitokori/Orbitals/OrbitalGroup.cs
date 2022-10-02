@@ -106,7 +106,7 @@ namespace osu.Game.Rulesets.Hitokori.Orbitals {
 			while ( activeOrbitals.Count > state.OrbitalCount ) {
 				var last = activeOrbitals[ activeOrbitals.Count - 1 ];
 				activeOrbitals.RemoveAt( activeOrbitals.Count - 1 );
-				RemoveInternal( last );
+				RemoveInternal( last, false );
 			}
 
 			Position = (Vector2)state.PivotPosition * positionScale.Value;
