@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Localisation;
+using osu.Framework.Utils;
 using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.UI;
 using osu.Game.Rulesets.Mods;
@@ -32,13 +33,11 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 
 			protected override string FragmentShader => "CircularFlashlight";
 
-			private float getSizeFor ( int combo ) {
+			protected override float GetComboScaleFor ( int combo ) {
 				if ( combo > 200 )
 					return 0.8f;
-				else if ( combo > 100 )
-					return 0.9f;
 				else
-					return 1;
+					return Interpolation.ValueAt( combo, 1, 0.8f, 0, 200 );
 			}
 
 			HitokoriPlayfield Playfield;
@@ -46,12 +45,10 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 				Playfield = playfield as HitokoriPlayfield;
 
 				FlashlightPosition = Playfield.Hitokori.Hi.ToSpaceOfOtherDrawable( Vector2.Zero, Playfield );
-				FlashlightSize = new Vector2( FLASHLIGHT_SIZE * (float)comboModifier.Value );
 			}
 
-			Bindable<double> comboModifier = new();
-			protected override void OnComboChange ( ValueChangedEvent<int> e ) {
-				this.TransformBindableTo( comboModifier, getSizeFor( e.NewValue ), FLASHLIGHT_FADE_DURATION );
+			protected override void UpdateFlashlightSize ( float size ) {
+				this.TransformTo( nameof( FlashlightSize ), new Vector2( 0, size * FLASHLIGHT_SIZE ), FLASHLIGHT_FADE_DURATION );
 			}
 		}
 
