@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
+	public partial class HitokoriSettingsSubsection : RulesetSettingsSubsection {
 		public HitokoriSettingsSubsection ( Ruleset ruleset ) : base( ruleset ) { }
 
 		protected override LocalisableString Header => HitokoriRuleset.SHORT_NAME;
@@ -57,10 +57,11 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 	}
 
-	public class SpeedSlider : OsuSliderBar<double> {
+	public class SpeedSlider : RoundedSliderBar<double> {
+		
 		public override LocalisableString TooltipText => $"{Current.Value:N1}x";
-	}
-	public class PercentageSlider : OsuSliderBar<double> {
+    }
+	public class PercentageSlider : RoundedSliderBar<double> {
 		public override LocalisableString TooltipText => $"{Current.Value:##0%}";
-	}
+    }
 }
