@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	public partial class HitokoriSettingsSubsection : RulesetSettingsSubsection {
+	public class HitokoriSettingsSubsection : RulesetSettingsSubsection {
 		public HitokoriSettingsSubsection ( Ruleset ruleset ) : base( ruleset ) { }
 
 		protected override LocalisableString Header => HitokoriRuleset.SHORT_NAME;
