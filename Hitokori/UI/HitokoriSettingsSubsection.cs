@@ -57,10 +57,11 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 	}
 
-	public class SpeedSlider : OsuSliderBar<double> {
+	public class SpeedSlider : RoundedSliderBar<double> {
+		
 		public override LocalisableString TooltipText => $"{Current.Value:N1}x";
-	}
-	public class PercentageSlider : OsuSliderBar<double> {
+    }
+	public class PercentageSlider : RoundedSliderBar<double> {
 		public override LocalisableString TooltipText => $"{Current.Value:##0%}";
-	}
+    }
 }
