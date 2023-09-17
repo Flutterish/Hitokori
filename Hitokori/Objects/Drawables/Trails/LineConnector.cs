@@ -7,7 +7,8 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public class LineConnector : Connector {
+    public class LineConnector : Connector
+    {
 		Box box;
 
 		public LineConnector () {

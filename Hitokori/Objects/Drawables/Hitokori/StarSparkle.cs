@@ -7,7 +7,8 @@ using System;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class StarSparkle : SpriteIcon {
+    public class StarSparkle : SpriteIcon
+    {
 		public double StartTime;
 		public double Duration;
 

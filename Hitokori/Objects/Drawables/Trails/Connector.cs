@@ -4,7 +4,8 @@ using osu.Game.Rulesets.Hitokori.Objects.Base;
 using osu.Game.Rulesets.Hitokori.Utils;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public abstract class Connector : CompositeDrawable {
+    public abstract class Connector : CompositeDrawable
+    {
 		public Connector () {
 			progress = new( this );
 			progress.BindValueChanged( v => isInvalidated = true );

@@ -12,8 +12,9 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Tiles {
-	public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction> { // TODO hold tiles should reverse at the end, not start. it will make them more readable
-		new public HoldTile Tile => HitObject as HoldTile;
+    public class DrawableHoldTile : HitokoriTile, IHasDuration, IKeyBindingHandler<HitokoriAction>
+    { // TODO hold tiles should reverse at the end, not start. it will make them more readable
+        new public HoldTile Tile => HitObject as HoldTile;
 		public override Vector2 NormalizedTilePosition => Tile.EndPoint.NormalizedTilePosition;
 
 		public DrawableTilePoint StartPoint { get; private set; }

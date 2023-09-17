@@ -10,7 +10,8 @@ using osuTK.Graphics;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class StandardOrbital : Orbital {
+    public class StandardOrbital : Orbital
+    {
 		private Circle circle;
 		private Colour4 colour;
 		public StandardOrbital ( IHasTilePosition parent, Radius radius, Colour4 colour ) : base( parent, radius ) {

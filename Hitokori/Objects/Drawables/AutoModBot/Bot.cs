@@ -6,7 +6,8 @@ using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Hitokori.Utils;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.AutoModBot {
-	public class Bot : Container {
+    public class Bot : Container
+    {
 		private AutoClickType clickType = AutoClickType.Up;
 		private double clickTime;
 

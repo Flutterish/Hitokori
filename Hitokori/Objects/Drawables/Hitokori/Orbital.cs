@@ -8,7 +8,8 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public abstract class Orbital : Container {
+    public abstract class Orbital : Container
+    {
 		public Trail Trail;
 
 		protected Radius Radius;

@@ -121,7 +121,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				sampleTimer += Time.Elapsed;
 			}
 
-			private class HueNotch : CircularProgress {
+            private class HueNotch : CircularProgress
+            {
 				const double CONTINUOUS_FILL = 16;
 
 				public BindableBool IsContinuous = new( true );

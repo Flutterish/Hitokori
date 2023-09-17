@@ -10,7 +10,8 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Mods {
-	public class HitokoriModFlashlight : ModFlashlight<HitokoriHitObject>, IUpdatableByPlayfield {
+    public class HitokoriModFlashlight : ModFlashlight<HitokoriHitObject>, IUpdatableByPlayfield
+    {
 		public override double ScoreMultiplier => 1.12;
 		public override LocalisableString Description => Localisation.ModStrings.FlashlightDescription;
 

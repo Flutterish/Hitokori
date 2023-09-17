@@ -13,7 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	public class HitokoriDrawableRuleset : DrawableRuleset<HitokoriHitObject> {
+    public class HitokoriDrawableRuleset : DrawableRuleset<HitokoriHitObject>
+    {
 		public HitokoriDrawableRuleset ( Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null ) : base( ruleset, beatmap, mods ) { }
 
 		public override DrawableHitObject<HitokoriHitObject> CreateDrawableRepresentation ( HitokoriHitObject h )

@@ -9,7 +9,8 @@ using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Base {
 
-	public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject>, IHasDisposeEvent {
+    public abstract class DrawableHitokoriHitObject : DrawableHitObject<HitokoriHitObject>, IHasDisposeEvent
+    {
 		protected DrawableHitokoriHitObject ( HitokoriHitObject hitObject = null ) : base( hitObject ) { }
 
 		[Resolved]

@@ -6,7 +6,8 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	public class OrbitalColorPicker : ColorPickerControl {
+    public class OrbitalColorPicker : ColorPickerControl
+    {
 		StandardOrbital orbital;
 		Radius radius;
 		protected override Drawable CreatePreview () {

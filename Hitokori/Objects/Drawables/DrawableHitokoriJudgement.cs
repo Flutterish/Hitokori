@@ -13,7 +13,8 @@ using Container = osu.Framework.Graphics.Containers.Container;
 using Vector2 = osuTK.Vector2;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class DrawableHitokoriJudgement : DrawableJudgement, IHasTilePosition {
+    public class DrawableHitokoriJudgement : DrawableJudgement, IHasTilePosition
+    {
 		private HitResult Type;
 		private double Offset;
 

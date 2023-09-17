@@ -9,7 +9,8 @@ using osu.Game.Tests.Visual;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Tests {
-	public class TestSceneOsuGame : OsuTestScene {
+    public class TestSceneOsuGame : OsuTestScene
+    {
 		[BackgroundDependencyLoader]
 		private void load ( GameHost host, OsuGameBase gameBase ) {
 			OsuGame game = new OsuGame();

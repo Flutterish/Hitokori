@@ -5,7 +5,8 @@ using osu.Game.Rulesets.Hitokori.Settings;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class TheUnwantedChild : StandardOrbital {
+    public class TheUnwantedChild : StandardOrbital
+    {
 		public TheUnwantedChild ( IHasTilePosition parent, Radius radius ) : base( parent, radius, Color4.Green ) { }
 
 		Bindable<Color4> color = new( Color4.Green );
