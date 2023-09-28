@@ -12,7 +12,8 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class TileMarker : Container {
+    public class TileMarker : Container
+    {
 		TilePoint Tile;
 
 		TickSize TickSize => Tile.Size;

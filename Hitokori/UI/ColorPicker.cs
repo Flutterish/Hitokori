@@ -15,5 +15,5 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 		}
 	}
 
-	public class ColorPicker : ColorPicker<ColorPickerControl> { }
+    public class ColorPicker : ColorPicker<ColorPickerControl> { }
 }

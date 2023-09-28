@@ -10,7 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class DrawableHitokori : Container, IHasTilePosition {
+    public class DrawableHitokori : Container, IHasTilePosition
+    {
 		public List<Orbital> Orbitals = new List<Orbital>();
 		private int OrbitalIndex;
 		private int NextOrbitalIndex => ( OrbitalIndex + 1 ) % Orbitals.Count;

@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Replays {
-	public class HitokoriReplayRecorder : ReplayRecorder<HitokoriAction> {
+    public class HitokoriReplayRecorder : ReplayRecorder<HitokoriAction>
+    {
 		public HitokoriReplayRecorder ( Score target ) : base( target ) { }
 
 		protected override ReplayFrame HandleFrame ( Vector2 mousePosition, List<HitokoriAction> actions, ReplayFrame previousFrame ) {

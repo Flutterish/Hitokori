@@ -10,7 +10,8 @@ using System;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Hitokori {
-	public class Radius : Container {
+    public class Radius : Container
+    {
 		BindableDouble Opacity = new( 0.15 );
 		Bindable<DashStyle> BorderStyle = new( DashStyle.Dashed );
 

@@ -10,7 +10,8 @@ using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public class CircularConnector : Connector {
+    public class CircularConnector : Connector
+    {
 		private Vector2 from;
 		public Vector2 From {
 			get => from;

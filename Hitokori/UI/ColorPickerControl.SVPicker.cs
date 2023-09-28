@@ -100,7 +100,8 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 				sampleTimer += Time.Elapsed;
 			}
 
-			private class SVNotch : CompositeDrawable {
+            private class SVNotch : CompositeDrawable
+            {
 				public Box box;
 				public SVNotch () {
 					AddInternal( box = new Box {

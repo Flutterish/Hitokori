@@ -20,7 +20,7 @@ using System;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	[Cached]
+    [Cached]
 	public class HitokoriPlayfield : Playfield {
 		[Cached]
 		public readonly SparklePool SparklePool = new SparklePool();

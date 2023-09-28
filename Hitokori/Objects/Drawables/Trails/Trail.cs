@@ -9,7 +9,8 @@ using System;
 using System.Linq;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
-	public class Trail : CompositeDrawable {
+    public class Trail : CompositeDrawable
+    {
 		public Path Line;
 		public Vector2 Offset;
 		LoopingList<Vector2> vertices = new LoopingList<Vector2>( 100 ); // TODO make trails less opaque towards the end

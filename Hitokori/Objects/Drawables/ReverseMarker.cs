@@ -6,8 +6,9 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Drawables {
-	public class ReverseMarker : Container { // TODO dear princess celestia, why the fuck did i use containers instead of composite drawables?
-		bool ToClockwise;
+    public class ReverseMarker : Container
+    { // TODO dear princess celestia, why the fuck did i use containers instead of composite drawables?
+        bool ToClockwise;
 		public ReverseMarker () {
 			InternalChild = new SpriteIcon {
 				Icon = FontAwesome.Solid.RedoAlt,

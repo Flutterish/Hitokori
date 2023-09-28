@@ -7,7 +7,8 @@ using osu.Game.Rulesets.Hitokori.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.UI {
-	public class HitokoriIcon : Container {
+    public class HitokoriIcon : Container
+    {
 		[Resolved]
 		private LocalisationManager localisation { get; set; }
 

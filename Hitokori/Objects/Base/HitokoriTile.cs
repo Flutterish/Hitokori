@@ -3,7 +3,8 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hitokori.Objects.Base {
-	public abstract class HitokoriTile : DrawableHitokoriHitObject, IHasTilePosition {
+    public abstract class HitokoriTile : DrawableHitokoriHitObject, IHasTilePosition
+    {
 		public HitokoriTileObject Tile => HitObject as HitokoriTileObject;
 
 		protected HitokoriTile ( HitokoriHitObject hitObject ) : base( hitObject ) {
