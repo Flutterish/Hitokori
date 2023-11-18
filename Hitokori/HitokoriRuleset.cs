@@ -47,8 +47,9 @@ namespace osu.Game.Rulesets.Hitokori {
 		public override ScoreProcessor CreateScoreProcessor () {
 			return base.CreateScoreProcessor();
 		}
-		public override StatisticRow[] CreateStatisticsForScore ( ScoreInfo score, IBeatmap playableBeatmap )
-			=> base.CreateStatisticsForScore( score, playableBeatmap );
+		public override StatisticItem[] CreateStatisticsForScore ( ScoreInfo score, IBeatmap playableBeatmap ) {
+			return base.CreateStatisticsForScore( score, playableBeatmap );
+		}
 
 		public override DrawableRuleset CreateDrawableRulesetWith ( IBeatmap beatmap, IReadOnlyList<Mod> mods = null )
 			=> new HitokoriDrawableRuleset( this, beatmap, mods );

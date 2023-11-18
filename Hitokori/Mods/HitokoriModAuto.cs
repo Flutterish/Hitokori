@@ -14,8 +14,6 @@ namespace osu.Game.Rulesets.Hitokori.Mods {
 		public override string Acronym => "AT";
 		public override LocalisableString Description => Localisation.ModStrings.AutoplayDescription;
 
-		public override bool UserPlayable => false;
-
 		public override double ScoreMultiplier => 1;
 
 		public override IconUsage? Icon => OsuIcon.ModAuto;
