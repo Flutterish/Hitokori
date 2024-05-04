@@ -136,7 +136,7 @@ namespace osu.Game.Rulesets.Hitokori.UI {
 
 				protected override void LoadComplete () {
 					IsContinuous.BindValueChanged( v => {
-						this.FillTo( fill / 360, 100, Easing.Out );
+						this.ProgressTo( fill / 360, 100, Easing.Out );
 						this.ResizeTo( outerRadius, 100, Easing.Out );
 						this.TransformTo( nameof( InnerRadius ), 1 - (innerRadius / outerRadius), 100, Easing.Out );
 					}, true );

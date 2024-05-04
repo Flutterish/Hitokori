@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Hitokori.Objects.Drawables.Trails {
 			arc.InnerRadius = TrailRadius * 2 / radius;
 			arc.Size = new Vector2( radius * 2 );
 
-			arc.FillTo( ( progress.B - progress.A ) / Math.PI / 2 * angle );
+			arc.ProgressTo( ( progress.B - progress.A ) / Math.PI / 2 * angle );
 
 			arc.Rotation = ( ( Around - From ).AngleFromXAxis() + ( angle >= 0 ? progress.A : progress.B ) * angle ).ToDegreesF() - 90;
 		}

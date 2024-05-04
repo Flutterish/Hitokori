@@ -10,8 +10,8 @@
     </PropertyGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0-preview-23531-01" />
-    <PackageReference Include="NUnit" Version="4.0.0-beta.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0-release-24177-07" />
+    <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
   </ItemGroup>
@@ -20,7 +20,7 @@
 	</ItemGroup>
   <PropertyGroup Label="Project">
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Hitokori.Tests</RootNamespace>
   </PropertyGroup>
 </Project>
