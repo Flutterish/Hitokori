@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2024.412.1" />
+    <PackageReference Include="ppy.osu.Game" Version="2024.625.0" />
   </ItemGroup>
 
   <ItemGroup>
