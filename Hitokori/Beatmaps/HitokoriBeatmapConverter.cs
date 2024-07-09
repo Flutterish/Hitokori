@@ -1,4 +1,5 @@
-﻿using osu.Framework.Extensions.IEnumerableExtensions;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Timing;
 using osu.Game.Rulesets.Hitokori.Mods;
@@ -208,7 +209,7 @@ namespace osu.Game.Rulesets.Hitokori.Beatmaps {
 		}
 
 		void GenerateBreaks ( HitokoriBeatmap Beatmap ) {
-			List<BreakPeriod> breaks = new List<BreakPeriod>();
+            BindableList<BreakPeriod> breaks = new BindableList<BreakPeriod>();
 
 			foreach ( var i in Beatmap.HitObjects.OfType<HitokoriTileObject>() ) {
 				if ( i.LastPoint.Duration >= HitokoriPlayfield.MinimumBreakTime ) {
